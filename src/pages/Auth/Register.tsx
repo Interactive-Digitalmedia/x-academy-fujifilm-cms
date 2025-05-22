@@ -16,7 +16,7 @@ import InputOTPControlled from '@/components/InputOTPControlled'
 import posthog from 'posthog-js'
 import Google from '../../../public/images/banner/logo/Google'
 import { ChevronLeft } from 'lucide-react'
-import ProgressBar from '@/components/command-bar/ProgressBar'
+// import ProgressBar from '@/components/command-bar/ProgressBar'
 // import adoerImg from '../../../public/images/adoerLogo.svg'
 const Register = () => {
   const [step, setStep] = useState<number>(1) // State to manage current step in registration process
@@ -181,7 +181,7 @@ const Register = () => {
           <form onSubmit={handleSubmitOTP}>
             <CardHeader className='mb-4 text-center'>
               <div className='mb-6'>
-                <ProgressBar currentStep={1} />
+                {/* <ProgressBar currentStep={1} /> */}
               </div>
               <CardTitle className='mb-2 text-2xl'>
                 Please enter the code

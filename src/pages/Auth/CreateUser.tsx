@@ -32,7 +32,7 @@ import {
 import adoerImg from '../../../public/images/adoerLogo.svg'
 
 import posthog from 'posthog-js'
-import ProgressBar from '@/components/command-bar/ProgressBar'
+// import ProgressBar from '@/components/command-bar/ProgressBar'
 // import { Select, SelectItem } from '@nextui-org/react'
 // import GoogleIcon from '@/components/icons/GoogleIcon'
 // import RedditIcon from '@/components/icons/RedditIcon'
@@ -310,7 +310,7 @@ export default function CreateUser() {
         {step === 1 && (
           <form onSubmit={handleSubmitDetails}>
             <div className='mb-6'>
-              <ProgressBar currentStep={step + 1} />
+              {/* <ProgressBar currentStep={step + 1} /> */}
             </div>
             <CardHeader className='mb-4 text-center'>
               <CardTitle className='mb-2 text-2xl'>

@@ -13,7 +13,7 @@ import whiteLogo from '../../../public/images/banner/logo/whiteLogo.svg'
 import blackLogo from '../../../public/images/banner/logo/blackLogo.svg'
 import { useEffect, useState } from 'react'
 import useGlobalStore from '@/state/GlobalState'
-import LoginWithSocial from './LoginWIthSocial'
+
 
 
 interface LoginModalProps {
@@ -210,7 +210,7 @@ useEffect(() => {
                       <Button onClick={() => {}} className='normal-btn mt-2'>
                         Continue
                       </Button>
-                      <LoginWithSocial />
+             
                     </>
                   </>
                 ),
@@ -241,7 +241,7 @@ useEffect(() => {
                       throughout this website, to manage access to your account,
                       and for other purposes described in our Privacy policy.
                     </p>
-                    <LoginWithSocial />
+   
                   </>
                 ),
                 // OTP Step
