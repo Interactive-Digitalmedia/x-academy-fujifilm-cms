@@ -12,9 +12,6 @@ import {
 } from '@nextui-org/react'
 import { Search, ChevronDown, User, UserRound, Settings } from 'lucide-react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import whiteLogo from '../../../public/images/banner/logo/whiteLogo.svg'
-import blackLogo from '../../../public/images/banner/logo/blackLogo.svg'
-import { notificationsData } from '@/assets/notification'
 
 import { useState } from 'react'
 import { useTheme } from '@/utils/ThemeProvider'
@@ -44,11 +41,6 @@ const NavBar = () => {
     return path !== '/' && currentPath.startsWith(path)
   }
 
-  const filtered = notificationsData.filter((n) => {
-    const matchesSearch = n.title.toLowerCase().includes(search.toLowerCase())
-    const matchesUnread = showUnreadOnly ? n.unread : true
-    return matchesSearch && matchesUnread
-  })
 
   return (
     <>
@@ -58,16 +50,16 @@ const NavBar = () => {
           <div className='flex items-center gap-6'>
             <RouterLink to='/'>
               <div className='w-24 overflow-hidden md:h-16 md:w-32'>
-                <img
+                {/* <img
                   src={whiteLogo}
                   className='mt-[2px] hidden h-[100%] w-[100%] dark:block'
                   alt='Logo Dark'
-                />
-                <img
+                /> */}
+                {/* <img
                   src={blackLogo}
                   className='mt-[2px] block h-[100%] w-[100%] dark:hidden'
                   alt='Logo Light'
-                />
+                /> */}
               </div>
             </RouterLink>
 
@@ -243,48 +235,7 @@ const NavBar = () => {
 
               {/* Notification List */}
               <div className='mt-4 max-h-60 w-full overflow-y-auto'>
-                {filtered.map((n) => (
-                  <div
-                    key={n.id}
-                    className='relative flex items-center gap-3 rounded px-1 py-2 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  >
-                    {n.unread && (
-                      <div className='absolute left-10 top-1 z-20 inline-block h-3 w-3 rounded-full border-2 border-[white] bg-blue-500' />
-                    )}
-                    <Avatar
-                      size='md'
-                      src={n.avatarUrl}
-                      alt={n.title}
-                      radius='sm'
-                    />
-                    <div className='flex-1'>
-                      <p className='flex items-center gap-1 text-sm font-medium'>
-                        {n.title}
-                      </p>
-                      <p className='text-xs text-gray-500'>{n.subtitle}</p>
-                    </div>
-                    <button
-                      className={`rounded-md px-3 py-1 text-xs text-white ${
-                        n.type === 'Event'
-                          ? 'bg-purple-500'
-                          : n.type === 'Fashion'
-                            ? 'bg-orange-500'
-                            : n.type === 'Street'
-                              ? 'bg-blue-500'
-                              : n.type === 'Wildlife'
-                                ? 'bg-green-700'
-                                : 'bg-pink-500' // Portrait
-                      }`}
-                    >
-                      {n.type}
-                    </button>
-                  </div>
-                ))}
-                {filtered.length === 0 && (
-                  <p className='text-center text-sm text-gray-500'>
-                    No notifications found.
-                  </p>
-                )}
+               
               </div>
             </PopoverContent>
           </Popover>

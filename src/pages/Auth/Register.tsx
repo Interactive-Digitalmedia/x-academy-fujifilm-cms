@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 import { baseUrl } from '@/utils/config'
 import InputOTPControlled from '@/components/InputOTPControlled'
 import posthog from 'posthog-js'
-import Google from '../../../public/images/banner/logo/Google'
+// import Google from '../../../public/images/banner/logo/Google'
 import { ChevronLeft } from 'lucide-react'
 // import ProgressBar from '@/components/command-bar/ProgressBar'
 // import adoerImg from '../../../public/images/adoerLogo.svg'
@@ -254,7 +254,7 @@ const Register = () => {
                 className='button-custom mb-4 flex w-full items-center gap-2 !rounded-xl'
               >
                 {/* <img src={google} alt='google' /> */}
-                <Google width={18} />
+                {/* <Google width={18} /> */}
                 <span>Continue with Google </span>
               </Button>
               <div className='block sm:hidden'>

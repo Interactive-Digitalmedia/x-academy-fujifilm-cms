@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 import useGlobalStore from '@/state/GlobalState'
 import { baseUrl } from '@/utils/config'
 import { Eye, EyeOff } from 'lucide-react'
-import Google from '../../../public/images/banner/logo/Google'
+// import Google from '../../../public/images/banner/logo/Google'
 import posthog from 'posthog-js'
 
 const Login = () => {
@@ -195,7 +195,7 @@ const Login = () => {
             className='button-custom flex w-full items-center gap-2'
           >
             {/* <img src={google} alt='google' /> */}
-            <Google width={18} />
+            {/* <Google width={18} /> */}
             <span>Google</span>
           </Button>
         </CardFooter>
