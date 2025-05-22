@@ -1,0 +1,25 @@
+.sidebar-container {
+    position: relative;
+    height: 100vh;
+    z-index: 20;
+    /* Ensure the container takes the full height of the screen */
+}
+
+.toggle-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    /* Ensure the button is on top */
+    margin: 10px;
+    /* Optional: Add some margin for better positioning */
+}
+
+.icon {
+    transition: transform 0.3s ease-in-out;
+    opacity: 60%;
+}
+
+.icon.collapsed {
+    transform: rotate(180deg);
+}
