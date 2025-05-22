@@ -2,7 +2,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import './DashboardLayout.css'
 import NavBar from '@/components/navbar/NavBar'
-import XAcademyFooter from '@/components/footer/footer'
 
 export default function DashboardLayout() {
   const location = useLocation()
@@ -22,7 +21,6 @@ export default function DashboardLayout() {
         <div className={`w-full`}>
           <Outlet />
           <div>
-            <XAcademyFooter />
           </div>
         </div>
       </div>

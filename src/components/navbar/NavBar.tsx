@@ -18,7 +18,6 @@ import { notificationsData } from '@/assets/notification'
 
 import { useState } from 'react'
 import { useTheme } from '@/utils/ThemeProvider'
-import LoginModal from '../login/LoginModal'
 import { Sun, Moon, Bell } from 'lucide-react'
 import useGlobalStore from '@/state/GlobalState'
 // type Props = {}
@@ -306,10 +305,7 @@ const NavBar = () => {
          
         </div>
       </nav>
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onOpenChange={setIsLoginModalOpen}
-      />
+  
     </>
   )
 }

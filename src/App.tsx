@@ -12,34 +12,20 @@ import GoogleLoginRedirect from './pages/Auth/GoogleLoginRedirect'
 import DashboardLayout from './layouts/DashboardLayout'
 import ForgotPassword from './pages/Auth/ForgotPassword'
 import ResetPassword from './pages/Auth/ResetPassword'
-import AmbassadorDirectory from './pages/Ambassador/AmbassadorDirectory'
-import AmbassadorProfile from './pages/Ambassador/AmbassadorProfile'
-import Shop from './pages/Shop/Shop'
 
-import TicketBooking from './pages/TicketBooking/TicketBooking'
+
 
 // import Channel1 from './pages/Channel1/Channel1'
 
 import NotGoogleUser from './pages/Auth/NotGoogleUser'
-import EventDetails from './pages/Activity/EventDetails'
-import Discover from './pages/Discover/Discover'
-import Community from './pages/Community/Community'
+
 import Home from './pages/Home/Home'
-import ActivityDirectory from './pages/Activity/ActivityDirectory'
-import useGlobalStore from '@/state/GlobalState'
-import LoginModal from './components/login/LoginModal'
-import useAuthValidator from './hooks/useAuthValidator'
 
 
 function App() {
-  useAuthValidator()
-  const { showLoginModal, setShowLoginModal } = useGlobalStore()
   return (
     <ThemeProvider storageKey='vite-ui-theme'>
-      <LoginModal
-  isOpen={showLoginModal}
-  onOpenChange={setShowLoginModal}
-/>
+   
       {/* <PlanProvider> */}
       <Toaster />
       <Routes>
@@ -49,18 +35,6 @@ function App() {
       
         <Route element={<DashboardLayout />}>
           <Route path="/" element={<Home />} />
- 
-          <Route path='/events/:eventSlug' element={<EventDetails />} />
-          <Route path='/ambassadors' element={<AmbassadorDirectory />} />
-          <Route
-            path='/ambassadors/:nameSlug'
-            element={<AmbassadorProfile />}
-          />
-          <Route path='/discover' element={<Discover />} />
-          <Route path='/activity' element={<ActivityDirectory />} />
-          <Route path='/community' element={<Community />} />
-          <Route path='/shop' element={<Shop />} />
-          <Route path='/ticket-booking' element={<TicketBooking />} />
         </Route>
         <Route path='/' element={<CheckAuth />}>
           <Route path='logout' element={<Logout />} />
