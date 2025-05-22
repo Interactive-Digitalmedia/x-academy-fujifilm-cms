@@ -20,20 +20,12 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import NotGoogleUser from './pages/Auth/NotGoogleUser'
 
 import Home from './pages/Home/Home'
-import useGlobalStore from '@/state/GlobalState'
-import LoginModal from './components/login/LoginModal'
-import useAuthValidator from './hooks/useAuthValidator'
 
 
 function App() {
-  useAuthValidator()
-  const { showLoginModal, setShowLoginModal } = useGlobalStore()
   return (
     <ThemeProvider storageKey='vite-ui-theme'>
-      <LoginModal
-  isOpen={showLoginModal}
-  onOpenChange={setShowLoginModal}
-/>
+   
       {/* <PlanProvider> */}
       <Toaster />
       <Routes>
