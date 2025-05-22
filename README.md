@@ -1,0 +1,1 @@
+# x-academy-fujifilm-cms
