@@ -27,7 +27,7 @@ export default function CheckAuth() {
   useEffect(() => {
     // if not signed in, redirect to login
     if (!signedIn) {
-      navigate('/home')
+      navigate('/admin/admin-login')
     }
     if (bearerToken) {
       const decoded = parseJwt(bearerToken)

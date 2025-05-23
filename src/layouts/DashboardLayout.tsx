@@ -1,29 +1,23 @@
-// src/components/layouts/DashboardLayout.tsx
-import { Outlet, useLocation } from 'react-router-dom'
-import './DashboardLayout.css'
+import { Outlet } from 'react-router-dom'
 import NavBar from '@/components/navbar/NavBar'
+import Sidebar from '@/components/sidebar/Sidebar'
 
 export default function DashboardLayout() {
-  const location = useLocation()
-  const isDiscoverRoute = location.pathname.startsWith('/discover')
-  const isActivityRoute = location.pathname.startsWith('/activity')
-
   return (
-    <>
-      {/* Only show NavBar if not in Discover section */}
-      {!isDiscoverRoute && !isActivityRoute && (
-        <div>
-          <NavBar />
-        </div>
-      )}
-
-      <div className={`flex h-screen bg-background`}>
-        <div className={`w-full`}>
-          <Outlet />
-          <div>
-          </div>
-        </div>
+    <div className="relative h-screen w-full bg-gray-100">
+      {/* Sidebar fixed from top left */}
+      <div className="fixed top-0 left-0 z-50 h-screen w-64">
+        <Sidebar />
       </div>
-    </>
+
+      {/* Main container shifted right by sidebar width */}
+      <div className="ml-64 flex flex-col h-screen">
+        <NavBar />
+
+        <main className="flex-1 overflow-auto p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
   )
 }
