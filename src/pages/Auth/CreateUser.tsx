@@ -29,7 +29,7 @@ import {
   // Lightbulb,
   // UserRound
 } from 'lucide-react'
-import adoerImg from '../../../public/images/adoerLogo.svg'
+// import adoerImg from '../../../public/images/adoerLogo.svg'
 
 import posthog from 'posthog-js'
 // import ProgressBar from '@/components/command-bar/ProgressBar'
@@ -304,7 +304,7 @@ export default function CreateUser() {
         </div> */}
       </div>
       <div className='absolute top-20 h-14 w-14 md:hidden [@media(min-width:408px)_and_(max-width:915px)]:top-20'>
-        <img src={adoerImg} alt='adoer.logo' className='h-[100%] w-[100%]' />
+        {/* <img src={adoerImg} alt='adoer.logo' className='h-[100%] w-[100%]' /> */}
       </div>
       <div className='m-[80px]'>
         {step === 1 && (
