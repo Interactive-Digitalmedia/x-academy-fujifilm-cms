@@ -1,10 +1,14 @@
+import useGlobalStore from '@/state/GlobalState'
+
 const Home = () => {
+  const { user } = useGlobalStore()
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Header */}
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold text-gray-800">Welcome, Admin</h1>
-        <div className="text-sm text-gray-600">kanishka@interactivedigitalmedia.in</div>
+        <h1 className="text-xl font-semibold text-gray-800">Welcome, {user?.email}</h1>
+        {/* <div className="text-sm text-gray-600">kanishka@interactivedigitalmedia.in</div> */}
       </header>
 
       {/* Dashboard Cards */}

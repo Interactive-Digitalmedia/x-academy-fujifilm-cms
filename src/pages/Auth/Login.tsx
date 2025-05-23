@@ -48,10 +48,10 @@ const Login = () => {
         setIsLoading(false)
         // navigate('/')
 
-        const { userId, fullname } = response.data.data
+        const { userId, fullname, isSuperAdmin } = response.data.data
         const token = response.data.token
 
-        setUser({ userId, fullname, token })
+        setUser({ userId, fullname, token, isSuperAdmin, email })
         posthog.capture('user_clicked_login_with_email')
         posthog.identify(
           email, // Replace 'distinct_id' with your user's unique identifier

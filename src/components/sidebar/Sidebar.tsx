@@ -28,7 +28,7 @@ export default function Sidebar() {
     <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col justify-between py-3">
       <div>
         {/* Logo */}
-        <div className="mb-2 flex justify-center items-center">
+        <div className="mb-1 flex justify-center items-center">
           <img src={Logo} className="h-[34px]" alt="Logo" />
         </div>
 
