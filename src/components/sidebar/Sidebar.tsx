@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Events', path: '/events', icon: Calendar },
+    { name: 'Events', path: '/create-events', icon: Calendar },
     { name: 'Partners', path: '/partners', icon: Users },
     { name: 'Blogs', path: '/blogs', icon: BookOpen },
     { name: 'Analytics', path: '/analytics', icon: BarChart },

@@ -1,0 +1,104 @@
+import { useState } from 'react'
+import EventDetails from '@/components/createEventTabs/EventDetails'
+import AboutEvent from '@/components/createEventTabs/AboutEvent'
+import AdminControls from '@/components/createEventTabs/AdminControls'
+import EventImage from '@/components/createEventTabs/EventImage'
+import EventSchedule from '@/components/createEventTabs/EventSchedule'
+import FAQs from '@/components/createEventTabs/FAQs'
+
+const tabs = [
+  'Event Details',
+  'About Event',
+  'Event Schedule',
+  'Event Image',
+  'FAQs',
+  'Admin Controls'
+]
+
+export default function CreateEventLayout({ data, setData }: any) {
+  const [currentTab, setCurrentTab] = useState(0)
+
+  const renderCurrentTab = () => {
+    switch (currentTab) {
+      case 0: return <EventDetails  data={data} setData={setData} />
+      case 1: return <AboutEvent data={data} setData={setData}  />
+      case 2: return <EventSchedule data={data} setData={setData} />
+      case 3: return <EventImage data={data} setData={setData} />
+      case 4: return <FAQs data={data} setData={setData} />
+      case 5: return <AdminControls data={data} setData={setData}/>
+      default: return null
+    }
+  }
+
+  return (
+    <div className=" flex flex-col">
+   
+
+      {/* Card wrapper */}
+      <div className="rounded-xl h-[83vh] border border-gray-200 bg-white p-5 shadow-sm">
+
+        {/* Tab Navigation (inside card) */}
+        <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
+          {tabs.map((tab, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentTab(index)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition 
+                  ${
+                    currentTab === index
+                      ? 'text-black font-semibold'
+                      : 'text-gray-400 hover:bg-gray-100'
+                  }`}
+              >
+                <span
+                  className={`flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full border ${
+                    currentTab === index
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'border-gray-300 text-gray-600'
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span className="whitespace-nowrap">{tab}</span>
+              </button>
+
+              {/* Connecting line between steps */}
+              {index < tabs.length - 1 && (
+                <div className="w-8 h-px bg-gray-300"></div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="flex-1 overflow-y-auto p-6 max-h-[58vh]">{renderCurrentTab()}</div>
+
+        {/* Footer Buttons */}
+        <div className="mt-6 flex justify-between">
+  <button
+    className="px-5 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-600 disabled:opacity-50"
+    disabled={currentTab === 0}
+    onClick={() => setCurrentTab((prev) => prev - 1)}
+  >
+    Previous
+  </button>
+
+  <button
+    className="px-6 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white"
+    onClick={() => {
+      if (currentTab === tabs.length - 1) {
+        // ✅ On last step: console the full payload
+        console.log('Collected Event Payload:', data)
+      } else {
+        setCurrentTab((prev) => prev + 1)
+      }
+    }}
+  >
+    {currentTab === tabs.length - 1 ? 'Submit' : 'Next Step'}
+  </button>
+</div>
+
+      </div>
+    </div>
+  )
+}
