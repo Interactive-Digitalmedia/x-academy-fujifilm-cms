@@ -29,26 +29,55 @@ export default function EventImage({ data, setData }: any) {
     <div className="space-y-8">
       <h2 className="text-lg font-semibold">Event Images</h2>
 
-      {/* Hero Image */}
       <div>
-        <label className="block text-sm font-medium mb-1">Hero Image</label>
-        <div className="flex gap-3 items-center">
-          <Input
-            placeholder="Image URL"
-            value={heroInput}
-            onChange={(e) => setHeroInput(e.target.value)}
-          />
-          <button
-            onClick={handleAddHero}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition w-[150px]"
-          >
-            Add Image
-          </button>
-        </div>
-        <p className="text-sm text-gray-500 mt-1">
-          Note: This is the main image that will be displayed at the top of your event page.
-        </p>
-      </div>
+  <label className="block text-sm font-medium mb-1">Hero Image</label>
+
+  {/* Preview and Remove Button */}
+  {data.bannerImage && (
+    <div className="mb-4 relative">
+      <img
+        src={data.bannerImage}
+        alt="Hero Preview"
+        className="rounded-md h-40 w-full object-cover border"
+      />
+      <button
+        onClick={() => setData({ ...data, bannerImage: '' })}
+        className="absolute top-2 right-2 bg-white/80 text-red-600 border border-red-500 px-2 py-1 text-xs rounded-md hover:bg-red-600 hover:text-white transition"
+      >
+        Remove
+      </button>
+    </div>
+  )}
+
+  <div className="flex gap-3 items-center">
+    <Input
+      placeholder="Image URL"
+      value={heroInput}
+      onChange={(e) => setHeroInput(e.target.value)}
+      isDisabled={!!data.bannerImage}
+    />
+    <button
+      onClick={() => {
+        if (data.bannerImage) {
+          alert('Only one hero image is allowed. Remove the current one first.')
+          return
+        }
+        if (!heroInput.trim()) return
+        setData({ ...data, bannerImage: heroInput.trim() })
+        setHeroInput('')
+      }}
+      className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition w-[150px]"
+    >
+      Add Image
+    </button>
+  </div>
+
+  <p className="text-sm text-gray-500 mt-1">
+    Note: This is the main image that will be displayed at the top of your event page.
+  </p>
+</div>
+
+
 
       {/* Gallery Images */}
       <div>
