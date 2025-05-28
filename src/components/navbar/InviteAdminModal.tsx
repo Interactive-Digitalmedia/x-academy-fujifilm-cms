@@ -20,7 +20,7 @@ interface InviteAdminModalProps {
 
 export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalProps) {
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<'super_admin' | 'admin' | 'event_manager'>('admin')
+  const [role, setRole] = useState<'super admin' | 'admin' | 'event manager'| 'content manager'>('admin')
 
   const handleCreateInvite = async () => {
     const payload ={
@@ -68,15 +68,18 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
               <label className="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
               <Select
                 selectedKeys={[role]}
-                onChange={(e) => setRole(e.target.value as 'super_admin' | 'admin' | 'event_manager')}
+                onChange={(e) => setRole(e.target.value as 'super admin' | 'admin' | 'event manager'| 'content manager')}
               >
-                <SelectItem key="super_admin" value="super_admin">
+                {/* <SelectItem key="super admin" value="super admin">
                   Super Admin
-                </SelectItem>
+                </SelectItem> */}
                 <SelectItem key="admin" value="admin">
                   Admin
                 </SelectItem>
-                <SelectItem key="event_manager" value="event_manager">
+                <SelectItem key="content manager" value="content manager">
+                Content Manger
+                </SelectItem>
+                <SelectItem key="event manager" value="event manager">
                   Event Manager
                 </SelectItem>
               </Select>

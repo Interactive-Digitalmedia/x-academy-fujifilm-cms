@@ -46,7 +46,7 @@ const Login = () => {
       setTimeout(() => {
         setSignedIn(true)
         setIsLoading(false)
-        // navigate('/')
+   
 
         const { userId, fullname, userRole = 'super admin' } = response.data.data
         const token = response.data.token

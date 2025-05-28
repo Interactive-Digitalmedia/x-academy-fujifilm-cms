@@ -32,7 +32,7 @@ function App() {
       
         <Route path='/' element={<CheckAuth />}>
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/create-events" element={<CreateEvent />} />
           <Route path="/events" element={<Events />} />
         </Route>

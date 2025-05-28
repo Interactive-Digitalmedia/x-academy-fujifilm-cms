@@ -15,7 +15,7 @@ export default function Sidebar() {
   const location = useLocation()
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Events', path: '/events', icon: Calendar },
     { name: 'Partners', path: '/partners', icon: Users },
     { name: 'Blogs', path: '/blogs', icon: BookOpen },
@@ -23,6 +23,13 @@ export default function Sidebar() {
     { name: 'Support', path: '/support', icon: HelpCircle },
     { name: 'Settings', path: '/settings', icon: Settings }
   ]
+
+  const isActive = (itemPath: string) => {
+    if (itemPath === '/') {
+      return location.pathname === '/'
+    }
+    return location.pathname.startsWith(itemPath)
+  }
 
   return (
     <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col justify-between py-3">
@@ -37,7 +44,7 @@ export default function Sidebar() {
         {/* Navigation */}
         <nav className="flex flex-col gap-1 px-2">
           {navItems.map(({ name, path, icon: Icon }) => {
-            const active = location.pathname.startsWith(path)
+            const active = isActive(path)
             return (
               <Link
                 key={name}

@@ -1,6 +1,8 @@
 import { Switch, Input } from '@nextui-org/react'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { Select, SelectItem } from '@nextui-org/react'
+import useGlobalStore from '@/state/GlobalState'
+import { useEffect } from 'react'
 
 const managers = [
   'Riya Sharma',
@@ -12,24 +14,34 @@ const managers = [
 
 export default function AdminControls({ data, setData }: any) {
   // Extra toggles stored locally unless added to schema
-  const [stopRegistrations, setStopRegistrations] = useState(true)
-  const [enableWaitlist, setEnableWaitlist] = useState(true)
+  // const [stopRegistrations, setStopRegistrations] = useState(true)
+  // const [enableWaitlist, setEnableWaitlist] = useState(true)
 
+  const { user } = useGlobalStore((state) => ({
+    user: state.user
+  }))
+
+  useEffect(()=>{
+    console.log("here here",user)
+  },[])
   return (
     <div className="space-y-6">
       <h2 className="text-lg font-semibold">Admin Controls</h2>
 
+{user?.userRole!=="admin" && (
+    <div className="flex justify-between items-center">
+    <span className="text-sm font-medium">Event Visibility</span>
+    <Switch
+      color="secondary"
+      isSelected={data.status === 'publish'}
+      onValueChange={(val) =>
+        setData({ ...data, status: val ? 'publish' : 'draft' })
+      }
+    />
+  </div>
+)}
       {/* Event Visibility (local state only) */}
-      <div className="flex justify-between items-center">
-  <span className="text-sm font-medium">Event Visibility</span>
-  <Switch
-    color="secondary"
-    isSelected={data.status === 'publish'}
-    onValueChange={(val) =>
-      setData({ ...data, status: val ? 'publish' : 'draft' })
-    }
-  />
-</div>
+    
 
       {/* Featured Event (schema: isFeatured) */}
       <div className="flex justify-between items-center">
