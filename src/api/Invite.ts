@@ -13,7 +13,8 @@ export function getTokenFromLocalStorage(): string | null {
     }
   }
 
-export const createInvite = async (email:string) => {
+export const createInvite = async (payload: any) => {
+  console.log("payload :", payload)
     const token = getTokenFromLocalStorage()
     if (!token) {
       console.error('Token is not available.')
@@ -22,7 +23,7 @@ export const createInvite = async (email:string) => {
     try {
       const response = await axios.post(
         `${baseUrl}admin/create-invite`,
-        { email }, 
+        payload, 
         {
           headers: {
             Authorization: `Bearer ${token}`,

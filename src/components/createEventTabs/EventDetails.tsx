@@ -99,7 +99,7 @@ export default function EventDetails({ data, setData }: any) {
             onChange={(e) => setData({ ...data, type: e.target.value })}
           >
             <SelectItem key="workshop">Workshop</SelectItem>
-            <SelectItem key="seminar">Event</SelectItem>
+            <SelectItem key="eventr">Event</SelectItem>
             <SelectItem key="exhibition">Exhibition</SelectItem>
           </Select>
         </div>

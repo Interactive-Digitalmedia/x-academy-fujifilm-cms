@@ -36,3 +36,26 @@ export function getTokenFromLocalStorage(): string | null {
       throw error
     }
   }
+
+  export const getActivities = async () => {
+    const token = getTokenFromLocalStorage()
+    if (!token) {
+      console.error('Token is not available.')
+      return
+    }
+    try {
+      const response = await axios.get(
+        `${baseUrl}activity/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error fetching the activities', error)
+      throw error
+    }
+  }

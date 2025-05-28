@@ -52,7 +52,7 @@ export default function CreateEventLayout({ data, setData }: any) {
    
 
       {/* Card wrapper */}
-      <div className="rounded-xl h-[83vh] border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="bgCard h-[83vh]">
 
         {/* Tab Navigation (inside card) */}
         <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
