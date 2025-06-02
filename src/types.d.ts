@@ -1,6 +1,6 @@
 export type Activity = {
   title: string
-  date: string
+  startDateTime: string
   time: string
   location: string
   type: string

@@ -15,6 +15,7 @@ import ResetPassword from './pages/Auth/ResetPassword'
 import NotGoogleUser from './pages/Auth/NotGoogleUser'
 import Home from './pages/Home/Home'
 import CreateEvent from './pages/Activity/CreateEvent'
+import Events from './pages/Activity/Events'
 
 
 function App() {
@@ -31,8 +32,9 @@ function App() {
       
         <Route path='/' element={<CheckAuth />}>
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/create-events" element={<CreateEvent />} />
+          <Route path="/events" element={<Events />} />
         </Route>
           <Route path='logout' element={<Logout />} />
           <Route path='*' element={<NotFound />} />

@@ -2,9 +2,13 @@ import { Bell, UserPlus } from 'lucide-react'
 import InviteAdminModal from './InviteAdminModal'
 import { useDisclosure } from '@nextui-org/react'
 import useGlobalStore from '@/state/GlobalState'
+import { useEffect } from 'react'
 
 export default function NavBar() {
   const { user } = useGlobalStore()
+  useEffect(()=>{
+    console.log("here user :", user)
+  },[])
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   return (
     <header className="w-full border-b border-gray-200 bg-white px-6 py-2 flex items-center justify-between">
@@ -12,7 +16,7 @@ export default function NavBar() {
 
       <div className="flex items-center gap-4">
         {/* Invite Button */}
-        {user?.isSuperAdmin?(
+        {user?.userRole==="super admin"?(
              <button
              type="button"
              onClick={onOpen}

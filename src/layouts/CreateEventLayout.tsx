@@ -5,6 +5,7 @@ import AdminControls from '@/components/createEventTabs/AdminControls'
 import EventImage from '@/components/createEventTabs/EventImage'
 import EventSchedule from '@/components/createEventTabs/EventSchedule'
 import FAQs from '@/components/createEventTabs/FAQs'
+import { uploadActivity } from '@/api/activity'
 
 const tabs = [
   'Event Details',
@@ -30,12 +31,28 @@ export default function CreateEventLayout({ data, setData }: any) {
     }
   }
 
+  const handleNextStepOrSubmit = async () => {
+    if (currentTab === tabs.length - 1) {
+      try {
+        const response = await uploadActivity(data)
+        console.log('✅ Activity successfully uploaded:', response)
+        // Optional: show toast or navigate
+      } catch (error) {
+        console.error('❌ Failed to upload activity:', error)
+        // Optional: show error toast
+      }
+    } else {
+      setCurrentTab((prev) => prev + 1)
+    }
+  }
+  
+
   return (
     <div className=" flex flex-col">
    
 
       {/* Card wrapper */}
-      <div className="rounded-xl h-[83vh] border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="bgCard h-[83vh]">
 
         {/* Tab Navigation (inside card) */}
         <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
@@ -85,14 +102,7 @@ export default function CreateEventLayout({ data, setData }: any) {
 
   <button
     className="px-6 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white"
-    onClick={() => {
-      if (currentTab === tabs.length - 1) {
-        // ✅ On last step: console the full payload
-        console.log('Collected Event Payload:', data)
-      } else {
-        setCurrentTab((prev) => prev + 1)
-      }
-    }}
+    onClick={handleNextStepOrSubmit}
   >
     {currentTab === tabs.length - 1 ? 'Submit' : 'Next Step'}
   </button>

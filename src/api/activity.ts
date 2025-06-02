@@ -13,8 +13,7 @@ export function getTokenFromLocalStorage(): string | null {
     }
   }
 
-export const createInvite = async (payload: any) => {
-  console.log("payload :", payload)
+  export const uploadActivity = async (payload:any) => {
     const token = getTokenFromLocalStorage()
     if (!token) {
       console.error('Token is not available.')
@@ -22,8 +21,8 @@ export const createInvite = async (payload: any) => {
     }
     try {
       const response = await axios.post(
-        `${baseUrl}admin/create-invite`,
-        payload, 
+        `${baseUrl}activity/upload`,
+         payload , 
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,8 +32,30 @@ export const createInvite = async (payload: any) => {
       )
       return response.data
     } catch (error) {
-      console.error('Error Sending Invite', error)
+      console.error('Error uploading the activity', error)
       throw error
     }
   }
-  
+
+  export const getActivities = async () => {
+    const token = getTokenFromLocalStorage()
+    if (!token) {
+      console.error('Token is not available.')
+      return
+    }
+    try {
+      const response = await axios.get(
+        `${baseUrl}activity/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error fetching the activities', error)
+      throw error
+    }
+  }
