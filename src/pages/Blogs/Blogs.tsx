@@ -27,6 +27,12 @@ interface BlogData {
   cta: {
     text: string;
     link: string;
+    isEnabled: boolean;
+    style: {
+      color: string;
+      size: string;
+      variant: string;
+    };
   };
   slug: string;
   metaTitle: string;
@@ -42,10 +48,13 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   // Main blog data state
   const [blogData, setBlogData] = React.useState<BlogData>({
     // Step 1: Publishing Details
-    title: "",
+    title: "Event Name xyz",
     author: "",
-    publishingDate: parseZonedDateTime("2024-06-03T10:00[America/New_York]"), //don't delete this is important
-    tags: [],
+    publishingDate: parseZonedDateTime("2024-06-03T10:00[America/New_York]"),
+    tags: [
+      { name: "Event", color: "purple" },
+      { name: "Fashion", color: "orange" },
+    ],
 
     // Step 2: Blog Image
     heroImage: {
@@ -61,6 +70,12 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
     cta: {
       text: "",
       link: "",
+      isEnabled: true,
+      style: {
+        color: "blue",
+        size: "md",
+        variant: "solid",
+      },
     },
 
     // Step 5: Meta Description
@@ -124,9 +139,13 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           <BlogImage blogData={blogData} updateBlogData={updateBlogData} />
         );
       case 2:
-        return <BlogContent />;
+        return (
+          <BlogContent blogData={blogData} updateBlogData={updateBlogData} />
+        );
       case 3:
-        return <CTAButton />;
+        return (
+          <CTAButton blogData={blogData} updateBlogData={updateBlogData} />
+        );
       case 4:
         return <MetaDescription />;
       default:
