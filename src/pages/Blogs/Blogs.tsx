@@ -7,7 +7,6 @@ import BlogContent from "@/components/blogs/BlogContent";
 import CTAButton from "@/components/blogs/CTAButton";
 import MetaDescription from "@/components/blogs/MetaDesctiption";
 import { parseZonedDateTime } from "@internationalized/date";
-
 interface Tag {
   name: string;
   color: string;
@@ -48,13 +47,10 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   // Main blog data state
   const [blogData, setBlogData] = React.useState<BlogData>({
     // Step 1: Publishing Details
-    title: "Event Name xyz",
+    title: "",
     author: "",
     publishingDate: parseZonedDateTime("2024-06-03T10:00[America/New_York]"),
-    tags: [
-      { name: "Event", color: "purple" },
-      { name: "Fashion", color: "orange" },
-    ],
+    tags: [],
 
     // Step 2: Blog Image
     heroImage: {
@@ -147,7 +143,12 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           <CTAButton blogData={blogData} updateBlogData={updateBlogData} />
         );
       case 4:
-        return <MetaDescription />;
+        return (
+          <MetaDescription
+            blogData={blogData}
+            updateBlogData={updateBlogData}
+          />
+        );
       default:
         return (
           <PublishingDetails
