@@ -1,32 +1,40 @@
 import * as React from "react";
 import { Input, Select, SelectItem, DatePicker } from "@nextui-org/react";
-import { parseZonedDateTime } from "@internationalized/date";
 
 interface Tag {
   name: string;
   color: string;
 }
 
-interface PublishingDetailsProps {
-  blogTitle: string;
-  setBlogTitle: (title: string) => void;
-  selectedAuthor: string;
-  setSelectedAuthor: (author: string) => void;
+interface BlogData {
+  title: string;
+  author: string;
   publishingDate: any;
-  setPublishingDate: (date: any) => void;
-  selectedTags: Tag[];
-  setSelectedTags: (tags: Tag[]) => void;
+  tags: Tag[];
+  heroImage: {
+    file: any;
+    url: string;
+    description: string;
+  };
+  content: string;
+  cta: {
+    text: string;
+    link: string;
+  };
+  slug: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+}
+
+interface PublishingDetailsProps {
+  blogData: BlogData;
+  updateBlogData: (field: keyof BlogData, value: any) => void;
 }
 
 const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
-  blogTitle,
-  setBlogTitle,
-  selectedAuthor,
-  setSelectedAuthor,
-  publishingDate,
-  setPublishingDate,
-  selectedTags,
-  setSelectedTags,
+  blogData,
+  updateBlogData,
 }) => {
   const availableTags: Tag[] = [
     { name: "Event", color: "purple" },
@@ -35,6 +43,8 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Wildlife", color: "green" },
     { name: "Portrait", color: "pink" },
     { name: "Travel", color: "indigo" },
+    { name: "Food", color: "yellow" },
+    { name: "Technology", color: "gray" },
   ];
 
   const authors = [
@@ -44,17 +54,27 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
   ];
 
   const removeTag = (index: number) => {
-    setSelectedTags(selectedTags.filter((_, i) => i !== index));
+    const newTags = blogData.tags.filter((_, i) => i !== index);
+    updateBlogData("tags", newTags);
   };
 
   const addTag = (tag: Tag) => {
-    if (!selectedTags.find((t) => t.name === tag.name)) {
-      setSelectedTags([...selectedTags, tag]);
+    if (!blogData.tags.find((t) => t.name === tag.name)) {
+      updateBlogData("tags", [...blogData.tags, tag]);
     }
   };
 
+  const handleSaveAndPreview = () => {
+    console.log("Publishing Details Data:", {
+      title: blogData.title,
+      author: blogData.author,
+      publishingDate: blogData.publishingDate,
+      tags: blogData.tags,
+    });
+  };
+
   const getTagColorClasses = (color: string) => {
-    const colorMap = {
+    const colorMap: { [key: string]: string } = {
       purple: "bg-purple-500 text-white",
       orange: "bg-orange-500 text-white",
       blue: "bg-blue-500 text-white",
@@ -69,7 +89,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-8">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
         Publishing Details
       </h2>
 
@@ -77,8 +97,8 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
       <div className="space-y-2">
         <Input
           type="text"
-          value={blogTitle}
-          onValueChange={setBlogTitle}
+          value={blogData.title}
+          onValueChange={(value) => updateBlogData("title", value)}
           label="Blog Title"
           labelPlacement="outside"
           placeholder="Enter blog title"
@@ -93,9 +113,9 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
       {/* Author and Publishing Date Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Select
-          value={selectedAuthor}
+          selectedKeys={blogData.author ? [blogData.author] : []}
           onSelectionChange={(keys) =>
-            setSelectedAuthor(Array.from(keys)[0] as string)
+            updateBlogData("author", Array.from(keys)[0] as string)
           }
           label="Original Author"
           labelPlacement="outside"
@@ -114,8 +134,8 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
         </Select>
 
         <DatePicker
-          value={publishingDate}
-          onChange={setPublishingDate}
+          value={blogData.publishingDate}
+          onChange={(date) => updateBlogData("publishingDate", date)}
           label="Publishing Date"
           labelPlacement="outside"
           classNames={{
@@ -134,9 +154,9 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
 
         {/* Selected Tags Box */}
         <div className="min-h-[60px] p-4 bg-gray-50 border border-gray-200 rounded-lg">
-          {selectedTags.length > 0 ? (
+          {blogData.tags.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {selectedTags.map((tag, index) => (
+              {blogData.tags.map((tag, index) => (
                 <span
                   key={index}
                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTagColorClasses(tag.color)}`}
@@ -163,10 +183,10 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
               key={index}
               onClick={() => addTag(tag)}
               disabled={
-                selectedTags.find((t) => t.name === tag.name) !== undefined
+                blogData.tags.find((t) => t.name === tag.name) !== undefined
               }
               className={`px-3 py-1 rounded-full text-sm font-medium transition-opacity ${getTagColorClasses(tag.color)} ${
-                selectedTags.find((t) => t.name === tag.name)
+                blogData.tags.find((t) => t.name === tag.name)
                   ? "opacity-40 cursor-not-allowed"
                   : "hover:opacity-80 cursor-pointer"
               }`}
@@ -175,6 +195,16 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Save & Preview Button */}
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <button
+          onClick={handleSaveAndPreview}
+          className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded-lg font-medium"
+        >
+          Save & Preview
+        </button>
       </div>
     </div>
   );

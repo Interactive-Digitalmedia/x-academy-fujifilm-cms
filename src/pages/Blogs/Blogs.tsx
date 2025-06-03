@@ -13,21 +13,70 @@ interface Tag {
   color: string;
 }
 
+interface BlogData {
+  title: string;
+  author: string;
+  publishingDate: any;
+  tags: Tag[];
+  heroImage: {
+    file: any;
+    url: string;
+    description: string;
+  };
+  content: string;
+  cta: {
+    text: string;
+    link: string;
+  };
+  slug: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+}
+
 interface BlogsProps {}
 
 const Blogs: React.FunctionComponent<BlogsProps> = () => {
   const [currentStep, setCurrentStep] = React.useState(0);
 
-  // Publishing Details State
-  const [blogTitle, setBlogTitle] = React.useState("Event Name xyz");
-  const [selectedAuthor, setSelectedAuthor] = React.useState("");
-  const [publishingDate, setPublishingDate] = React.useState(
-    parseZonedDateTime("2024-06-03T10:00[America/New_York]")
-  );
-  const [selectedTags, setSelectedTags] = React.useState<Tag[]>([
-    { name: "Event", color: "purple" },
-    { name: "Fashion", color: "orange" },
-  ]);
+  // Main blog data state
+  const [blogData, setBlogData] = React.useState<BlogData>({
+    // Step 1: Publishing Details
+    title: "",
+    author: "",
+    publishingDate: parseZonedDateTime("2024-06-03T10:00[America/New_York]"), //don't delete this is important
+    tags: [],
+
+    // Step 2: Blog Image
+    heroImage: {
+      file: null,
+      url: "",
+      description: "",
+    },
+
+    // Step 3: Blog Content
+    content: "",
+
+    // Step 4: CTA Button
+    cta: {
+      text: "",
+      link: "",
+    },
+
+    // Step 5: Meta Description
+    slug: "",
+    metaTitle: "",
+    metaDescription: "",
+    keywords: "",
+  });
+
+  // Helper function to update blog data
+  const updateBlogData = (field: keyof BlogData, value: any) => {
+    setBlogData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // TODO: Add state for other steps when needed
   // const [selectedImage, setSelectedImage] = React.useState(null);
@@ -57,19 +106,17 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
     }
   };
 
+  const handlePublishBlog = () => {
+    console.log("Final Blog Data:", blogData);
+  };
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return (
           <PublishingDetails
-            blogTitle={blogTitle}
-            setBlogTitle={setBlogTitle}
-            selectedAuthor={selectedAuthor}
-            setSelectedAuthor={setSelectedAuthor}
-            publishingDate={publishingDate}
-            setPublishingDate={setPublishingDate}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
+            blogData={blogData}
+            updateBlogData={updateBlogData}
           />
         );
       case 1:
@@ -83,21 +130,15 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
       default:
         return (
           <PublishingDetails
-            blogTitle={blogTitle}
-            setBlogTitle={setBlogTitle}
-            selectedAuthor={selectedAuthor}
-            setSelectedAuthor={setSelectedAuthor}
-            publishingDate={publishingDate}
-            setPublishingDate={setPublishingDate}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
+            blogData={blogData}
+            updateBlogData={updateBlogData}
           />
         );
     }
   };
 
   return (
-    <div className="bg-white h-max rounded-xl p-8">
+    <div className="bg-white h-full rounded-xl p-8">
       {/* Step Indicator */}
       <StepIndicator steps={steps} currentStep={currentStep} />
 
@@ -119,13 +160,13 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
         </button>
 
         <button
-          onClick={handleNextStep}
-          disabled={currentStep === steps.length - 1}
-          className={`px-6 py-2 rounded-lg font-medium ${
+          onClick={
             currentStep === steps.length - 1
-              ? "bg-gray-400 text-white cursor-not-allowed"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
+              ? handlePublishBlog
+              : handleNextStep
+          }
+          disabled={currentStep === steps.length - 1 ? false : false}
+          className="bg-blue-500 text-white hover:bg-blue-600 px-6 py-2 rounded-lg font-medium"
         >
           {currentStep === steps.length - 1 ? "Publish Blog" : "Next Step"}
         </button>
