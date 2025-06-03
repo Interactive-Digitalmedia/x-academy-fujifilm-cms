@@ -160,7 +160,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   };
 
   return (
-    <div className="bg-white h-full rounded-xl p-8">
+    <div className="bg-white h-max rounded-xl p-8">
       {/* Step Indicator */}
       <StepIndicator steps={steps} currentStep={currentStep} />
 

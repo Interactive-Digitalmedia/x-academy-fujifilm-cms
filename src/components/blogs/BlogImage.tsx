@@ -105,7 +105,7 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">Blog Image</h2>
+      <h2 className="text-lg font-bold text-gray-800 mb-8">Blog Image</h2>
 
       {/* Hero Image Section */}
       <div className="space-y-4">

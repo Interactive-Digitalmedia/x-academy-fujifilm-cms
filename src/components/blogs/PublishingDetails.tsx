@@ -43,8 +43,6 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Wildlife", color: "green" },
     { name: "Portrait", color: "pink" },
     { name: "Travel", color: "indigo" },
-    { name: "Food", color: "yellow" },
-    { name: "Technology", color: "gray" },
   ];
 
   const authors = [
@@ -64,14 +62,14 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     }
   };
 
-  const handleSaveAndPreview = () => {
-    console.log("Publishing Details Data:", {
-      title: blogData.title,
-      author: blogData.author,
-      publishingDate: blogData.publishingDate,
-      tags: blogData.tags,
-    });
-  };
+  //   const handleSaveAndPreview = () => {
+  //     console.log("Publishing Details Data:", {
+  //       title: blogData.title,
+  //       author: blogData.author,
+  //       publishingDate: blogData.publishingDate,
+  //       tags: blogData.tags,
+  //     });
+  //   };
 
   const getTagColorClasses = (color: string) => {
     const colorMap: { [key: string]: string } = {
@@ -89,7 +87,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
+      <h2 className="text-lg font-bold text-gray-800 mb-8">
         Publishing Details
       </h2>
 
@@ -159,7 +157,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
               {blogData.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTagColorClasses(tag.color)}`}
+                  className={`inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium ${getTagColorClasses(tag.color)}`}
                 >
                   {tag.name}
                   <button
@@ -185,7 +183,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
               disabled={
                 blogData.tags.find((t) => t.name === tag.name) !== undefined
               }
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-opacity ${getTagColorClasses(tag.color)} ${
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-opacity ${getTagColorClasses(tag.color)} ${
                 blogData.tags.find((t) => t.name === tag.name)
                   ? "opacity-40 cursor-not-allowed"
                   : "hover:opacity-80 cursor-pointer"
@@ -198,14 +196,14 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
       </div>
 
       {/* Save & Preview Button */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
+      {/* <div className="mt-8 pt-6 border-t border-gray-200">
         <button
           onClick={handleSaveAndPreview}
           className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded-lg font-medium"
         >
           Save & Preview
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

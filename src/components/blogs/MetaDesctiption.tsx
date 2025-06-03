@@ -68,11 +68,11 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
     updateBlogData("slug", autoSlug);
   };
 
-  const handleSaveAndPreview = () => {
-    console.log("Complete Blog Data:", blogData);
-    // Here you would typically save to backend or trigger publish
-    alert("Blog saved! Check console for complete data.");
-  };
+  // const handleSaveAndPreview = () => {
+  //   console.log("Complete Blog Data:", blogData);
+  //   // Here you would typically save to backend or trigger publish
+  //   alert("Blog saved! Check console for complete data.");
+  // };
 
   const getTitleLengthStatus = () => {
     if (metaTitleLength === 0)
@@ -236,7 +236,7 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
       </div>
 
       {/* Save & Preview Button */}
-      <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+      {/* <div className="mt-8 pt-6 border-t border-gray-200 text-center">
         <Button
           onClick={handleSaveAndPreview}
           color="primary"
@@ -245,7 +245,7 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
         >
           Save & Preview
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
