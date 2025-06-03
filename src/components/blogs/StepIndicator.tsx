@@ -15,24 +15,26 @@ const StepIndicator: React.FunctionComponent<StepIndicatorProps> = ({
   currentStep,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+    <div className="flex items-center justify-between mb-4 pb-6 border-b border-gray-200">
       {steps.map((step, index) => (
         <div key={step.number} className="flex items-center">
           <div className="flex items-center">
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                 index === currentStep
                   ? "bg-blue-500 text-white"
                   : index < currentStep
-                    ? "bg-green-500 text-white"
+                    ? // ? "bg-green-500 text-white"
+                      "bg-gray-200 text-gray-600"
                     : "bg-gray-200 text-gray-600"
               }`}
             >
-              {index < currentStep ? "✓" : step.number}
+              {/* {index < currentStep ? "✓" : step.number} */}
+              {step.number}
             </div>
             <div className="ml-3">
               <p
-                className={`text-sm font-medium ${
+                className={`text-xs font-medium ${
                   index === currentStep ? "text-gray-900" : "text-gray-500"
                 }`}
               >
@@ -43,7 +45,8 @@ const StepIndicator: React.FunctionComponent<StepIndicatorProps> = ({
           {index < steps.length - 1 && (
             <div
               className={`w-12 h-0.5 mx-4 ${
-                index < currentStep ? "bg-green-500" : "bg-gray-200"
+                // index < currentStep ? "bg-green-500" : "bg-gray-200"
+                index < currentStep ? "bg-gray-200" : "bg-gray-200"
               }`}
             ></div>
           )}

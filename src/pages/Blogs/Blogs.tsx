@@ -6,6 +6,12 @@ import BlogImage from "@/components/blogs/BlogImage";
 import BlogContent from "@/components/blogs/BlogContent";
 import CTAButton from "@/components/blogs/CTAButton";
 import MetaDescription from "@/components/blogs/MetaDesctiption";
+import { parseZonedDateTime } from "@internationalized/date";
+
+interface Tag {
+  name: string;
+  color: string;
+}
 
 interface BlogsProps {}
 
@@ -15,13 +21,12 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   // Publishing Details State
   const [blogTitle, setBlogTitle] = React.useState("Event Name xyz");
   const [selectedAuthor, setSelectedAuthor] = React.useState("");
-  const [publishingDate, setPublishingDate] = React.useState("");
-  const [selectedTags, setSelectedTags] = React.useState([
-    { name: "Event", color: "purple", removable: true },
-    { name: "Fashion", color: "orange", removable: true },
-    { name: "Street", color: "blue", removable: false },
-    { name: "Wildlife", color: "green", removable: false },
-    { name: "Portrait", color: "pink", removable: false },
+  const [publishingDate, setPublishingDate] = React.useState(
+    parseZonedDateTime("2024-06-03T10:00[America/New_York]")
+  );
+  const [selectedTags, setSelectedTags] = React.useState<Tag[]>([
+    { name: "Event", color: "purple" },
+    { name: "Fashion", color: "orange" },
   ]);
 
   // TODO: Add state for other steps when needed
@@ -92,7 +97,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   };
 
   return (
-    <div className="bg-white h-full rounded-xl p-8">
+    <div className="bg-white h-max rounded-xl p-8">
       {/* Step Indicator */}
       <StepIndicator steps={steps} currentStep={currentStep} />
 
