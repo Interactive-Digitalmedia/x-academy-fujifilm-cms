@@ -120,7 +120,9 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           />
         );
       case 1:
-        return <BlogImage />;
+        return (
+          <BlogImage blogData={blogData} updateBlogData={updateBlogData} />
+        );
       case 2:
         return <BlogContent />;
       case 3:
