@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-
 import {
   LayoutDashboard,
   Calendar,
@@ -9,6 +8,7 @@ import {
   HelpCircle,
   Settings,
   CircleEllipsis,
+
 } from "lucide-react";
 import Logo from "/images/logo/logo.webp";
 import { Divider } from "@nextui-org/react";
@@ -25,6 +25,7 @@ export default function Sidebar() {
     { name: "Support", path: "/support", icon: HelpCircle },
     { name: "Settings", path: "/settings", icon: Settings },
     { name: "Others", path: "/others", icon: CircleEllipsis },
+
   ];
 
   const isActive = (itemPath: string) => {
