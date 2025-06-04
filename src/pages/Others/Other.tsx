@@ -125,136 +125,126 @@ const Others: React.FunctionComponent<OthersProps> = () => {
         <Button
           color="primary"
           startContent={<Plus className="w-4 h-4" />}
-          onClick={addNewTemplate}
+          onPress={addNewTemplate}
         >
           New Template
         </Button>
       </div>
 
       {/* Templates Accordion */}
-      <div className="space-y-4">
+      <div className="">
         {templates.map((template) => (
-          <div key={template.id} className="border border-gray-200 rounded-lg">
-            <Accordion
-              variant="splitted"
-              defaultExpandedKeys={template.isExpanded ? [template.id] : []}
-            >
-              <AccordionItem
-                key={template.id}
-                aria-label={template.name}
-                title={
-                  <div className="flex items-center justify-between w-full pr-4">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={template.id === "2"}
-                        onChange={() => {}}
-                        className="w-4 h-4 text-blue-600 rounded"
-                      />
-                      <span className="font-medium text-gray-700">
-                        {template.name}
-                      </span>
-                    </div>
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      color="danger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteTemplate(template.id);
-                      }}
-                    >
-                      Delete Template
-                    </Button>
+          <Accordion
+            key={template.id}
+            defaultExpandedKeys={template.isExpanded ? [template.id] : []}
+          >
+            <AccordionItem
+              key={template.id}
+              aria-label={template.name}
+              title={
+                <div className="flex items-center justify-between w-full pr-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={template.id === "2"}
+                      onChange={() => {}}
+                      className="w-4 h-4 text-blue-600 rounded"
+                    />
+                    <span className="font-medium text-gray-700">
+                      {template.name}
+                    </span>
                   </div>
-                }
-              >
-                <div className="space-y-4 p-4">
-                  {/* Questions */}
-                  {template.questions.map((question, index) => (
-                    <div
-                      key={question.id}
-                      className="space-y-3 p-4 bg-gray-50 rounded-lg"
-                    >
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium text-gray-700">
-                          {index + 1}. Question
-                        </h4>
-                        <Button
-                          isIconOnly
-                          size="sm"
-                          variant="light"
-                          color="danger"
-                          onClick={() =>
-                            deleteQuestion(template.id, question.id)
+                  <div
+                    className="text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteTemplate(template.id);
+                    }}
+                  >
+                    Delete Template
+                  </div>
+                </div>
+              }
+            >
+              <div className="space-y-4 p-4">
+                {/* Questions */}
+                {template.questions.map((question, index) => (
+                  <div key={question.id} className="space-y-3 p-4  rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-700">
+                        {index + 1}. Question
+                      </h4>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        color="danger"
+                        onPress={() => deleteQuestion(template.id, question.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">
+                          Query
+                        </label>
+                        <Input
+                          value={question.query}
+                          onValueChange={(value) =>
+                            updateQuestion(
+                              template.id,
+                              question.id,
+                              "query",
+                              value
+                            )
                           }
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                          placeholder="Query"
+                          classNames={{
+                            inputWrapper: "bg-white border border-gray-200",
+                          }}
+                        />
                       </div>
 
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600 mb-1">
-                            Query
-                          </label>
-                          <Input
-                            value={question.query}
-                            onValueChange={(value) =>
-                              updateQuestion(
-                                template.id,
-                                question.id,
-                                "query",
-                                value
-                              )
-                            }
-                            placeholder="Query"
-                            classNames={{
-                              inputWrapper: "bg-white border border-gray-200",
-                            }}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600 mb-1">
-                            Answer
-                          </label>
-                          <Textarea
-                            value={question.answer}
-                            onValueChange={(value) =>
-                              updateQuestion(
-                                template.id,
-                                question.id,
-                                "answer",
-                                value
-                              )
-                            }
-                            placeholder="Sample"
-                            minRows={3}
-                            classNames={{
-                              inputWrapper: "bg-white border border-gray-200",
-                            }}
-                          />
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">
+                          Answer
+                        </label>
+                        <Textarea
+                          value={question.answer}
+                          onValueChange={(value) =>
+                            updateQuestion(
+                              template.id,
+                              question.id,
+                              "answer",
+                              value
+                            )
+                          }
+                          placeholder="Sample"
+                          minRows={3}
+                          classNames={{
+                            inputWrapper: "bg-white border border-gray-200",
+                          }}
+                        />
                       </div>
                     </div>
-                  ))}
+                  </div>
+                ))}
 
-                  {/* Add Item Button */}
-                  <Button
-                    color="primary"
-                    variant="bordered"
-                    startContent={<Plus className="w-4 h-4" />}
-                    onClick={() => addQuestion(template.id)}
-                    className="w-full"
-                  >
-                    Add Item
-                  </Button>
-                </div>
-              </AccordionItem>
-            </Accordion>
-          </div>
+                {/* Add Item Button */}
+                <Button
+                  color="primary"
+                  variant="bordered"
+                  startContent={<Plus className="w-4 h-4" />}
+                  onPress={() => addQuestion(template.id)}
+                  className="w-full"
+                >
+                  Add Item
+                </Button>
+              </div>
+            </AccordionItem>
+          </Accordion>
         ))}
       </div>
 
@@ -309,28 +299,30 @@ const Others: React.FunctionComponent<OthersProps> = () => {
   );
 
   return (
-    <div className="bg-white h-full rounded-xl p-8">
+    <div className="bg-white h-max rounded-xl p-8">
       {/* Search and Filter Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex-1 max-w-md">
+      <div className="flex justify-between items-center mb-6 gap-4">
+        <div className="flex-1 ">
           <Input
             type="text"
             placeholder="Search"
             startContent={<Search className="w-4 h-4 text-gray-400" />}
             classNames={{
-              inputWrapper: "bg-gray-50 border border-gray-200",
+              inputWrapper: "bg-gray-50 border border-gray-200 ",
             }}
           />
         </div>
         <div className="flex gap-2">
           <Button
             variant="bordered"
+            className="border-[1.5px]"
             startContent={<Calendar className="w-4 h-4" />}
           >
             Dates
           </Button>
           <Button
             variant="bordered"
+            className="border-[1.5px]"
             startContent={<Filter className="w-4 h-4" />}
           >
             Filters
