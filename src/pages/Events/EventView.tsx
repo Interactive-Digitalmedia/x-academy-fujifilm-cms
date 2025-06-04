@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { EventTable } from "./EventTable";
+import { EventTable } from "@/components/events/EventTable";
 import { useNavigate } from "react-router-dom";
 
-const ListView: React.FC = () => {
+const EventView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All"); // track selected toggle
   const types = ["All", "Event", "Workshop", "Exhibition"];
   const navigate = useNavigate();
@@ -102,4 +102,4 @@ const ListView: React.FC = () => {
   );
 };
 
-export default ListView;
+export default EventView;
