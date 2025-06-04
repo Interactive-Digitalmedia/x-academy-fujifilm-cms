@@ -17,6 +17,7 @@ import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 import Events from "./pages/Activity/Events";
 import Blogs from "./pages/Blogs/Blogs";
+import Others from "./pages/Others/Other";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/create-events" element={<CreateEvent />} />
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/others" element={<Others />} />
           </Route>
           <Route path="logout" element={<Logout />} />
           <Route path="*" element={<NotFound />} />

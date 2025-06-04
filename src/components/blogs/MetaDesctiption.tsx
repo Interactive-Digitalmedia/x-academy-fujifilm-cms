@@ -60,13 +60,13 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
     setMetaDescLength(blogData.metaDescription.length);
   }, [blogData.metaTitle, blogData.metaDescription]);
 
-  const generateSlug = () => {
-    const autoSlug = blogData.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    updateBlogData("slug", autoSlug);
-  };
+  // const generateSlug = () => {
+  //   const autoSlug = blogData.title
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9]+/g, "-")
+  //     .replace(/^-+|-+$/g, "");
+  //   updateBlogData("slug", autoSlug);
+  // };
 
   // const handleSaveAndPreview = () => {
   //   console.log("Complete Blog Data:", blogData);
@@ -119,13 +119,13 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
               input: "text-gray-800",
             }}
           />
-          <Button
+          {/* <Button
             onClick={generateSlug}
             variant="bordered"
             className="shrink-0"
           >
             Generate
-          </Button>
+          </Button> */}
         </div>
         <p className="text-xs text-gray-500">
           URL Preview: yourwebsite.com/blog/{slugPreview || "your-blog-slug"}
@@ -205,7 +205,7 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
       </div>
 
       {/* SEO Preview */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      {/* <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-sm font-medium text-gray-700 mb-4">SEO Preview</h3>
         <div className="space-y-2 bg-white p-4 rounded border">
           <div className="text-blue-600 text-lg hover:underline cursor-pointer line-clamp-1">
@@ -219,21 +219,7 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
               "Your meta description will appear here. This is how your blog post will look in search engine results."}
           </div>
         </div>
-      </div>
-
-      {/* SEO Tips */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-blue-800 mb-2">
-          SEO Optimization Tips:
-        </h3>
-        <ul className="text-sm text-blue-700 space-y-1">
-          <li>• Include your main keyword in the meta title and description</li>
-          <li>• Write compelling descriptions that encourage clicks</li>
-          <li>• Keep URLs short and descriptive</li>
-          <li>• Use relevant keywords but avoid keyword stuffing</li>
-          <li>• Make sure your content matches your meta description</li>
-        </ul>
-      </div>
+      </div> */}
 
       {/* Save & Preview Button */}
       {/* <div className="mt-8 pt-6 border-t border-gray-200 text-center">
