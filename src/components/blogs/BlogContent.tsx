@@ -46,7 +46,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
     updateBlogData("content", value);
   };
 
-  const estimatedReadingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words/minute
+  // const estimatedReadingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words/minute
 
   return (
     <div className="space-y-6">
@@ -55,7 +55,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       </h2>
 
       {/* Content Statistics */}
-      <div className="flex gap-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+      {/* <div className="flex gap-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
         <div>
           <span className="font-medium">Words:</span> {wordCount}
         </div>
@@ -66,7 +66,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
           <span className="font-medium">Estimated reading time:</span>{" "}
           {estimatedReadingTime} min
         </div>
-      </div>
+      </div> */}
 
       {/* Content Textarea */}
       <div className="space-y-2">
@@ -76,7 +76,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
         <Textarea
           value={blogData.content}
           onValueChange={handleContentChange}
-          placeholder="Start writing your blog content here...&#10;&#10;You can write in plain text for now. Rich text editor will be added later.&#10;&#10;Include your main content, paragraphs, and any text formatting you need."
+          placeholder="Start writing your blog content."
           minRows={15}
           maxRows={25}
           classNames={{
@@ -87,7 +87,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       </div>
 
       {/* Content Guidelines */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="text-sm font-medium text-blue-800 mb-2">
           Content Guidelines:
         </h3>
@@ -98,7 +98,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
           <li>• Add a compelling introduction and conclusion</li>
           <li>• Rich text formatting will be available in the next update</li>
         </ul>
-      </div>
+      </div> */}
 
       {/* Preview Section */}
       {blogData.content && (

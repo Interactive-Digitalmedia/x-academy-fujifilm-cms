@@ -127,7 +127,7 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
             />
           </div>
           <Button
-            onClick={handleAddImage}
+            onPress={handleAddImage}
             color="primary"
             variant="bordered"
             className="px-6"
@@ -158,7 +158,7 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
             />
             <p className="text-sm text-gray-600">Image uploaded successfully</p>
             <Button
-              onClick={handleAddImage}
+              onPress={handleAddImage}
               color="primary"
               variant="flat"
               size="sm"

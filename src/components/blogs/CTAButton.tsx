@@ -155,7 +155,7 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
               <Button
                 isIconOnly
                 variant="bordered"
-                onClick={() => setShowSettings(!showSettings)}
+                onPress={() => setShowSettings(!showSettings)}
                 className="shrink-0"
               >
                 <svg
@@ -271,22 +271,6 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Button Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">
-              CTA Button Tips:
-            </h3>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>
-                • Use action-oriented text like "Get Started", "Learn More",
-                "Download Now"
-              </li>
-              <li>• Keep button text short and clear (2-4 words ideal)</li>
-              <li>• Ensure the link opens to a relevant, useful page</li>
-              <li>• Test the button on different devices and screen sizes</li>
-            </ul>
           </div>
         </>
       )}
