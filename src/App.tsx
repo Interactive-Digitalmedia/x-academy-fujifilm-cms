@@ -17,6 +17,8 @@ import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 import Events from "./pages/Activity/Events";
 import ListView from "./components/events/ListView";
+import Partners from "./components/partners/Partners";
+import PartnersListView from "./components/partners/PartnersListView";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
             <Route path="/create-events" element={<CreateEvent />} />
             <Route path="/events" element={<Events />} />
             <Route path="/list-view" element={<ListView />} />
+            <Route path="/partners" element={<Partners />} />
+            <Route path="/partnerslistview" element={<PartnersListView />} />
           </Route>
           <Route path="logout" element={<Logout />} />
           <Route path="*" element={<NotFound />} />
