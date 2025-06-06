@@ -1,8 +1,13 @@
 import * as React from "react";
-import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Search, Grid3X3, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import {
+  DateFilterPopover,
+  FiltersPopover,
+} from "@/components/blogs/BlogsFilterDate";
 
 interface Tag {
   name: string;
@@ -13,8 +18,8 @@ interface BlogData {
   id: string;
   title: string;
   author: string;
-  publishingDate: any;
-  publishedDate: string; // Added for BlogDetails
+  publishingDate: Date;
+  publishedDate: string;
   status: "Draft" | "Published";
   tags: Tag[];
   heroImage: {
@@ -22,7 +27,7 @@ interface BlogData {
     url: string;
     description: string;
   };
-  gallery: string[]; // Added gallery array
+  gallery: string[];
   content: string;
   cta: {
     text: string;
@@ -82,14 +87,14 @@ export const dummyBlogs: BlogData[] = [
   },
   {
     id: "2",
-    title: "A Guide to clicking Long Exposure shots",
-    author: "Praveen Bhat",
+    title: "Advanced Street Photography Techniques",
+    author: "Jane Smith",
     publishingDate: new Date("2024-02-10"),
     publishedDate: "February 10, 2024",
     status: "Published",
     tags: [
       { name: "Street", color: "blue" },
-      { name: "Tutorial", color: "purple" },
+      { name: "Advanced", color: "purple" },
     ],
     heroImage: {
       file: null,
@@ -102,10 +107,10 @@ export const dummyBlogs: BlogData[] = [
       "https://images.unsplash.com/photo-1554048612-b6a482b22881?w=800&h=600&fit=crop",
     ],
     content:
-      "Advanced techniques for capturing stunning long exposure photographs that will elevate your photography skills to the next level. Building upon basic long exposure principles, this guide explores sophisticated methods used by professional photographers.\n\nDiscover how to use neutral density filters effectively, master different shutter speeds for various effects, and learn post-processing techniques that enhance your long exposure images.\n\nFrom seascapes to urban photography, these advanced techniques will help you create compelling images that stand out in any portfolio.",
+      "Advanced techniques for capturing stunning street photography that will elevate your skills to the next level. Building upon basic street photography principles, this guide explores sophisticated methods used by professional photographers.\n\nDiscover how to capture candid moments, use natural lighting effectively, and develop your unique street photography style.\n\nFrom urban landscapes to human interactions, these advanced techniques will help you create compelling images that tell powerful stories.",
     cta: {
       text: "Learn More",
-      link: "/blog/advanced-long-exposure",
+      link: "/blog/advanced-street-photography",
       isEnabled: true,
       style: {
         color: "green",
@@ -113,20 +118,21 @@ export const dummyBlogs: BlogData[] = [
         variant: "solid",
       },
     },
-    slug: "advanced-long-exposure-techniques",
-    metaTitle: "Advanced Long Exposure Photography Techniques",
-    metaDescription: "Take your long exposure photography to the next level",
-    keywords: "advanced photography, long exposure, professional techniques",
+    slug: "advanced-street-photography-techniques",
+    metaTitle: "Advanced Street Photography Techniques",
+    metaDescription: "Take your street photography to the next level",
+    keywords:
+      "advanced photography, street photography, professional techniques",
   },
   {
     id: "3",
-    title: "A Guide to clicking Long Exposure shots",
-    author: "Praveen Bhat",
+    title: "Portrait Photography for Beginners",
+    author: "Mike Johnson",
     publishingDate: new Date("2024-03-05"),
     publishedDate: "March 5, 2024",
     status: "Draft",
     tags: [
-      { name: "Street", color: "blue" },
+      { name: "Portrait", color: "green" },
       { name: "Beginner", color: "orange" },
     ],
     heroImage: {
@@ -140,10 +146,10 @@ export const dummyBlogs: BlogData[] = [
       "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&h=600&fit=crop",
     ],
     content:
-      "Essential tips for beginners starting with long exposure photography. If you're new to photography or looking to explore long exposure techniques, this beginner-friendly guide is perfect for you.\n\nWe'll start with the basics: what equipment you need, fundamental camera settings, and simple techniques that will help you capture your first successful long exposure shots.\n\nNo prior experience needed - just bring your camera and enthusiasm to learn. By the end of this guide, you'll have the confidence to experiment with long exposure photography on your own.",
+      "Essential tips for beginners starting with portrait photography. If you're new to photography or looking to explore portrait techniques, this beginner-friendly guide is perfect for you.\n\nWe'll start with the basics: what equipment you need, fundamental camera settings, and simple techniques that will help you capture your first successful portrait shots.\n\nNo prior experience needed - just bring your camera and enthusiasm to learn. By the end of this guide, you'll have the confidence to experiment with portrait photography on your own.",
     cta: {
       text: "Get Started",
-      link: "/blog/beginner-long-exposure",
+      link: "/blog/beginner-portrait-photography",
       isEnabled: true,
       style: {
         color: "orange",
@@ -151,17 +157,17 @@ export const dummyBlogs: BlogData[] = [
         variant: "solid",
       },
     },
-    slug: "beginner-long-exposure-guide",
-    metaTitle: "Long Exposure Photography for Beginners",
+    slug: "portrait-photography-for-beginners",
+    metaTitle: "Portrait Photography for Beginners",
     metaDescription:
-      "Start your journey into long exposure photography with our beginner guide",
-    keywords: "beginner photography, long exposure basics, camera tips",
+      "Start your journey into portrait photography with our beginner guide",
+    keywords: "beginner photography, portrait basics, camera tips",
   },
 ];
 
 interface BlogsGridProps {
   blogs: BlogData[];
-  handleBlogClick: (blog: BlogData) => void; // Changed to pass full blog object
+  handleBlogClick: (blog: BlogData) => void;
 }
 
 const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
@@ -174,7 +180,7 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
         <div
           key={blog.id}
           onClick={() => {
-            handleBlogClick(blog); // Pass full blog object
+            handleBlogClick(blog);
           }}
           className="card cursor-pointer rounded-lg shadow-sm transition-all hover:shadow-md bg-white border"
         >
@@ -238,6 +244,14 @@ interface BlogsProps {}
 const Blogs: React.FunctionComponent<BlogsProps> = () => {
   const navigate = useNavigate();
 
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+
   const slugify = (title: string) =>
     title
       .toLowerCase()
@@ -245,11 +259,72 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
       .replace(/[^\w-]+/g, "");
 
   const handleBlogClick = (blog: BlogData) => {
-    // Changed to receive full blog object
     console.log("Blog clicked:", blog.title);
     const slug = slugify(blog.title);
-    // Navigate to blog details page with the full blog object
-    navigate(`/blogs/${slug}`, { state: { blog } }); // Pass full blog object
+    navigate(`/blogs/${slug}`, { state: { blog } });
+  };
+
+  // Filter blogs based on all criteria
+  const filteredBlogs = useMemo(() => {
+    return dummyBlogs.filter((blog) => {
+      // Search filter
+      const matchesSearch =
+        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.content.toLowerCase().includes(searchTerm.toLowerCase());
+
+      // Tag filter
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) =>
+          blog.tags.some((blogTag) => blogTag.name === tag)
+        );
+
+      // Author filter
+      const matchesAuthor =
+        selectedAuthors.length === 0 || selectedAuthors.includes(blog.author);
+
+      // Status filter
+      const matchesStatus =
+        selectedStatus.length === 0 || selectedStatus.includes(blog.status);
+
+      // Date filter
+      const matchesDate =
+        (!startDate || new Date(blog.publishingDate) >= new Date(startDate)) &&
+        (!endDate || new Date(blog.publishingDate) <= new Date(endDate));
+
+      return (
+        matchesSearch &&
+        matchesTags &&
+        matchesAuthor &&
+        matchesStatus &&
+        matchesDate
+      );
+    });
+  }, [
+    searchTerm,
+    selectedTags,
+    selectedAuthors,
+    selectedStatus,
+    startDate,
+    endDate,
+  ]);
+
+  // Reset functions
+  const resetFilters = () => {
+    setSelectedTags([]);
+    setSelectedAuthors([]);
+    setSelectedStatus([]);
+  };
+
+  const resetDateFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  const handleDateRangeChange = (start: string | null, end: string | null) => {
+    setStartDate(start);
+    setEndDate(end);
   };
 
   return (
@@ -261,7 +336,9 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
-              placeholder="Search"
+              placeholder="Search blogs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-muted/50"
             />
           </div>
@@ -270,12 +347,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           <div className="flex items-center gap-3">
             {/* View Toggle Icons */}
             <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 h-8 w-8"
-                // onClick={() => navigate("/events")}
-              >
+              <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
                 <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button variant="secondary" size="sm" className="p-2 h-8 w-8">
@@ -283,22 +355,95 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
               </Button>
             </div>
 
-            {/* Dates Button */}
-            <Button variant="outline" size="sm" className="h-[41px] px-3 gap-2">
-              <Calendar className="h-4 w-4" />
-              <span className="text-sm">Dates</span>
-            </Button>
+            {/* Date Filter */}
+            <DateFilterPopover
+              onDateRangeChange={handleDateRangeChange}
+              onReset={resetDateFilter}
+            />
 
-            {/* Filters Button */}
-            <Button variant="outline" size="sm" className="h-[41px] px-3 gap-2">
-              <Filter className="h-4 w-4" />
-              <span className="text-sm">Filters</span>
-            </Button>
+            {/* Filters */}
+            <FiltersPopover
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+              selectedAuthors={selectedAuthors}
+              setSelectedAuthors={setSelectedAuthors}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+              onReset={resetFilters}
+            />
           </div>
         </div>
 
+        {/* Active Filters Display */}
+        {(selectedTags.length > 0 ||
+          selectedAuthors.length > 0 ||
+          selectedStatus.length > 0) && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            <span className="text-sm text-gray-600">Active filters:</span>
+            {selectedTags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800"
+              >
+                {tag}
+                <button
+                  onClick={() =>
+                    setSelectedTags(selectedTags.filter((t) => t !== tag))
+                  }
+                  className="ml-1 hover:text-blue-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            {selectedAuthors.map((author) => (
+              <span
+                key={author}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800"
+              >
+                {author}
+                <button
+                  onClick={() =>
+                    setSelectedAuthors(
+                      selectedAuthors.filter((a) => a !== author)
+                    )
+                  }
+                  className="ml-1 hover:text-green-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            {selectedStatus.map((status) => (
+              <span
+                key={status}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800"
+              >
+                {status}
+                <button
+                  onClick={() =>
+                    setSelectedStatus(
+                      selectedStatus.filter((s) => s !== status)
+                    )
+                  }
+                  className="ml-1 hover:text-purple-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Results count */}
+        <div className="mb-4">
+          <span className="text-sm text-gray-600">
+            Showing {filteredBlogs.length} of {dummyBlogs.length} blogs
+          </span>
+        </div>
+
         {/* BlogsGrid Component */}
-        <BlogsGrid blogs={dummyBlogs} handleBlogClick={handleBlogClick} />
+        <BlogsGrid blogs={filteredBlogs} handleBlogClick={handleBlogClick} />
       </div>
     </>
   );
