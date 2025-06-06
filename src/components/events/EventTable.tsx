@@ -9,15 +9,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+type EventTableProps = {
+  filteredEvents: typeof dummyEvents; // or EventType[]
+};
+
 // props from ListView
-export function EventTable({ selectedType }: { selectedType: string }) {
-  // Filter events based on selected type
-  const filteredEvents =
-    selectedType === "All"
-      ? dummyEvents
-      : dummyEvents.filter(
-          (event) => event.type.toLowerCase() === selectedType.toLowerCase()
-        );
+export function EventTable({ filteredEvents }: EventTableProps) {
   return (
     <div className="bg-white w-full">
       <Table className="w-full text-sm">

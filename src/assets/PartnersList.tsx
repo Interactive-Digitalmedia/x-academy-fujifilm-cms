@@ -7,8 +7,9 @@ export const PartnersList = [
     countryCode: "in",
     upcomingEvents: 2,
     totalEvents: 5,
-    fujigearOwned: 3,
+    fujiGearOwned: 3,
     imageUrl: "https://images.unsplash.com/photo-1603415526960-f7e0328b9c17",
+    countryEmoji: "",
   },
   {
     sno: 2,
@@ -18,8 +19,9 @@ export const PartnersList = [
     countryCode: "in",
     upcomingEvents: 1,
     totalEvents: 3,
-    fujigearOwned: 2,
+    fujiGearOwned: 2,
     imageUrl: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d",
+    countryEmoji: "",
   },
   {
     sno: 3,
@@ -29,8 +31,9 @@ export const PartnersList = [
     countryCode: "in",
     upcomingEvents: 0,
     totalEvents: 4,
-    fujigearOwned: 4,
+    fujiGearOwned: 4,
     imageUrl: "https://images.unsplash.com/photo-1527980965255-d3b416303d12",
+    countryEmoji: "",
   },
   {
     sno: 4,
@@ -40,8 +43,9 @@ export const PartnersList = [
     countryCode: "in",
     upcomingEvents: 2,
     totalEvents: 6,
-    fujigearOwned: 3,
+    fujiGearOwned: 3,
     imageUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+    countryEmoji: "",
   },
   {
     sno: 5,
@@ -51,7 +55,8 @@ export const PartnersList = [
     countryCode: "in",
     upcomingEvents: 1,
     totalEvents: 2,
-    fujigearOwned: 2,
+    fujiGearOwned: 2,
     imageUrl: "https://images.unsplash.com/photo-1502767089025-6572583495b9",
+    countryEmoji: "",
   },
 ];
