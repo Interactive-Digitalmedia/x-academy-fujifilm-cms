@@ -22,6 +22,8 @@ import EventView from "./pages/Events/EventView";
 
 import Blogs from "./pages/Blogs/Blogs";
 import Others from "./pages/Others/Other";
+import Community from "./pages/Community/Community";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -42,7 +44,9 @@ function App() {
             <Route path="/partnerslistview" element={<PartnersListView />} />
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/community" element={<Community />} />
             <Route path="/others" element={<Others />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="logout" element={<Logout />} />
           <Route path="*" element={<NotFound />} />
