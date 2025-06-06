@@ -20,6 +20,7 @@ import EventView from "./pages/Events/EventView";
 import Blogs from "./pages/Blogs/Blogs";
 import Others from "./pages/Others/Other";
 import PartnersView from "./pages/Partners/PartnersView";
+import TestPartnerPage from "./createPartnerTabs/CreatePartners";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
+            <Route path="/test-partner" element={<TestPartnerPage />} />
 
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
