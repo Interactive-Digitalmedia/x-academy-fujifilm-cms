@@ -44,11 +44,10 @@ const StepIndicator: React.FunctionComponent<StepIndicatorProps> = ({
           </div>
           {index < steps.length - 1 && (
             <div
-              className={`w-12 h-0.5 mx-4 ${
-                // index < currentStep ? "bg-green-500" : "bg-gray-200"
+              className={`connector-line w-10 h-0.5 mx-4 ${
                 index < currentStep ? "bg-gray-200" : "bg-gray-200"
               }`}
-            ></div>
+            />
           )}
         </div>
       ))}
