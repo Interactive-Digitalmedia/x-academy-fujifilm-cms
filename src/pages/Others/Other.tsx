@@ -299,7 +299,7 @@ const Others: React.FunctionComponent<OthersProps> = () => {
   );
 
   return (
-    <div className="bg-white h-max rounded-xl p-8">
+    <div className="bg-white h-max rounded-xl p-4">
       {/* Search and Filter Header */}
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1 ">
