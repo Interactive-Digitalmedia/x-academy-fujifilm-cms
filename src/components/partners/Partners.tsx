@@ -26,7 +26,7 @@ const Partners: React.FC = () => {
   });
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
+    <div className="bg-white h-max rounded-xl p-4">
       <div className="w-full">
         {/* Search and Controls Panel */}
         <div className="flex justify-between items-center mb-6 w-full">

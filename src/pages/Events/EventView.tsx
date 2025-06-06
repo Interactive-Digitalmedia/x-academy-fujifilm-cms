@@ -11,18 +11,7 @@ const EventView: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "965px",
-        padding: "16px 16px 67px 16px",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "12px",
-        border: "1px solid #EDEDED",
-        background: "#FFF",
-      }}
-    >
+    <div className="bg-white h-max rounded-xl p-4">
       <div className="w-full">
         {/* Search and Controls Panel */}
         <div className="flex justify-between items-center mb-6 w-full">
