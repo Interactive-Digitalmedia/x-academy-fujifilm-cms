@@ -15,12 +15,12 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
-import Events from "./pages/Activity/Events";
+
 import Partners from "./components/partners/Partners";
 import PartnersListView from "./components/partners/PartnersListView";
 import EventView from "./pages/Events/EventView";
-
 import Blogs from "./pages/Blogs/Blogs";
+import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
 import Community from "./pages/Community/Community";
 import Profile from "./pages/Profile/Profile";
@@ -38,12 +38,13 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
-            {/* <Route path="/events" element={<Events />} /> */}
+
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/partnerslistview" element={<PartnersListView />} />
-            <Route path="/events" element={<Events />} />
+
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs/:blogSlug" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
             <Route path="/others" element={<Others />} />
             <Route path="/profile" element={<Profile />} />
