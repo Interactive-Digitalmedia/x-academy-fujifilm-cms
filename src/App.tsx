@@ -16,12 +16,10 @@ import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 import Events from "./pages/Activity/Events";
-import Partners from "./components/partners/Partners";
-import PartnersListView from "./components/partners/PartnersListView";
 import EventView from "./pages/Events/EventView";
-
 import Blogs from "./pages/Blogs/Blogs";
 import Others from "./pages/Others/Other";
+import PartnersView from "./pages/Partners/PartnersView";
 
 function App() {
   return (
@@ -36,10 +34,10 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
-            {/* <Route path="/events" element={<Events />} /> */}
+
             <Route path="/events" element={<EventView />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/partnerslistview" element={<PartnersListView />} />
+            <Route path="/partners" element={<PartnersView />} />
+
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/others" element={<Others />} />
