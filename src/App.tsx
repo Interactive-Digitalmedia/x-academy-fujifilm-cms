@@ -24,6 +24,7 @@ import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
 import Community from "./pages/Community/Community";
 import Profile from "./pages/Profile/Profile";
+import CreateBlog from "./pages/Blogs/CreateBlog";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/partnerslistview" element={<PartnersListView />} />
 
             <Route path="/blogs" element={<Blogs />} />
+            <Route path="/blogs/createblogs" element={<CreateBlog />} />
             <Route path="/blogs/:blogSlug" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
             <Route path="/others" element={<Others />} />
