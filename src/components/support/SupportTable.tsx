@@ -29,8 +29,12 @@ export function SupportTable({ filteredSupports }: SupportTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredSupports.map((support, index) => (
-            <SupportRow key={support.id} support={support} index={index} />
+          {filteredSupports.map((support) => (
+            <SupportRow
+              key={support._id}
+              support={support}
+              index={support.sno - 1}
+            />
           ))}
         </TableBody>
       </Table>

@@ -22,6 +22,7 @@ import Blogs from "./pages/Blogs/Blogs";
 import Others from "./pages/Others/Other";
 import PartnersView from "./pages/Partners/PartnersView";
 import Support from "./pages/Support/Support";
+import SupportDetails from "./pages/Support/SupportDetails";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/support" element={<Support />} />
+            <Route path="/support/:id" element={<SupportDetails />} />
 
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
