@@ -21,6 +21,7 @@ import EventView from "./pages/Events/EventView";
 import Blogs from "./pages/Blogs/Blogs";
 import Others from "./pages/Others/Other";
 import PartnersView from "./pages/Partners/PartnersView";
+import Support from "./pages/Support/Support";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/create-partner" element={<CreatePartner />} />
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
+            <Route path="/support" element={<Support />} />
 
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
