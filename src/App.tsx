@@ -15,6 +15,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
+import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
 import EventView from "./pages/Events/EventView";
 import Blogs from "./pages/Blogs/Blogs";
@@ -34,7 +35,7 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
-
+            <Route path="/create-partner" element={<CreatePartner />} />
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
 

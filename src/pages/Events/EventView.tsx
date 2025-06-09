@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import ActivityGrid from "@/components/events/ActivityGrid";
 import { dummyEvents } from "@/assets/dummyEvents";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
+import FilterCard from "@/components/ui/filtercard";
 
 const EventView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All"); // track selected toggle
@@ -14,37 +15,52 @@ const EventView: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+  const [filteredResults, setFilteredResults] = useState(dummyEvents);
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+    {}
+  );
+  const [showFilters, setShowFilters] = useState(false);
 
   const types = ["All", "Event", "Workshop", "Exhibition"];
 
-  // Filter logic
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
-    return new Date(year, month - 1, day); // JS months are 0-based
+    return new Date(year, month - 1, day);
   };
 
-  const filteredEvents = dummyEvents.filter((event) => {
-    const matchesType = activeType === "All" || event.type === activeType;
+  useEffect(() => {
+    const lowerSearch = searchText.toLowerCase();
 
-    const eventDate = parseDMY(event.date);
-    const from = selectedRange?.from;
-    const to = selectedRange?.to;
+    const filtered = dummyEvents.filter((event) => {
+      // Filter by activeType
+      const matchesType = activeType === "All" || event.type === activeType;
 
-    const matchesDateRange =
-      !from || !to || (eventDate >= from && eventDate <= to);
+      // Filter by FilterCard (activeFilters)
+      const matchesFilterCard =
+        (!activeFilters.type || event.type === activeFilters.type) &&
+        (!activeFilters.organizer ||
+          event.organizer === activeFilters.organizer);
 
-    if (searchText.length >= 3) {
-      const lowerSearch = searchText.toLowerCase();
+      // Filter by search text (3+ characters)
       const matchesSearch =
+        searchText.length < 3 ||
         event.name.toLowerCase().includes(lowerSearch) ||
         event.location.toLowerCase().includes(lowerSearch) ||
         event.organizer.toLowerCase().includes(lowerSearch);
 
-      return matchesType && matchesSearch && matchesDateRange;
-    }
+      // Filter by date
+      const eventDate = parseDMY(event.date);
+      const from = selectedRange?.from;
+      const to = selectedRange?.to;
+      const matchesDate =
+        !from || !to || (eventDate >= from && eventDate <= to);
 
-    return matchesType && matchesDateRange;
-  });
+      return matchesType && matchesFilterCard && matchesSearch && matchesDate;
+    });
+
+    setFilteredResults(filtered);
+  }, [activeType, searchText, selectedRange, activeFilters]);
+
   return (
     <div
       style={{
@@ -123,11 +139,52 @@ const EventView: React.FC = () => {
               )}
             </div>
 
-            {/* Filters Button */}
-            <Button variant="outline" size="sm" className="h-[41px] px-3 gap-2">
-              <Filter className="h-4 w-4" />
-              <span className="text-sm">Filters</span>
-            </Button>
+            {/* Filters Button and Dropdown Wrapper */}
+            <div className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-[41px] px-3 gap-2"
+                onClick={() => setShowFilters((prev) => !prev)}
+              >
+                <Filter className="h-4 w-4" />
+                <span className="text-sm">Filters</span>
+              </Button>
+
+              {showFilters && (
+                <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
+                  <FilterCard
+                    data={dummyEvents}
+                    sections={[
+                      {
+                        heading: "Type",
+                        key: "type",
+                        type: "button-group",
+                        options: [
+                          "Workshops",
+                          "Exhibitions",
+                          "Events",
+                          "Online Seminars",
+                          "Phototours",
+                          "Photowalks",
+                          "Service Camps",
+                          "Others",
+                        ],
+                      },
+                      {
+                        heading: "Conducted By",
+                        key: "organizer",
+                        type: "dropdown",
+                        options: Array.from(
+                          new Set(dummyEvents.map((e) => e.organizer))
+                        ),
+                      },
+                    ]}
+                    onFiltered={(filtered, active) => setActiveFilters(active)}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -163,7 +220,7 @@ const EventView: React.FC = () => {
         {/* Show Either List or Grid */}
         {viewMode === "grid" ? (
           <ActivityGrid
-            demoActivities={filteredEvents.map((e) => ({
+            demoActivities={filteredResults.map((e) => ({
               id: e.id,
               title: e.name,
               type: e.type,
@@ -190,7 +247,7 @@ const EventView: React.FC = () => {
             }))}
           />
         ) : (
-          <EventTable filteredEvents={filteredEvents} />
+          <EventTable filteredEvents={filteredResults} />
         )}
       </div>
     </div>

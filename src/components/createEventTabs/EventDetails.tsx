@@ -11,6 +11,7 @@ const allTags = [
   { name: 'Portrait', color: 'bg-pink-400' }
 ]
 
+
 const ambassadors = [
     'Chiranth',
     'Tarun Khiwal',
