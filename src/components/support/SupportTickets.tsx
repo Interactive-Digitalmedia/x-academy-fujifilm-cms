@@ -72,6 +72,8 @@ const SupportTickets: React.FC = () => {
       }}
     >
       <div className="w-full">
+        <h2 className="text-xl font-bold mb-2">Support Tickets</h2>
+
         {/* Controls Row */}
         <div className="flex justify-between items-center mb-6 w-full">
           {/* Search Bar */}

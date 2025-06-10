@@ -23,6 +23,7 @@ import Others from "./pages/Others/Other";
 import PartnersView from "./pages/Partners/PartnersView";
 import Support from "./pages/Support/Support";
 import SupportDetails from "./pages/Support/SupportDetails";
+import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
 
 function App() {
   return (
@@ -42,6 +43,10 @@ function App() {
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/support" element={<Support />} />
             <Route path="/support/:id" element={<SupportDetails />} />
+            <Route
+              path="/support/refund/:id"
+              element={<RefundSupportDetails />}
+            />
 
             <Route path="/events" element={<Events />} />
             <Route path="/blogs" element={<Blogs />} />
