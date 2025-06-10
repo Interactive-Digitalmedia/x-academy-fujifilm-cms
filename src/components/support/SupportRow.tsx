@@ -23,7 +23,13 @@ export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
 
   return (
     <TableRow
-      onClick={() => navigate("/support/" + support._id)}
+      onClick={() =>
+        navigate(
+          support.type.toLowerCase() === "refund"
+            ? `/support/refund/${support._id}`
+            : `/support/${support._id}`
+        )
+      }
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >

@@ -10,6 +10,7 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { Search, Calendar, Filter, Plus, Trash2 } from "lucide-react";
+import Newsletter from "@/components/others/Newsletter";
 
 interface Question {
   id: string;
@@ -275,17 +276,6 @@ const Others: React.FunctionComponent<OthersProps> = () => {
     </div>
   );
 
-  const renderNewsletterContent = () => (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-gray-800">
-        Newsletter Subscriptions
-      </h1>
-      <div className="text-gray-500">
-        Newsletter subscriptions content coming soon...
-      </div>
-    </div>
-  );
-
   const renderAboutUsContent = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -348,8 +338,9 @@ const Others: React.FunctionComponent<OthersProps> = () => {
           {renderFAQContent()}
         </Tab>
         <Tab key="newsletter" title="Newsletter Subscriptions">
-          {renderNewsletterContent()}
+          <Newsletter />
         </Tab>
+
         <Tab key="about" title="About Us">
           {renderAboutUsContent()}
         </Tab>
