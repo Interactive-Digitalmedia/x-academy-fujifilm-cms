@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PublicProfile from "@/components/createPartnerTabs/PublicProfile";
 import Gallery from "@/components/createPartnerTabs/Gallery";
-// import Gears from "@/components/partners/Gears"
+import Gears from "@/components/createPartnerTabs/Gears";
 import ContactDetails from "@/components/createPartnerTabs/ContactDetails";
 
 const tabs = [
@@ -20,7 +20,8 @@ export default function CreatePartnerLayout({ data, setData }: any) {
         return <PublicProfile data={data} setData={setData} />;
       case 1:
         return <Gallery data={data} setData={setData} />;
-      // case 2: return <Gears data={data} setData={setData} />
+      case 2:
+        return <Gears data={data} setData={setData} />;
       case 3:
         return <ContactDetails data={data} setData={setData} />;
       default:

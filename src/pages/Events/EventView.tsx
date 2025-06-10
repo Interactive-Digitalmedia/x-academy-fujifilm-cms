@@ -10,7 +10,7 @@ import { DateRange } from "react-day-picker";
 import FilterCard from "@/components/ui/filtercard";
 
 const EventView: React.FC = () => {
-  const [activeType, setActiveType] = useState<string>("All"); // track selected toggle
+  const [activeType, setActiveType] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchText, setSearchText] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
@@ -32,30 +32,24 @@ const EventView: React.FC = () => {
     const lowerSearch = searchText.toLowerCase();
 
     const filtered = dummyEvents.filter((event) => {
-      // Filter by activeType
       const matchesType = activeType === "All" || event.type === activeType;
-
-      // Filter by FilterCard (activeFilters)
-      const matchesFilterCard =
-        (!activeFilters.type || event.type === activeFilters.type) &&
-        (!activeFilters.organizer ||
-          event.organizer === activeFilters.organizer);
-
-      // Filter by search text (3+ characters)
-      const matchesSearch =
-        searchText.length < 3 ||
-        event.name.toLowerCase().includes(lowerSearch) ||
-        event.location.toLowerCase().includes(lowerSearch) ||
-        event.organizer.toLowerCase().includes(lowerSearch);
-
-      // Filter by date
-      const eventDate = parseDMY(event.date);
       const from = selectedRange?.from;
       const to = selectedRange?.to;
+      const eventDate = parseDMY(event.date);
       const matchesDate =
         !from || !to || (eventDate >= from && eventDate <= to);
 
-      return matchesType && matchesFilterCard && matchesSearch && matchesDate;
+      return (
+        matchesType &&
+        (!activeFilters.type || event.type === activeFilters.type) &&
+        (!activeFilters.organizer ||
+          event.organizer === activeFilters.organizer) &&
+        (searchText.length < 3 ||
+          event.name.toLowerCase().includes(lowerSearch) ||
+          event.location.toLowerCase().includes(lowerSearch) ||
+          event.organizer.toLowerCase().includes(lowerSearch)) &&
+        matchesDate
+      );
     });
 
     setFilteredResults(filtered);
@@ -75,11 +69,10 @@ const EventView: React.FC = () => {
       }}
     >
       <div className="w-full">
-        {/* Search and Controls Panel */}
+        {/* Search + controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          {/* Search Bar */}
           <div className="relative w-[680px] mr-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
               placeholder="Search"
@@ -89,9 +82,8 @@ const EventView: React.FC = () => {
             />
           </div>
 
-          {/* Right Side Controls */}
           <div className="flex items-center gap-3">
-            {/* View Toggle Icons */}
+            {/* view toggle */}
             <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
               <Button
                 variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -111,7 +103,7 @@ const EventView: React.FC = () => {
               </Button>
             </div>
 
-            {/* Calendar Toggle */}
+            {/* calendar */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -130,16 +122,14 @@ const EventView: React.FC = () => {
                     selected={selectedRange}
                     onSelect={(range) => {
                       setSelectedRange(range);
-                      if (range?.from && range?.to) {
-                        setShowCalendar(false);
-                      }
+                      if (range?.from && range?.to) setShowCalendar(false);
                     }}
                   />
                 </div>
               )}
             </div>
 
-            {/* Filters Button and Dropdown Wrapper */}
+            {/* filters */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -180,7 +170,10 @@ const EventView: React.FC = () => {
                         ),
                       },
                     ]}
-                    onFiltered={(filtered, active) => setActiveFilters(active)}
+                    onFiltered={(filtered, active) => {
+                      setActiveFilters(active);
+                      setFilteredResults(filtered);
+                    }}
                   />
                 </div>
               )}
@@ -188,36 +181,34 @@ const EventView: React.FC = () => {
           </div>
         </div>
 
-        <div>
-          {/* Type Filter */}
-          <div className="mb-6 flex flex-wrap gap-3">
-            {types.map((type) => (
-              <button
-                key={type}
-                className={`btn-toggle ${
-                  activeType === type
-                    ? "btn-toggle-active"
-                    : "btn-toggle-inactive"
-                }`}
-                style={{
-                  display: "flex",
-                  width: "121px",
-                  padding: "6px 12px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "10px",
-                  alignSelf: "stretch",
-                }}
-                onClick={() => setActiveType(type)}
-                type="button"
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+        {/* quick type buttons */}
+        <div className="mb-6 flex flex-wrap gap-3">
+          {types.map((type) => (
+            <button
+              key={type}
+              className={`btn-toggle ${
+                activeType === type
+                  ? "btn-toggle-active"
+                  : "btn-toggle-inactive"
+              }`}
+              style={{
+                display: "flex",
+                width: "121px",
+                padding: "6px 12px",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+                alignSelf: "stretch",
+              }}
+              onClick={() => setActiveType(type)}
+              type="button"
+            >
+              {type}
+            </button>
+          ))}
         </div>
 
-        {/* Show Either List or Grid */}
+        {/* grid or list */}
         {viewMode === "grid" ? (
           <ActivityGrid
             demoActivities={filteredResults.map((e) => ({
