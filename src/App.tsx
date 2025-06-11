@@ -39,6 +39,7 @@ import PartnersView from "./pages/Partners/PartnersView";
 import Support from "./pages/Support/Support";
 import SupportDetails from "./pages/Support/SupportDetails";
 import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
+import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
 
@@ -73,7 +74,7 @@ function App() {
             <Route path="/partners" element={<PartnersView />} />
             {/* <Route path="/partners" element={<Partners />} /> */}
             {/* <Route path="/partnerslistview" element={<PartnersListView />} /> */}
-
+            <Route path="/partner-preview" element={<AmbassadorProfile />} />
             <Route path="/create-partner" element={<CreatePartner />} />
 
             <Route path="/events" element={<EventView />} />
