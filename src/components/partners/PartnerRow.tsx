@@ -12,7 +12,7 @@ interface Partner {
   countryEmoji: string;
   upcomingEvents: number;
   totalEvents: number;
-  fujigearOwned: number;
+  fujiGearOwned: number;
   imageUrl: string;
 }
 
@@ -40,7 +40,7 @@ const PartnerRow: React.FC<PartnerRowProps> = ({ partner, index }) => {
         {partner.totalEvents}
       </TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
-        {partner.fujigearOwned}
+        {partner.fujiGearOwned}
       </TableCell>
       <TableCell className="px-3 py-1 text-right">
         <ChevronRight className="w-4 h-4 text-gray-400" />

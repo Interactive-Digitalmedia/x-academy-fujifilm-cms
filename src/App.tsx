@@ -16,15 +16,27 @@ import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 
+
 import Partners from "./components/partners/Partners";
 import PartnersListView from "./components/partners/PartnersListView";
+
+import CreatePartner from "./pages/Activity/CreatePartner";
+import Events from "./pages/Activity/Events";
+
 import EventView from "./pages/Events/EventView";
 import Blogs from "./pages/Blogs/Blogs";
 import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
+
 import Community from "./pages/Community/Community";
 import Profile from "./pages/Profile/Profile";
 import CreateBlog from "./pages/Blogs/CreateBlog";
+
+import PartnersView from "./pages/Partners/PartnersView";
+import Support from "./pages/Support/Support";
+import SupportDetails from "./pages/Support/SupportDetails";
+import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
+
 
 function App() {
   return (
@@ -40,9 +52,23 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
 
+
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/partnerslistview" element={<PartnersListView />} />
+
+
+            <Route path="/create-partner" element={<CreatePartner />} />
+            <Route path="/events" element={<EventView />} />
+            <Route path="/partners" element={<PartnersView />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/support/:id" element={<SupportDetails />} />
+            <Route
+              path="/support/refund/:id"
+              element={<RefundSupportDetails />}
+            />
+
+            <Route path="/events" element={<Events />} />
 
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blogs/createblogs" element={<CreateBlog />} />
