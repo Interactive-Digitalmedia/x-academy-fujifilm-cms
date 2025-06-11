@@ -15,11 +15,6 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
-
-
-import Partners from "./components/partners/Partners";
-import PartnersListView from "./components/partners/PartnersListView";
-
 import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
 
@@ -37,7 +32,6 @@ import Support from "./pages/Support/Support";
 import SupportDetails from "./pages/Support/SupportDetails";
 import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
 
-
 function App() {
   return (
     <ThemeProvider storageKey="vite-ui-theme">
@@ -52,11 +46,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/create-events" element={<CreateEvent />} />
 
-
             <Route path="/events" element={<EventView />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/partnerslistview" element={<PartnersListView />} />
-
+            <Route path="/partners" element={<PartnersView />} />
+            {/* <Route path="/partners" element={<Partners />} /> */}
+            {/* <Route path="/partnerslistview" element={<PartnersListView />} /> */}
 
             <Route path="/create-partner" element={<CreatePartner />} />
             <Route path="/events" element={<EventView />} />
