@@ -18,10 +18,8 @@ import CreateEvent from "./pages/Activity/CreateEvent";
 
 import Analytics from "./pages/Analytics/Analytics";
 
-import Partners from "./components/partners/Partners";
-import PartnersListView from "./components/partners/PartnersListView";
-
-
+// import Partners from "./components/partners/Partners";
+// import PartnersListView from "./components/partners/PartnersListView";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
@@ -43,7 +41,6 @@ import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
 
-
 function App() {
   return (
     <ThemeProvider storageKey="vite-ui-theme">
@@ -60,8 +57,8 @@ function App() {
             <Route path="/events/create-events" element={<CreateEvent />} />
 
             <Route path="/events" element={<EventView />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/partnerslistview" element={<PartnersListView />} />
+            {/* <Route path="/partners" element={<Partners />} />
+            <Route path="/partnerslistview" element={<PartnersListView />} /> */}
 
             <Route
               path="/partners/create-partner"
