@@ -34,7 +34,9 @@ const PartnerCard: React.FC<Props> = ({ partner }) => {
   return (
     <div
       onClick={() =>
-        navigate(`/partners/${partner.name.toLowerCase().replace(/ /g, "-")}`)
+        navigate(
+          `/partners/${encodeURIComponent(partner.name.toLowerCase().replace(/\s+/g, "-"))}`
+        )
       }
       className="card cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-lg transition"
     >

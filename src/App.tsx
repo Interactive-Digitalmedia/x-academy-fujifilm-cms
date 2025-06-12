@@ -57,8 +57,6 @@ function App() {
             <Route path="/events/create-events" element={<CreateEvent />} />
 
             <Route path="/events" element={<EventView />} />
-            {/* <Route path="/partners" element={<Partners />} />
-            <Route path="/partnerslistview" element={<PartnersListView />} /> */}
 
             <Route
               path="/partners/create-partner"
@@ -69,8 +67,8 @@ function App() {
 
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
-            {/* <Route path="/partners" element={<Partners />} /> */}
-            {/* <Route path="/partnerslistview" element={<PartnersListView />} /> */}
+            <Route path="/partners/:id" element={<AmbassadorProfile />} />
+
             <Route path="/partner-preview" element={<AmbassadorProfile />} />
             <Route path="/create-partner" element={<CreatePartner />} />
 
