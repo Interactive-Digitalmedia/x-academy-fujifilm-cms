@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { Search, Calendar, Filter, Plus, Trash2 } from "lucide-react";
 import Newsletter from "@/components/others/Newsletter";
+import AboutUs from "@/components/others/Aboutus";
 
 interface Question {
   id: string;
@@ -276,18 +277,6 @@ const Others: React.FunctionComponent<OthersProps> = () => {
     </div>
   );
 
-  const renderAboutUsContent = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-800">About Us</h1>
-        <Button color="primary" startContent={<span>✏️</span>}>
-          Edit Details
-        </Button>
-      </div>
-      <div className="text-gray-500">About Us content coming soon...</div>
-    </div>
-  );
-
   return (
     <div className="bg-white h-max rounded-xl p-4">
       {/* Search and Filter Header */}
@@ -342,7 +331,7 @@ const Others: React.FunctionComponent<OthersProps> = () => {
         </Tab>
 
         <Tab key="about" title="About Us">
-          {renderAboutUsContent()}
+          {<AboutUs />}
         </Tab>
       </Tabs>
     </div>

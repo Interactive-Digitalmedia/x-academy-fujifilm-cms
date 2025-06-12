@@ -1,31 +1,26 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { badgeColors } from "@/assets/badgeColors";
-import { demoActivities } from "@/assets/demoActivities";
 import GalleryMasonryGrid from "@/components/partners/partnerpreview/GalleryMasonryGrid";
 import GearDetailsGrid from "@/components/partners/partnerpreview/GearDetailsGrid";
-import { ambassadorGear } from "@/assets/ambassadorGear";
 import { Download } from "lucide-react";
+import { PartnersList } from "@/assets/PartnersList";
 
 const AmbassadorProfile = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const ambassador = {
-    name: "John Doe",
-    image: "/images/ambassadors/sampleAmbassador.jpg",
-    bio: "Award-winning photographer known for urban landscapes and portraits.",
-    tags: ["Street", "Portrait", "Documentary"],
-    about: {
-      who: "John Doe is a self-taught photographer. He has worked across Asia and Europe.",
-      about:
-        "John Doe has a deep love for capturing candid human emotions and vibrant city life.\nHe has collaborated with brands like Fujifilm and Adobe.",
-    },
-    gallery: [
-      "/images/gallery/sample1.jpg",
-      "/images/gallery/sample2.jpg",
-      "/images/gallery/sample3.jpg",
-    ],
+  const partner = PartnersList.find(
+    (p) => p.name.toLowerCase().replace(/\s+/g, "-") === id
+  );
+
+  const ambassador = partner && {
+    ...partner,
+    bio: partner.bio,
+    tags: partner.tags,
+    about: partner.about,
+    gallery: partner.gallery,
+    gear: partner.gear,
   };
 
   const tabs = ["About", "Gallery", "Gear Details"];
@@ -37,7 +32,7 @@ const AmbassadorProfile = () => {
         <p className="text-gray-500">Ambassador not found.</p>
         <button
           className="mt-4 rounded bg-black px-4 py-2 text-white"
-          onClick={() => navigate("/ambassadors")}
+          onClick={() => navigate("/partners")}
         >
           Go Back
         </button>
@@ -54,13 +49,13 @@ const AmbassadorProfile = () => {
         <div className="-mt-10 flex items-end justify-between px-3 md:px-6">
           <div className="z-30 h-20 w-20 overflow-hidden rounded-full border-4 border-background md:h-28 md:w-28">
             <img
-              src={ambassador.image}
+              src={ambassador.imageUrl}
               alt={ambassador.name}
               className="h-full w-full object-cover"
             />
           </div>
 
-          <div className="flex justify-end -mr-6 ">
+          <div className="flex justify-end -mr-6">
             <button
               className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-gray-100"
               onClick={() => {
@@ -122,7 +117,11 @@ const AmbassadorProfile = () => {
       <div className="bg-white py-5 px-5 rounded-xl w-full mt-3 max-w-none mx-auto mb-6">
         {activeTab === "Gear Details" ? (
           <div className="bg-white rounded-xl p-4 w-full">
-            <GearDetailsGrid gear={ambassadorGear} />
+            {ambassador.gear && ambassador.gear.length > 0 ? (
+              <GearDetailsGrid gear={ambassador.gear} />
+            ) : (
+              <p className="text-gray-500">No gear details available.</p>
+            )}
           </div>
         ) : (
           <div className="bg-white rounded-xl p-4 w-full text-sm">

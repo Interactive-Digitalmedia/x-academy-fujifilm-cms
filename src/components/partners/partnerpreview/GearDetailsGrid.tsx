@@ -1,4 +1,4 @@
-// components/GearDetailsGrid.tsx
+
 import React from "react";
 import { ExternalLink } from "lucide-react";
 

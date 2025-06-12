@@ -1,22 +1,22 @@
 export const ambassadorGear = [
   {
     name: "Fujifilm GFX100S II Large Format Mirrorless Camera – Black",
-    image: "/images/gear/GearCamera.jpg", // no import, just use the public path
+    image: "public/banner/GearCamera.png",
     link: "https://fujifilm.in/products/gfx100s-ii/",
   },
   {
     name: "Fujifilm X100VI 40.2 MP Mirrorless Camera With Fixed 23mmF2 Lens",
-    image: "/images/gear/GearCamera.jpg",
+    image: "public/banner/GearCamera.png",
     link: "https://fujifilm.in/products/x100vi/",
   },
   {
     name: "XF500mmF5.6 R LM OIS WR – Silver",
-    image: "/images/gear/GearCamera.jpg",
+    image: "public/banner/GearCamera.png",
     link: "https://fujifilm.in/products/xf500mm/",
   },
   {
     name: "XF16mmF2.8 R WR – Black",
-    image: "/images/gear/GearCamera.jpg",
+    image: "public/banner/GearCamera.png",
     link: "https://fujifilm.in/products/xf16mm/",
   },
 ];
