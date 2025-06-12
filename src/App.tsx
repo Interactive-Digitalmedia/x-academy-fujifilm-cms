@@ -40,6 +40,7 @@ import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
 import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
+import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
   return (
@@ -69,7 +70,8 @@ function App() {
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:id" element={<AmbassadorProfile />} />
 
-            <Route path="/partner-preview" element={<AmbassadorProfile />} />
+            <Route path="/partners/:id/edit" element={<PartnersEditPage />} />
+
             <Route path="/create-partner" element={<CreatePartner />} />
 
             <Route path="/events" element={<EventView />} />
