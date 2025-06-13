@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import useGlobalStore from "@/state/GlobalState";
 import {
   LayoutDashboard,
   Calendar,
@@ -13,6 +14,7 @@ import Logo from "/images/logo/logo.webp";
 import { Divider } from "@nextui-org/react";
 
 export default function Sidebar() {
+  const { user } = useGlobalStore();
   const location = useLocation();
 
   const navItems = [
@@ -75,7 +77,7 @@ export default function Sidebar() {
             : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
         }`}
       >
-        Super Admin
+        {user?.userRole}
       </Link>
     </aside>
   );

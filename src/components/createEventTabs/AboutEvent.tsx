@@ -1,68 +1,127 @@
-// AboutEvent.tsx
-import { Textarea } from '@nextui-org/react'
+import { Switch } from "@nextui-org/react";
+import StaticEditor from "../ui/basiceditor";
+import { Camera, Utensils } from "lucide-react";
 
 export default function AboutEvent({ data, setData }: any) {
   const about = data.about || {
-    whyShouldYouAttend: '',
+    whyShouldYouAttend: "",
     whatsIncluded: [],
-    about: ''
-  }
+    about: "",
+  };
 
   const handleChange = (field: string, value: string | string[]) => {
-    const updated = { ...about, [field]: value }
-    setData({ ...data, about: updated })
-  }
+    const updated = { ...about, [field]: value };
+    setData({ ...data, about: updated });
+  };
+
+  const whatsIncludedOptions = [
+    {
+      label: "Lunch + Dinner",
+      value: "food",
+      icon: <Utensils className="text-green-600" />,
+    },
+    {
+      label: "Camera Provided",
+      value: "camera1",
+      icon: <Camera className="text-purple-600" />,
+    },
+    {
+      label: "Camera Provided",
+      value: "camera2",
+      icon: <Camera className="text-purple-600" />,
+    },
+    {
+      label: "Camera Provided",
+      value: "camera3",
+      icon: <Camera className="text-purple-600" />,
+    },
+  ];
 
   return (
     <div className="space-y-6">
+      {/* About the Event */}
       <div>
-        <label className="block text-sm font-medium mb-1">About the Event</label>
-        <Textarea
-          placeholder="Describe what attendees will learn, experience, and take away."
-          minRows={4}
-          value={about.about}
-          onChange={(e) => handleChange('about', e.target.value)}
-        />
+        <label className="block text-sm font-medium mb-1">
+          About the Event
+        </label>
+        {/* Optional: Replace StaticEditor with Textarea if needed */}
+        <StaticEditor />
         <p className="mt-1 text-xs text-gray-500">
-          Note: Write a compelling description of your event. Include what attendees can expect to learn or experience.
+          Note: Write a compelling description of your event. Include what
+          attendees can expect to learn or experience.
         </p>
       </div>
 
+      {/* What's Included */}
       <div>
-        <label className="block text-sm font-medium mb-1">What's Included?</label>
-        <Textarea
-  placeholder="e.g. Live demo, Expert Q&A, Free goodies"
-  minRows={3}
-  value={about.whatsIncluded.join(', ')}  // ✅ Convert array to string
-  onChange={(e) =>
-    handleChange(
-      'whatsIncluded',
-      e.target.value.split(',').map((s) => s.trim()) // ✅ Convert string back to array
-    )
-  }
-/>
-
+        <label className="block text-sm font-medium mb-1">
+          What's Included?
+        </label>
+        <div className="space-y-3">
+          {whatsIncludedOptions.map((item, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center gap-">
+                {item.icon}
+                <span className="text-sm font-medium">{item.label}</span>
+              </div>
+              <Switch
+                size="sm"
+                isSelected={about.whatsIncluded.includes(item.value)}
+                onValueChange={(isSelected) => {
+                  const updatedList = isSelected
+                    ? [...about.whatsIncluded, item.value]
+                    : about.whatsIncluded.filter(
+                        (val: string) => val !== item.value
+                      );
+                  handleChange("whatsIncluded", updatedList);
+                }}
+                classNames={{
+                  base: [
+                    "w-[36px] h-[20px]",
+                    "rounded-full",
+                    "bg-gray-300",
+                    "data-[selected=true]:bg-blue-600",
+                    "transition-colors",
+                  ].join(" "),
+                  thumb: [
+                    "w-4 h-4",
+                    "rounded-full",
+                    "bg-white",
+                    "shadow-md",
+                    "transition-transform",
+                    "translate-x-0",
+                    "data-[selected=true]:translate-x-[16px]",
+                  ].join(" "),
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Why Should You Attend */}
       <div>
-        <label className="block text-sm font-medium mb-1">Why Should You Attend?</label>
-        <Textarea
-          placeholder="Explain the value and benefits of this event."
-          minRows={3}
-          value={about.whyShouldYouAttend}
-          onChange={(e) => handleChange('whyShouldYouAttend', e.target.value)}
-        />
+        <label className="block text-sm font-medium mb-1">
+          Why Should You Attend?
+        </label>
+        <StaticEditor />
       </div>
 
+      {/* Tips Section */}
       <div className="pt-4">
-        <p className="text-sm font-semibold text-gray-600 mb-2">Tips for a great description:</p>
+        <p className="text-sm font-semibold text-gray-600 mb-2">
+          Tips for a great description:
+        </p>
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1">
           <li>Be clear about what participants will gain from attending</li>
           <li>Highlight key speakers or special features</li>
           <li>Mention any prerequisites or who the event is ideal for</li>
-          <li>Include information about refreshments, materials, or other amenities</li>
+          <li>
+            Include information about refreshments, materials, or other
+            amenities
+          </li>
         </ul>
       </div>
     </div>
-  )
+  );
 }
