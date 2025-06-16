@@ -55,6 +55,32 @@ const EventView: React.FC = () => {
     setFilteredResults(filtered);
   }, [activeType, searchText, selectedRange, activeFilters]);
 
+  const demoActivities = filteredResults.map((e) => ({
+    id: e.id.toString(),
+    title: e.name,
+    type: e.type,
+    status: e.status.toLowerCase(),
+    bannerImage: e.img,
+    location: e.location,
+    startDateTime: `${e.date.split("-").reverse().join("-")}T10:00:00`,
+    ambassadorName: e.organizer,
+    time: "10:00 AM",
+    duration: 60,
+    language: "English",
+    about: {
+      whyShouldYouAttend: "Lorem ipsum dolor sit amet.",
+      whatsIncluded: ["Session 1", "Session 2"],
+      about: "Lorem ipsum placeholder content.",
+    },
+    gallery: [],
+    ambassador: [],
+    FAQ: [],
+    seatCount: 100,
+    pendingSeats: 20,
+    isFeatured: false,
+    tags: [],
+  }));
+
   return (
     <div
       style={{
@@ -69,7 +95,7 @@ const EventView: React.FC = () => {
       }}
     >
       <div className="w-full">
-        {/* Search + controls */}
+        {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
           <div className="relative w-[680px] mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -83,7 +109,7 @@ const EventView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* view toggle */}
+            {/* View toggle */}
             <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
               <Button
                 variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -103,7 +129,7 @@ const EventView: React.FC = () => {
               </Button>
             </div>
 
-            {/* calendar */}
+            {/* Calendar */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -129,7 +155,7 @@ const EventView: React.FC = () => {
               )}
             </div>
 
-            {/* filters */}
+            {/* Filters */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -181,7 +207,7 @@ const EventView: React.FC = () => {
           </div>
         </div>
 
-        {/* quick type buttons */}
+        {/* Quick type filter */}
         <div className="mb-6 flex flex-wrap gap-3">
           {types.map((type) => (
             <button
@@ -208,37 +234,11 @@ const EventView: React.FC = () => {
           ))}
         </div>
 
-        {/* grid or list */}
+        {/* Grid or Table */}
         {viewMode === "grid" ? (
-          <ActivityGrid
-            demoActivities={filteredResults.map((e) => ({
-              id: e.id,
-              title: e.name,
-              type: e.type,
-              status: e.status.toLowerCase(),
-              bannerImage: e.img,
-              location: e.location,
-              startDateTime: "2025-05-26T10:00:00",
-              ambassadorName: e.organizer,
-              time: "10:00 AM",
-              duration: 60,
-              language: "English",
-              about: {
-                whyShouldYouAttend: "Lorem ipsum dolor sit amet.",
-                whatsIncluded: ["Session 1", "Session 2"],
-                about: "Lorem ipsum placeholder content.",
-              },
-              gallery: [],
-              ambassador: [],
-              FAQ: [],
-              seatCount: 100,
-              pendingSeats: 20,
-              isFeatured: false,
-              tags: [],
-            }))}
-          />
+          <ActivityGrid demoActivities={demoActivities} />
         ) : (
-          <EventTable filteredEvents={filteredResults} />
+          <EventTable demoActivities={demoActivities} />
         )}
       </div>
     </div>
