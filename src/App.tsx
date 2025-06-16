@@ -15,6 +15,7 @@ import ResetPassword from "./pages/Auth/ResetPassword";
 import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
+import CommunityDetails from "./pages/Community/CommunityDetails";
 
 import Analytics from "./pages/Analytics/Analytics";
 
@@ -30,6 +31,7 @@ import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
 
 import Community from "./pages/Community/Community";
+
 import Profile from "./pages/Profile/Profile";
 import CreateBlog from "./pages/Blogs/CreateBlog";
 
@@ -91,6 +93,8 @@ function App() {
             <Route path="/blogs/createblogs" element={<CreateBlog />} />
             <Route path="/blogs/:blogSlug" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
+            <Route path="/community/:id" element={<CommunityDetails />} />
+
             <Route path="/others" element={<Others />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
