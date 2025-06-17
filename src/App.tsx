@@ -16,7 +16,6 @@ import NotGoogleUser from "./pages/Auth/NotGoogleUser";
 import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 import CommunityDetails from "./pages/Community/CommunityDetails";
-
 import Analytics from "./pages/Analytics/Analytics";
 
 // import Partners from "./components/partners/Partners";
@@ -24,8 +23,8 @@ import Analytics from "./pages/Analytics/Analytics";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
-
 import EventView from "./pages/Events/EventView";
+import EventDetails from "./pages/Events/EventDetails";
 import Blogs from "./pages/Blogs/Blogs";
 import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
@@ -58,8 +57,8 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route path="/events/create-events" element={<CreateEvent />} />
-
             <Route path="/events" element={<EventView />} />
+            <Route path="/events/:id" element={<EventDetails />} />
 
             <Route
               path="/partners/create-partner"

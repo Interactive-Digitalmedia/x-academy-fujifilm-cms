@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EventTable } from "@/components/events/EventTable";
 import ActivityGrid from "@/components/events/ActivityGrid";
 import { dummyEvents } from "@/assets/dummyEvents";
-import { Calendar as CustomCalendar } from "@/components/ui/calendar";
+import { PlusCircle } from "lucide-react";
+
 import { DateRange } from "react-day-picker";
 import FilterCard from "@/components/ui/filtercard";
 
-const EventView: React.FC = () => {
+const GridView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchText, setSearchText] = useState("");
-  const [showCalendar, setShowCalendar] = useState(false);
+
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
   const [filteredResults, setFilteredResults] = useState(dummyEvents);
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
@@ -21,7 +22,7 @@ const EventView: React.FC = () => {
   );
   const [showFilters, setShowFilters] = useState(false);
 
-  const types = ["All", "Event", "Workshop", "Exhibition"];
+  const types = ["All", "Event", "Workshop", "Exhibition", "Drafts"];
 
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
@@ -95,9 +96,20 @@ const EventView: React.FC = () => {
       }}
     >
       <div className="w-full">
+        {/* Heading + Add New */}
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-bold">Events</h2>
+          <Button
+            className="bg-[#0099FF] hover:bg-[#008ae6] text-white font-medium px-3 py-2 rounded-lg flex items-center gap-2 text-sm"
+            onClick={() => console.log("Create New clicked")}
+          >
+            <PlusCircle className="w-4 h-4 text-white" />
+            Create New
+          </Button>
+        </div>
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w-[680px] mr-4">
+          <div className="relative w-[840px] mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -110,50 +122,6 @@ const EventView: React.FC = () => {
 
           <div className="flex items-center gap-3">
             {/* View toggle */}
-            <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
-              <Button
-                variant={viewMode === "grid" ? "secondary" : "ghost"}
-                size="sm"
-                className="p-2 h-8 w-8"
-                onClick={() => setViewMode("grid")}
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "secondary" : "ghost"}
-                size="sm"
-                className="p-2 h-8 w-8"
-                onClick={() => setViewMode("list")}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Calendar */}
-            <div className="relative">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-[41px] px-3 gap-2"
-                onClick={() => setShowCalendar((prev) => !prev)}
-              >
-                <Calendar className="h-4 w-4" />
-                <span className="text-sm">Dates</span>
-              </Button>
-
-              {showCalendar && (
-                <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-200 shadow-lg rounded-md p-2">
-                  <CustomCalendar
-                    mode="range"
-                    selected={selectedRange}
-                    onSelect={(range) => {
-                      setSelectedRange(range);
-                      if (range?.from && range?.to) setShowCalendar(false);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
 
             {/* Filters */}
             <div className="relative">
@@ -245,4 +213,4 @@ const EventView: React.FC = () => {
   );
 };
 
-export default EventView;
+export default GridView;

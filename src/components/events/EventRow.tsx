@@ -23,7 +23,9 @@ export const EventRow: React.FC<EventRowProps> = ({ event, index }) => {
 
   return (
     <TableRow
-      onClick={() => navigate("/notfound")}
+      onClick={() =>
+        navigate(`/events/${event.id}`, { state: { activity: event } })
+      }
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >
