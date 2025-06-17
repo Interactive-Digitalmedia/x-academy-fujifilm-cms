@@ -27,18 +27,14 @@ const initialEventData = {
   endDateTime: "",
   location: "",
   language: "",
-  ambassadors: [
-    {
-      name: "John Doe",
-      gallery: [
-        "/banner/blog1.png",
-        "/banner/blog2.png",
-        "/banner/event1.png",
-        "/banner/blog4.png",
-        "/banner/blog5.png",
-        "/banner/blog6.png",
-      ],
-    },
+  ambassadors: [], // <-- only store names like "Ritika", "Tarun Khiwal"
+  ambassadorGallery: [
+    "/banner/blog1.png",
+    "/banner/blog2.png",
+    "/banner/event1.png",
+    "/banner/blog4.png",
+    "/banner/blog5.png",
+    "/banner/blog6.png",
   ],
   pricing: "",
 };
@@ -58,7 +54,7 @@ const EventConcluded: React.FC = () => {
       case "Promotional Images":
         return (
           <div className="px-1 pt-2">
-            <PromotionalImages images={data.ambassadors?.[0]?.gallery || []} />
+            <PromotionalImages images={data.ambassadorGallery || []} />
           </div>
         );
       case "Post-Event Images":

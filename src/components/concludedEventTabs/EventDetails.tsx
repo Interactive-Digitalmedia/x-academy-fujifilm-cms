@@ -213,8 +213,10 @@ export default function EventDetails({ data, setData }: any) {
             onClick={() => setHostDropdownOpen(!hostDropdownOpen)}
             className="w-full border rounded px-3 py-2 cursor-pointer bg-white"
           >
-            {data.ambassadors && data.ambassadors.length > 0
-              ? data.ambassadors.join(", ")
+            {Array.isArray(data.ambassadors) && data.ambassadors.length > 0
+              ? data.ambassadors
+                  .map((a: any) => (typeof a === "string" ? a : a?.name || ""))
+                  .join(", ")
               : "Select hosts"}
           </div>
 
