@@ -347,10 +347,10 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           <div className="flex items-center gap-3">
             {/* View Toggle Icons */}
             <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
-              <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+              <Button variant="secondary" size="sm" className="p-2 h-8 w-8">
                 <Grid3X3 className="h-4 w-4" />
               </Button>
-              <Button variant="secondary" size="sm" className="p-2 h-8 w-8">
+              <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
                 <List className="h-4 w-4" />
               </Button>
             </div>
@@ -434,13 +434,6 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
             ))}
           </div>
         )}
-
-        {/* Results count */}
-        <div className="mb-4">
-          <span className="text-sm text-gray-600">
-            Showing {filteredBlogs.length} of {dummyBlogs.length} blogs
-          </span>
-        </div>
 
         {/* BlogsGrid Component */}
         <BlogsGrid blogs={filteredBlogs} handleBlogClick={handleBlogClick} />
