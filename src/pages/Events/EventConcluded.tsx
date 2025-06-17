@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import AboutEvent from "@/concludedEventTabs/AboutEvent";
-import EventDetails from "@/components/createEventTabs/EventDetails";
+import MainCard from "@/components/concludedEventTabs/MainCard";
+import EventDetails from "@/components/concludedEventTabs/EventDetails";
+import AboutEvent from "@/components/concludedEventTabs/AboutEvent";
+import EventSchedule from "@/components/concludedEventTabs/EventSchedule";
+import PromotionalImages from "@/components/concludedEventTabs/PromotionalImages";
+import PostEventImages from "@/components/concludedEventTabs/PostEventImages";
+import FAQs from "@/components/concludedEventTabs/FAQs";
+import AdminControls from "@/components/concludedEventTabs/AdminControls";
 
 const TABS = [
   "Event Details",
@@ -21,7 +27,19 @@ const initialEventData = {
   endDateTime: "",
   location: "",
   language: "",
-  ambassadors: [],
+  ambassadors: [
+    {
+      name: "John Doe",
+      gallery: [
+        "/banner/blog1.png",
+        "/banner/blog2.png",
+        "/banner/event1.png",
+        "/banner/blog4.png",
+        "/banner/blog5.png",
+        "/banner/blog6.png",
+      ],
+    },
+  ],
   pricing: "",
 };
 
@@ -30,41 +48,25 @@ const EventConcluded: React.FC = () => {
   const [data, setData] = useState(initialEventData);
 
   const renderTabContent = () => {
-    console.log("Active tab:", activeTab);
     switch (activeTab) {
       case "Event Details":
         return <EventDetails data={data} setData={setData} />;
       case "About Event":
-        console.log("Rendering AboutEvent");
         return <AboutEvent />;
       case "Event Schedule":
-        return (
-          <div className="text-sm text-gray-700">
-            This is Event Schedule content.
-          </div>
-        );
+        return <EventSchedule />;
       case "Promotional Images":
         return (
-          <div className="text-sm text-gray-700">
-            This is Promotional Images content.
+          <div className="px-1 pt-2">
+            <PromotionalImages images={data.ambassadors?.[0]?.gallery || []} />
           </div>
         );
       case "Post-Event Images":
-        return (
-          <div className="text-sm text-gray-700">
-            This is Post-Event Images content.
-          </div>
-        );
+        return <PostEventImages data={data} setData={setData} />;
       case "FAQs":
-        return (
-          <div className="text-sm text-gray-700">This is FAQs content.</div>
-        );
+        return <FAQs />;
       case "Admin Controls":
-        return (
-          <div className="text-sm text-gray-700">
-            This is Admin Controls content.
-          </div>
-        );
+        return <AdminControls data={data} setData={setData} />;
       default:
         return <div className="text-sm text-gray-600">Coming soon...</div>;
     }
@@ -73,11 +75,7 @@ const EventConcluded: React.FC = () => {
   return (
     <div className="w-full">
       {/* Top Placeholder Card */}
-      <div className="w-full h-[322px] bg-white rounded-xl shadow-md p-4 mb-6">
-        <div className="text-gray-500 text-center text-sm h-full flex items-center justify-center">
-          Placeholder Card (322px height)
-        </div>
-      </div>
+      <MainCard />
 
       {/* Tabs + Content Block */}
       <div className="w-full bg-white rounded-xl shadow-md p-4">

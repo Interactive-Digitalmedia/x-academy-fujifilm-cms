@@ -10,7 +10,7 @@ const AboutEvent: React.FC = () => {
         </label>
         <textarea
           rows={3}
-          className="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
+          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
           defaultValue="Workshop"
         />
         <p className="text-xs text-gray-500 mt-1">
@@ -26,7 +26,7 @@ const AboutEvent: React.FC = () => {
         </label>
         <textarea
           rows={3}
-          className="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
+          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
           defaultValue="Workshop"
         />
       </div>
@@ -38,7 +38,7 @@ const AboutEvent: React.FC = () => {
         </label>
         <textarea
           rows={3}
-          className="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring focus:border-blue-300"
+          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
           defaultValue="Workshop"
         />
       </div>
