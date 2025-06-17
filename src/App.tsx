@@ -25,6 +25,7 @@ import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
 import EventView from "./pages/Events/EventView";
 import EventDetails from "./pages/Events/EventDetails";
+import EventConcluded from "./pages/Events/EventConcluded";
 import Blogs from "./pages/Blogs/Blogs";
 import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
@@ -66,7 +67,7 @@ function App() {
             />
 
             <Route path="/create-events" element={<CreateEvent />} />
-
+            <Route path="/concluded-event" element={<EventConcluded />} />
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:id" element={<AmbassadorProfile />} />
