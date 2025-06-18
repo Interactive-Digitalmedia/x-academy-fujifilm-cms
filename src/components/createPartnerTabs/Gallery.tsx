@@ -77,8 +77,8 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold text-gray-800 mb-4">Gallery</h2>
+    <div className="space-y-3 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Gallery</h2>
 
       <div
         className={`relative border-2 border-dashed rounded-lg p-10 text-center transition-colors h-[172px] ${

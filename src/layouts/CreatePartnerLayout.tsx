@@ -61,7 +61,7 @@ export default function CreatePartnerLayout({ data, setData }: any) {
                 <span
                   className={`flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full border ${
                     currentTab === index
-                      ? "bg-blue-600 text-white border-blue-600"
+                      ? " text-white bg-[#1098F7]"
                       : "border-gray-300 text-gray-600"
                   }`}
                 >
@@ -71,7 +71,7 @@ export default function CreatePartnerLayout({ data, setData }: any) {
               </button>
 
               {index < tabs.length - 1 && (
-                <div className="w-8 h-px bg-gray-300"></div>
+                <div className="w-[110px] h-px bg-gray-300"></div>
               )}
             </div>
           ))}
@@ -98,7 +98,7 @@ export default function CreatePartnerLayout({ data, setData }: any) {
 
           <button
             onClick={handleNextStepOrSubmit}
-            className="bg-[#1098F7] text-white hover:bg-blue-600 px-6 py-2 rounded-lg font-medium"
+            className="bg-[#1098F7] text-white  px-6 py-2 rounded-lg font-medium"
           >
             {currentTab === tabs.length - 1 ? "Submit" : "Next Step"}
           </button>

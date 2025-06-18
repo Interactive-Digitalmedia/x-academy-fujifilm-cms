@@ -64,15 +64,18 @@ export default function PublicProfile({ data, setData }: any) {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold text-gray-800 mb-4">Public Profile</h2>
+    <div className="space-y-3 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Public Profile</h2>
 
       {/* Name & Title */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium mb-1 block">Name</label>
-          <Input
-            variant="bordered"
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Name
+          </label>
+          <input
+            type="text"
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             placeholder="John Doe"
             value={data.name || ""}
             onChange={(e) => setData({ ...data, name: e.target.value })}
@@ -80,12 +83,17 @@ export default function PublicProfile({ data, setData }: any) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-1 block">Title</label>
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Title
+          </label>
           <Select
-            variant="bordered"
             placeholder="Select title"
             selectedKeys={data.title ? [data.title] : []}
             onChange={(e) => setData({ ...data, title: e.target.value })}
+            classNames={{
+              trigger:
+                "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
+            }}
           >
             {titles.map((title) => (
               <SelectItem key={title} value={title}>
@@ -98,8 +106,10 @@ export default function PublicProfile({ data, setData }: any) {
 
       {/* Tags */}
       <div>
-        <label className="text-sm font-medium mb-2 block">Tags</label>
-        <div className="flex gap-2 flex-wrap p-2 rounded-md bg-gray-100 mb-3">
+        <label className="block text-sm font-medium text-[#818181] mb-2">
+          Tags
+        </label>
+        <div className="flex gap-2 flex-wrap px-2 py-1 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
           {selectedTags.map((tag) => {
             const tagColor =
               tagsList.find((t) => t.name === tag)?.color || "bg-gray-400";
@@ -138,9 +148,11 @@ export default function PublicProfile({ data, setData }: any) {
 
       {/* Bio */}
       <div>
-        <label className="text-sm font-medium mb-1 block">Bio</label>
-        <Textarea
-          variant="bordered"
+        <label className="block text-sm font-medium text-[#818181] mb-1">
+          Bio
+        </label>
+        <textarea
+          className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
           placeholder="Write a short bio"
           value={data.bio || ""}
           onChange={(e) => setData({ ...data, bio: e.target.value })}
@@ -150,9 +162,12 @@ export default function PublicProfile({ data, setData }: any) {
       {/* Location & Date */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium mb-1 block">Location</label>
-          <Input
-            variant="bordered"
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Location
+          </label>
+          <input
+            type="text"
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             placeholder="Mumbai"
             value={data.location || ""}
             onChange={(e) => setData({ ...data, location: e.target.value })}
@@ -160,10 +175,12 @@ export default function PublicProfile({ data, setData }: any) {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-1 block">Date Joined</label>
-          <Input
-            variant="bordered"
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Date Joined
+          </label>
+          <input
             type="date"
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             value={data.dateJoined || ""}
             onChange={(e) => setData({ ...data, dateJoined: e.target.value })}
           />
@@ -178,12 +195,14 @@ export default function PublicProfile({ data, setData }: any) {
             Profile Picture
           </label>
           <div className="flex gap-2">
-            <Input
-              variant="bordered"
+            <input
+              type="text"
               placeholder="Image URL"
+              className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
               value={data.profilePic || ""}
               onChange={(e) => setData({ ...data, profilePic: e.target.value })}
             />
+
             <Button
               variant="bordered"
               className="border-[#1098F7] text-[#1098F7] bg-white hover:bg-[#e6f4fe]"
@@ -223,12 +242,14 @@ export default function PublicProfile({ data, setData }: any) {
         <div>
           <label className="text-sm font-medium mb-1 block">Cover Image</label>
           <div className="flex gap-2">
-            <Input
-              variant="bordered"
+            <input
+              type="text"
               placeholder="Image URL"
+              className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
               value={data.coverImage || ""}
               onChange={(e) => setData({ ...data, coverImage: e.target.value })}
             />
+
             <Button
               variant="bordered"
               className="border-[#1098F7] text-[#1098F7] bg-white hover:bg-[#e6f4fe]"
