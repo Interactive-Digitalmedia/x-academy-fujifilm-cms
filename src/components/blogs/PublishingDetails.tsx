@@ -86,92 +86,94 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-bold text-gray-800 mb-8">
-        Publishing Details
-      </h2>
+    <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Public Profile</h2>
 
       {/* Blog Title */}
       <div className="space-y-2">
-        <Input
-          type="text"
-          value={blogData.title}
-          onValueChange={(value) => updateBlogData("title", value)}
-          label="Blog Title"
-          labelPlacement="outside"
-          placeholder="Enter blog title"
-          classNames={{
-            label: "text-sm font-medium text-gray-600",
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800",
-          }}
-        />
+        <div>
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Blog Title
+          </label>
+          <input
+            type="text"
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            placeholder="Enter blog title"
+            value={blogData.title}
+            onChange={(e) => updateBlogData("title", e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Author and Publishing Date Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Select
-          selectedKeys={blogData.author ? [blogData.author] : []}
-          onSelectionChange={(keys) =>
-            updateBlogData("author", Array.from(keys)[0] as string)
-          }
-          label="Original Author"
-          labelPlacement="outside"
-          placeholder="Select author's name"
-          classNames={{
-            label: "text-sm font-medium text-gray-600",
-            trigger: "bg-gray-50 border border-gray-200",
-            value: "text-gray-500",
-          }}
-        >
-          {authors.map((author) => (
-            <SelectItem key={author.key} value={author.key}>
-              {author.label}
-            </SelectItem>
-          ))}
-        </Select>
+        <div>
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Original Author
+          </label>
+          <select
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            value={blogData.author}
+            onChange={(e) => updateBlogData("author", e.target.value)}
+          >
+            <option value="" disabled>
+              Select author's name
+            </option>
+            <option value="john-doe">John Doe</option>
+            <option value="jane-smith">Jane Smith</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
 
-        <DatePicker
-          value={blogData.publishingDate}
-          onChange={(date) => updateBlogData("publishingDate", date)}
-          label="Publishing Date"
-          labelPlacement="outside"
-          classNames={{
-            label: "text-sm font-medium text-gray-600",
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-500",
-          }}
-        />
+        <div>
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Publishing Date
+          </label>
+          <input
+            type="date"
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            value={blogData.publishingDate}
+            onChange={(e) => updateBlogData("publishingDate", e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Blog Tags */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-600">
+      <div>
+        <label className="block text-sm font-medium text-[#818181] mb-2">
           Blog Tags
         </label>
 
         {/* Selected Tags Box */}
-        <div className="min-h-[60px] p-4 bg-gray-50 border border-gray-200 rounded-lg">
-          {blogData.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {blogData.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className={`inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium ${getTagColorClasses(tag.color)}`}
+        <div className="flex gap-2 flex-wrap px-2 py-1 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
+          {blogData.tags.map((tag, index) => {
+            const tagColorMap: Record<string, string> = {
+              purple: "bg-purple-600",
+              orange: "bg-amber-500",
+              blue: "bg-blue-600",
+              green: "bg-emerald-700",
+              pink: "bg-pink-400",
+              indigo: "bg-indigo-500",
+              gray: "bg-gray-400",
+            };
+            const tagColor = tagColorMap[tag.color] || "bg-gray-400";
+
+            return (
+              <span
+                key={index}
+                className={`flex items-center gap-1 text-white text-sm px-3 py-1 rounded-md ${tagColor}`}
+              >
+                {tag.name}
+                <button
+                  type="button"
+                  onClick={() => removeTag(index)}
+                  className="ml-1 text-white hover:text-red-200"
                 >
-                  {tag.name}
-                  <button
-                    onClick={() => removeTag(index)}
-                    className="ml-2 text-white hover:text-gray-200 focus:outline-none"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          ) : (
-            <div className="text-gray-400 text-sm">Select tags from below</div>
-          )}
+                  ×
+                </button>
+              </span>
+            );
+          })}
         </div>
 
         {/* Available Tags */}

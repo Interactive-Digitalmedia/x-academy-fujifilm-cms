@@ -102,11 +102,11 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">CTA Button</h2>
+    <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">CTA Button</h2>
 
       {/* Enable CTA Toggle */}
-      <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
         <Switch
           isSelected={blogData.cta.isEnabled}
           onValueChange={(value) => updateCTAField("isEnabled", value)}
@@ -115,46 +115,40 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
         <label className="text-sm font-medium text-gray-600">
           Enable CTA Button
         </label>
-      </div>
+      </div> */}
 
       {blogData.cta.isEnabled && (
         <>
           {/* Button Link */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-600">
+          <div>
+            <label className="block text-sm font-medium text-[#818181] mb-1">
               Button Link
             </label>
-            <Input
+            <input
               type="url"
-              value={blogData.cta.link}
-              onValueChange={(value) => updateCTAField("link", value)}
               placeholder="XYZ"
-              classNames={{
-                inputWrapper: "bg-gray-50 border border-gray-200",
-                input: "text-gray-800",
-              }}
+              value={blogData.cta.link}
+              onChange={(e) => updateCTAField("link", e.target.value)}
+              className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             />
           </div>
 
           {/* Button Text */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-[#818181] mb-1">
               Button Text
             </label>
             <div className="flex gap-2">
-              <Input
+              <input
                 type="text"
-                value={blogData.cta.text}
-                onValueChange={(value) => updateCTAField("text", value)}
                 placeholder="XYZ"
-                classNames={{
-                  inputWrapper: "bg-gray-50 border border-gray-200",
-                  input: "text-gray-800",
-                }}
+                value={blogData.cta.text}
+                onChange={(e) => updateCTAField("text", e.target.value)}
+                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
               />
               <Button
                 isIconOnly
-                variant="bordered"
+                variant="light"
                 onPress={() => setShowSettings(!showSettings)}
                 className="shrink-0"
               >
@@ -182,7 +176,7 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
           </div>
 
           {/* Button Settings */}
-          {showSettings && (
+          {/* {showSettings && (
             <div className="bg-gray-50 p-6 rounded-lg space-y-4">
               <h3 className="text-sm font-medium text-gray-700 mb-4">
                 Button Styling
@@ -250,10 +244,10 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
                 </Select>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Button Preview */}
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <label className="block text-sm font-medium text-gray-600">
               Button Preview
             </label>
@@ -271,7 +265,7 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
         </>
       )}
     </div>

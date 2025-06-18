@@ -28,7 +28,7 @@ const StepIndicator: React.FunctionComponent<StepIndicatorProps> = ({
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                 index === currentStep
-                  ? "bg-blue-500 text-white"
+                  ? "bg-[#1098F7] text-white"
                   : index < currentStep
                     ? // ? "bg-green-500 text-white"
                       "bg-gray-200 text-gray-600"

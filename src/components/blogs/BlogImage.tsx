@@ -104,33 +104,29 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-bold text-gray-800 mb-8">Blog Image</h2>
+    <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Blog Image</h2>
 
       {/* Hero Image Section */}
       <div className="space-y-4">
-        <label className="block text-sm font-medium text-gray-600">
+        <label className="block text-sm font-medium text-[#818181] mb-1">
           Hero Image
         </label>
-
         <div className="flex gap-4 items-end">
           <div className="flex-1">
-            <Input
+            <input
               type="text"
-              value={blogData.heroImage.url}
-              onValueChange={(value) => updateHeroImageField("url", value)}
+              className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
               placeholder="Image URL"
-              classNames={{
-                inputWrapper: "bg-gray-50 border border-gray-200",
-                input: "text-gray-800",
-              }}
+              value={blogData.heroImage.url}
+              onChange={(e) => updateHeroImageField("url", e.target.value)}
             />
           </div>
           <Button
             onPress={handleAddImage}
             color="primary"
             variant="bordered"
-            className="px-6"
+            className="px-6 text-[#1098F7] border-[#1098F7]"
           >
             Add Image
           </Button>
@@ -203,18 +199,15 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
 
       {/* Image Description */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-600">
+        <label className="block text-sm font-medium text-[#818181] mb-1">
           Image Description
         </label>
-        <Textarea
+        <textarea
           value={blogData.heroImage.description}
-          onValueChange={(value) => updateHeroImageField("description", value)}
+          onChange={(e) => updateHeroImageField("description", e.target.value)}
           placeholder="Event Name xyz"
-          minRows={3}
-          classNames={{
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800",
-          }}
+          rows={3}
+          className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
         />
         <p className="text-sm text-gray-500">
           Note: Write a compelling description of your event. Include what
