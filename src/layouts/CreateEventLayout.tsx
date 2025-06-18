@@ -73,7 +73,7 @@ export default function CreateEventLayout({ data, setData }: any) {
                 <span
                   className={`flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full border ${
                     currentTab === index
-                      ? "bg-blue-600 text-white border-blue-600"
+                      ? " text-white bg-[#1098F7]"
                       : "border-gray-300 text-gray-600"
                   }`}
                 >
@@ -96,9 +96,9 @@ export default function CreateEventLayout({ data, setData }: any) {
         </div>
 
         {/* Footer Buttons */}
-        <div className="mt-6 flex justify-between">
+        <div className="mt-2 flex justify-between">
           <button
-            className="px-5 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-600 disabled:opacity-50"
+            className=" px-5 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-600 disabled:opacity-50"
             disabled={currentTab === 0}
             onClick={() => setCurrentTab((prev) => prev - 1)}
           >
@@ -106,7 +106,7 @@ export default function CreateEventLayout({ data, setData }: any) {
           </button>
 
           <button
-            className="px-6 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white"
+            className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
             onClick={handleNextStepOrSubmit}
           >
             {currentTab === tabs.length - 1 ? "Submit" : "Next Step"}

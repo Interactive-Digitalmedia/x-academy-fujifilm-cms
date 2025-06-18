@@ -38,10 +38,11 @@ export default function AboutEvent({ data, setData }: any) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 mt-[-25px]">
+      <h2 className="text-base font-bold  mb-1">About Event</h2>
       {/* About the Event */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block text-sm text-[#818181] font-medium mb-1">
           About the Event
         </label>
         {/* Optional: Replace StaticEditor with Textarea if needed */}
@@ -53,8 +54,8 @@ export default function AboutEvent({ data, setData }: any) {
       </div>
 
       {/* What's Included */}
-      <div>
-        <label className="block text-sm font-medium mb-1">
+      <div className="w-full md:w-[420px]">
+        <label className="block text-[#818181] text-sm font-medium mb-2">
           What's Included?
         </label>
         <div className="space-y-3">
@@ -80,7 +81,7 @@ export default function AboutEvent({ data, setData }: any) {
                     "w-[36px] h-[20px]",
                     "rounded-full",
                     "bg-gray-300",
-                    "data-[selected=true]:bg-blue-600",
+                    "data-[selected=true]:bg-[#1098F7]",
                     "transition-colors",
                   ].join(" "),
                   thumb: [
@@ -101,7 +102,7 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* Why Should You Attend */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block text-sm text-[#818181] font-medium mb-1">
           Why Should You Attend?
         </label>
         <StaticEditor />
@@ -109,7 +110,7 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* Tips Section */}
       <div className="pt-4">
-        <p className="text-sm font-semibold text-gray-600 mb-2">
+        <p className="text-sm font-semibold text-[#818181]  mb-2">
           Tips for a great description:
         </p>
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1">
