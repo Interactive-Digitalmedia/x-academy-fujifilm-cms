@@ -17,9 +17,7 @@ import Home from "./pages/Home/Home";
 import CreateEvent from "./pages/Activity/CreateEvent";
 import CommunityDetails from "./pages/Community/CommunityDetails";
 import Analytics from "./pages/Analytics/Analytics";
-
-// import Partners from "./components/partners/Partners";
-// import PartnersListView from "./components/partners/PartnersListView";
+import EventAnalytics from "./pages/Analytics/EventAnalytics";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
@@ -82,6 +80,11 @@ function App() {
             <Route path="/submissions" element={<Submissions />} />
             <Route path="/submissions/:id" element={<SubmissionDetails />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route
+              path="/analytics/event-analytics"
+              element={<EventAnalytics />}
+            />
+
             <Route path="/support" element={<Support />} />
             <Route path="/support/:id" element={<SupportDetails />} />
             <Route
