@@ -42,6 +42,7 @@ import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
 import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
+import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
 import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
@@ -79,6 +80,7 @@ function App() {
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/submissions" element={<Submissions />} />
+            <Route path="/submissions/:id" element={<SubmissionDetails />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/support" element={<Support />} />
             <Route path="/support/:id" element={<SupportDetails />} />

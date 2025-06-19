@@ -33,7 +33,7 @@ export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >
-      <TableCell className="px-3 py-1">{index + 1}</TableCell> {/* 👈 Added */}
+      <TableCell className="px-3 py-1">{index + 1}</TableCell> 
       <TableCell className="px-3 py-1">{support.date}</TableCell>
       <TableCell className="px-3 py-1">{support.raisedBy}</TableCell>
       <TableCell className="px-3 py-1">{support.title}</TableCell>
