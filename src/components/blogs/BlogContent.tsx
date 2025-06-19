@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Textarea } from "@nextui-org/react";
-
+import StaticEditor from "../ui/basiceditor";
 interface BlogData {
   title: string;
   author: string;
@@ -49,10 +48,8 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
   // const estimatedReadingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words/minute
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
-        Blog Content
-      </h2>
+    <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Blog Content</h2>
 
       {/* Content Statistics */}
       {/* <div className="flex gap-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
@@ -69,23 +66,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       </div> */}
 
       {/* Content Textarea */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-600">
-          Blog Content
-        </label>
-        <Textarea
-          value={blogData.content}
-          onValueChange={handleContentChange}
-          placeholder="Start writing your blog content."
-          minRows={15}
-          maxRows={25}
-          classNames={{
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800 resize-none",
-          }}
-        />
-      </div>
-
+      <StaticEditor />
       {/* Content Guidelines */}
       {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="text-sm font-medium text-blue-800 mb-2">

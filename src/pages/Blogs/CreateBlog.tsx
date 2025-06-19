@@ -192,7 +192,7 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
               : handleNextStep
           }
           disabled={currentStep === steps.length - 1 ? false : false}
-          className="bg-blue-500 text-white hover:bg-blue-600 px-6 py-2 rounded-lg font-medium"
+          className="bg-[#1098F7] text-white hover:bg-[#1098F7] px-6 py-2 rounded-lg font-medium"
         >
           {currentStep === steps.length - 1 ? "Publish Blog" : "Next Step"}
         </button>

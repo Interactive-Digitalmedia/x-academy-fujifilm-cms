@@ -1,4 +1,4 @@
-import GridView from "@/components/home/gridview";
+import GridView from "@/components/home/GridView";
 import {
   TrendingUp,
   TrendingDown,

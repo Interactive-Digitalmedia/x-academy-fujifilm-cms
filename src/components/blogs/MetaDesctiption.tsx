@@ -98,26 +98,20 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
   const descStatus = getDescLengthStatus();
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
-        Meta Description
-      </h2>
-
+    <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Meta Description</h2>
       {/* Title Slug */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-600">
+        <label className="block text-sm font-medium text-[#818181] mb-1">
           Title Slug
         </label>
         <div className="flex gap-2">
-          <Input
+          <input
             type="text"
-            value={blogData.slug}
-            onValueChange={(value) => updateBlogData("slug", value)}
             placeholder="XYZ"
-            classNames={{
-              inputWrapper: "bg-gray-50 border border-gray-200",
-              input: "text-gray-800",
-            }}
+            value={blogData.slug}
+            onChange={(e) => updateBlogData("slug", e.target.value)}
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
           />
           {/* <Button
             onClick={generateSlug}
@@ -127,81 +121,72 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
             Generate
           </Button> */}
         </div>
-        <p className="text-xs text-gray-500">
+        {/* <p className="text-xs text-gray-500">
           URL Preview: yourwebsite.com/blog/{slugPreview || "your-blog-slug"}
-        </p>
+        </p> */}
       </div>
 
       {/* Meta Title */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <label className="block text-sm font-medium text-gray-600">
+          <label className="block text-sm font-medium text-[#818181] mb-1">
             Meta Title
           </label>
-          <span className={`text-xs ${titleStatus.color}`}>
+          {/* <span className={`text-xs ${titleStatus.color}`}>
             {metaTitleLength}/60 - {titleStatus.text}
-          </span>
+          </span> */}
         </div>
-        <Input
+        <input
           type="text"
-          value={blogData.metaTitle}
-          onValueChange={(value) => updateBlogData("metaTitle", value)}
           placeholder="XYZ"
-          classNames={{
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800",
-          }}
+          value={blogData.metaTitle}
+          onChange={(e) => updateBlogData("metaTitle", e.target.value)}
+          className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
         />
-        <p className="text-xs text-gray-500">
+        {/* <p className="text-xs text-gray-500">
           Recommended: 30-60 characters for optimal SEO
-        </p>
+        </p> */}
       </div>
 
       {/* Meta Description */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <label className="block text-sm font-medium text-gray-600">
+          <label className="block text-sm font-medium text-[#818181] mb-1">
             Meta Description
           </label>
-          <span className={`text-xs ${descStatus.color}`}>
+          {/* <span className={`text-xs ${descStatus.color}`}>
             {metaDescLength}/160 - {descStatus.text}
-          </span>
+          </span> */}
         </div>
-        <Textarea
-          value={blogData.metaDescription}
-          onValueChange={(value) => updateBlogData("metaDescription", value)}
+        <textarea
           placeholder="XYZ"
-          minRows={4}
-          maxRows={6}
-          classNames={{
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800",
-          }}
+          value={blogData.metaDescription}
+          onChange={(e) => updateBlogData("metaDescription", e.target.value)}
+          rows={4}
+          className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
         />
-        <p className="text-xs text-gray-500">
+
+        {/* <p className="text-xs text-gray-500">
           Recommended: 120-160 characters for optimal search engine display
-        </p>
+        </p> */}
       </div>
 
       {/* Keywords */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-600">
+        <label className="block text-sm font-medium text-[#818181] mb-1">
           Keywords
         </label>
-        <Input
+        <input
           type="text"
-          value={blogData.keywords}
-          onValueChange={(value) => updateBlogData("keywords", value)}
           placeholder="XYZ"
-          classNames={{
-            inputWrapper: "bg-gray-50 border border-gray-200",
-            input: "text-gray-800",
-          }}
+          value={blogData.keywords}
+          onChange={(e) => updateBlogData("keywords", e.target.value)}
+          className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
         />
-        <p className="text-xs text-gray-500">
+        {/* <p className="text-xs text-gray-500">
           Enter keywords separated by commas (e.g., blog, tutorial, web
           development)
-        </p>
+        </p> */}
       </div>
 
       {/* SEO Preview */}

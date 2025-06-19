@@ -88,13 +88,13 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
   };
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-bold text-gray-800">Gears</h2>
+    <div className="space-y-3 mt-[-8px]">
+      <h2 className="text-base font-bold mb-1">Gears</h2>
 
       {/* Gears Preview */}
       {gearBlocks.some((gear) => gear.imageUrl) && (
         <div>
-          <h3 className="text-base font-bold -mt-2 mb-3">Gears Owned</h3>
+          <h3 className="text-[13px] font-bold -mt-2 mb-2">Gears Owned</h3>
           <div className="flex gap-4 flex-wrap">
             {gearBlocks
               .filter((gear) => gear.imageUrl)
@@ -131,11 +131,13 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
 
           <div className="flex gap-4 flex-wrap">
             <div className="flex-1 min-w-[240px]">
-              <label className="block text-sm font-medium text-black mb-1">
-                Product title
+              <label className="block text-sm font-medium text-[#818181] mb-1">
+                Product Title
               </label>
-              <Input
+              <input
+                type="text"
                 placeholder="Product Title"
+                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
                 value={gear.title}
                 onChange={(e) =>
                   handleFieldChange(index, "title", e.target.value)
@@ -144,11 +146,13 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
             </div>
 
             <div className="flex-1 min-w-[240px]">
-              <label className="block text-sm font-medium text-black mb-1">
-                Product link
+              <label className="block text-sm font-medium text-[#818181] mb-1">
+                Product URL
               </label>
-              <Input
+              <input
+                type="text"
                 placeholder="Product URL"
+                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
                 value={gear.link}
                 onChange={(e) =>
                   handleFieldChange(index, "link", e.target.value)
@@ -160,11 +164,13 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
           {/* Image Input */}
           <div className="flex items-center gap-3 flex-wrap">
             <div className="flex-1 min-w-[240px]">
-              <label className="block text-sm font-medium text-black mb-1">
-                Product image
+              <label className="block text-sm font-medium text-[#818181] mb-1">
+                Image URL
               </label>
-              <Input
+              <input
+                type="text"
                 placeholder="Image URL"
+                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
                 value={gear.imageUrl}
                 onChange={(e) =>
                   handleFieldChange(index, "imageUrl", e.target.value)
