@@ -98,5 +98,23 @@ export function getTokenFromLocalStorage(): string | null {
       throw error;
     }
   };
+
+  export async function createFaq(payload: {
+    name: string;
+    items: { title: string; description: string }[];
+  }) {
+    const res = await fetch(`${baseUrl}faq/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+      },
+      body: JSON.stringify(payload),
+    });
+  
+    if (!res.ok) throw new Error("Failed to create FAQ");
+    return await res.json(); // Should return { _id: "...", ... }
+  }
+  
   
 

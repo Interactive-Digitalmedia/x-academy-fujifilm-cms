@@ -5,7 +5,7 @@ import AdminControls from "@/components/createEventTabs/AdminControls";
 import EventImage from "@/components/createEventTabs/EventImage";
 import EventSchedule from "@/components/createEventTabs/EventSchedule";
 import FAQs from "@/components/createEventTabs/FAQs";
-import { updateActivity, uploadActivity } from "@/api/activity";
+import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
 
 const tabs = [
   "Event Details",
@@ -58,6 +58,35 @@ export default function CreateEventLayout({ data, setData }: any) {
 
 
   const handleNextStepOrSubmit = async () => {
+
+    if (currentTab === 4) { // FAQs tab
+      const faqItems = data.FAQ || [];
+    
+      // Transform into backend format
+      const payload = {
+        name: "Custom",
+        items: faqItems.map((faq: any) => ({
+          title: faq.Q,
+          description: faq.A,
+        })),
+      };
+    
+      try {
+        const faqRes = await createFaq(payload);
+        const faqId = faqRes?.data?._id;
+    
+        // Store faqId inside activity data
+        setData((prev: any) => ({ ...prev, FAQ: faqId }));
+    
+        // Also update activity with faqId if activityId exists
+        if (activityId) {
+          await updateActivity(activityId, { ...data, FAQ: faqId });
+        }
+      } catch (err) {
+        console.error("❌ Failed to save FAQ:", err);
+      }
+    }
+
     try {
 
       let response;
