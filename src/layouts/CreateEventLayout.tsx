@@ -5,7 +5,7 @@ import AdminControls from "@/components/createEventTabs/AdminControls";
 import EventImage from "@/components/createEventTabs/EventImage";
 import EventSchedule from "@/components/createEventTabs/EventSchedule";
 import FAQs from "@/components/createEventTabs/FAQs";
-import { uploadActivity } from "@/api/activity";
+import { updateActivity, uploadActivity } from "@/api/activity";
 
 const tabs = [
   "Event Details",
@@ -38,20 +38,54 @@ export default function CreateEventLayout({ data, setData }: any) {
     }
   };
 
+  // const handleNextStepOrSubmit = async () => {
+  //   if (currentTab === tabs.length - 1) {
+  //     try {
+  //       console.log("payload :", data)
+  //       const response = await uploadActivity(data);
+  //       console.log("✅ Activity successfully uploaded:", response);
+  //       // Optional: show toast or navigate
+  //     } catch (error) {
+  //       console.error("❌ Failed to upload activity:", error);
+  //       // Optional: show error toast
+  //     }
+  //   } else {
+  //     setCurrentTab((prev) => prev + 1);
+  //   }
+  // };
+
+  const [activityId, setActivityId] = useState<string | null>(null);
+
+
   const handleNextStepOrSubmit = async () => {
-    if (currentTab === tabs.length - 1) {
-      try {
-        const response = await uploadActivity(data);
-        console.log("✅ Activity successfully uploaded:", response);
-        // Optional: show toast or navigate
-      } catch (error) {
-        console.error("❌ Failed to upload activity:", error);
-        // Optional: show error toast
+    try {
+
+      let response;
+  
+      if (!activityId) {
+        // console.log("i")
+        // First step: create the activity
+        response = await uploadActivity(data);
+        setActivityId(response?.data._id);
+        console.log("✅ Activity created:", response.data._id);
+      } else {
+        // Update existing activity
+        response = await updateActivity(activityId, data);
+        console.log("🔄 Activity updated:", response);
       }
-    } else {
-      setCurrentTab((prev) => prev + 1);
+  
+      // Go to next tab or finish
+      if (currentTab === tabs.length - 1) {
+        console.log("🎉 Final submission complete");
+      } else {
+        setCurrentTab((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error("❌ Error saving activity:", error);
     }
   };
+  
+  
 
   return (
     <div className=" flex flex-col">

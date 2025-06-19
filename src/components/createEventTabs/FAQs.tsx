@@ -7,16 +7,16 @@ const blankFaq = { Q: "", A: "" };
 export default function FAQs({ data, setData }: any) {
   const [faqBlocks, setFaqBlocks] = useState([{ ...blankFaq }]);
 
-  const handleFieldChange = (
-    index: number,
-    field: "Q" | "A",
-    value: string
-  ) => {
-    const updated = [...faqBlocks];
-    updated[index][field] = value;
-    setFaqBlocks(updated);
-    setData({ ...data, FAQ: updated });
-  };
+  // const handleFieldChange = (
+  //   index: number,
+  //   field: "Q" | "A",
+  //   value: string
+  // ) => {
+  //   const updated = [...faqBlocks];
+  //   updated[index][field] = value;
+  //   setFaqBlocks(updated);
+  //   setData({ ...data, FAQ: updated });
+  // };
 
   const handleAddFaq = () => {
     const updated = [...faqBlocks, { ...blankFaq }];
@@ -44,7 +44,7 @@ export default function FAQs({ data, setData }: any) {
         <Select
           placeholder="Select a Template"
           selectedKeys={[data.type || ""]}
-          onChange={(e) => setData({ ...data, type: e.target.value })}
+          // onChange={(e) => setData({ ...data, type: e.target.value })}
           classNames={{
             trigger:
               "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -83,7 +83,7 @@ export default function FAQs({ data, setData }: any) {
               type="text"
               placeholder="Enter your question"
               value={faq.Q}
-              onChange={(e) => handleFieldChange(index, "Q", e.target.value)}
+              // onChange={(e) => handleFieldChange(index, "Q", e.target.value)}
               className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             />
           </div>
@@ -96,7 +96,7 @@ export default function FAQs({ data, setData }: any) {
               placeholder="Type your answer"
               rows={3}
               value={faq.A}
-              onChange={(e) => handleFieldChange(index, "A", e.target.value)}
+              // onChange={(e) => handleFieldChange(index, "A", e.target.value)}
               className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             />
           </div>

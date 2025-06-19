@@ -1,45 +1,79 @@
 import { useState } from "react";
-import { Input } from "@nextui-org/react";
 import { X } from "lucide-react";
+import { uploadImage } from "@/api/activity";
 
 export default function EventImage({ data, setData }: any) {
-  const [heroInput, setHeroInput] = useState("");
-  const [galleryInput, setGalleryInput] = useState("");
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
 
-  const handleAddHero = () => {
-    if (!heroInput.trim()) return;
-    setData({ ...data, bannerImage: heroInput.trim() });
-    setHeroInput("");
+  // Handle hero upload immediately after file select
+  const handleHeroChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setHeroFile(file);
+    setUploading(true);
+    try {
+      const res = await uploadImage(file);
+      console.log("public url :", res)
+      if (res?.publicUrl) {
+        setData((prev: any) => ({ ...prev, bannerImage: res.publicUrl }));
+      }
+    } catch (err) {
+      console.error("❌ Error uploading hero image:", err);
+    }
+    setUploading(false);
   };
 
-  const handleAddGallery = () => {
-    if (!galleryInput.trim()) return;
-    const updatedGallery = [...(data.gallery || []), galleryInput.trim()];
-    setData({ ...data, gallery: updatedGallery });
-    setGalleryInput("");
+  // Handle gallery upload (multiple files)
+  const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setGalleryFiles((prev) => [...prev, ...files]);
+
+    setUploading(true);
+    try {
+      const uploadPromises = files.map(file => uploadImage(file));
+      const results = await Promise.all(uploadPromises);
+      const uploadedUrls = results
+        .filter(r => r?.publicUrl)
+        .map(r => r.publicUrl);
+
+      setData((prev: any) => ({
+        ...prev,
+        gallery: [...(prev.gallery || []), ...uploadedUrls]
+      }));
+    } catch (err) {
+      console.error("❌ Error uploading gallery images:", err);
+    }
+    setUploading(false);
   };
 
   const handleRemoveGalleryImage = (index: number) => {
     const updated = [...(data.gallery || [])];
     updated.splice(index, 1);
     setData({ ...data, gallery: updated });
+
+    const updatedFiles = [...galleryFiles];
+    updatedFiles.splice(index, 1);
+    setGalleryFiles(updatedFiles);
   };
 
   return (
-    <div className="space-y-2 mt-[-25px]">
-      <h2 className="text-base font-bold mb-1">Event Images</h2>
+    <div className="space-y-4">
+      <h2 className="text-base font-bold">Event Images</h2>
 
-      {/* Hero Image */}
+      {/* Hero Section */}
       <div>
         <label className="block text-sm font-medium text-[#818181] mb-1">
           Hero Image
         </label>
 
         {data.bannerImage && (
-          <div className="mb-4 relative">
+          <div className="relative mb-3">
             <img
               src={data.bannerImage}
-              alt="Hero Preview"
+              alt="Hero"
               className="rounded-md h-40 w-full object-cover border"
             />
             <button
@@ -51,66 +85,42 @@ export default function EventImage({ data, setData }: any) {
           </div>
         )}
 
-        <div className="flex gap-2 items-center">
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={heroInput}
-            onChange={(e) => setHeroInput(e.target.value)}
-            disabled={!!data.bannerImage}
-            className="w-full border text-sm placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-          />
-          <button
-            onClick={() => {
-              if (data.bannerImage) {
-                alert(
-                  "Only one hero image is allowed. Remove the current one first."
-                );
-                return;
-              }
-              if (!heroInput.trim()) return;
-              setData({ ...data, bannerImage: heroInput.trim() });
-              setHeroInput("");
-            }}
-            className=" text-[#1098F7] border border-[#1098F7] px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-50 transition w-[130px]"
-          >
-            Add Image
-          </button>
-        </div>
-
-        <p className="text-sm text-gray-500 mt-1">
-          Note: This is the main image that will be displayed at the top of your
-          event page.
-        </p>
+        <input
+          type="file"
+          accept="image/*"
+          id="hero-file-upload"
+          onChange={handleHeroChange}
+          className="hidden"
+        />
+        <label htmlFor="hero-file-upload">
+          <div className="cursor-pointer border border-blue-500 px-4 py-2 text-sm text-blue-500 rounded-md inline-block hover:bg-blue-50">
+            Upload Hero Image
+          </div>
+        </label>
       </div>
 
-      {/* Gallery Images */}
+      {/* Gallery Section */}
       <div>
         <label className="block text-sm font-medium text-[#818181] mb-1">
           Gallery Images
         </label>
 
-        <div className="flex gap-2 items-center">
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={galleryInput}
-            onChange={(e) => setGalleryInput(e.target.value)}
-            className="w-full border text-sm placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-          />
-          <button
-            onClick={handleAddGallery}
-            className=" text-[#1098F7] border border-[#1098F7] px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-50 transition w-[130px]"
-          >
-            Add Image
-          </button>
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          id="gallery-file-upload"
+          multiple
+          onChange={handleGalleryChange}
+          className="hidden"
+        />
+        <label
+          htmlFor="gallery-file-upload"
+          className="cursor-pointer border border-blue-500 px-4 py-2 text-sm text-blue-500 rounded-md inline-block hover:bg-blue-50"
+        >
+          Upload Gallery
+        </label>
 
-        <p className="text-sm text-gray-500 mt-1">
-          Note: Add additional images to showcase your event.
-        </p>
-
-        {data.gallery && data.gallery.length > 0 && (
+        {data.gallery?.length > 0 && (
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {data.gallery.map((url: string, index: number) => (
               <div
@@ -133,9 +143,13 @@ export default function EventImage({ data, setData }: any) {
             ))}
           </div>
         )}
+      </div>
 
-        {/* Dropzone UI Placeholder */}
-        <div className="mt-6 border-2 border-dashed border-blue-400 rounded-lg py-12 text-center text-sm text-gray-600">
+      {uploading && (
+        <p className="text-sm text-blue-500">Uploading image(s)...</p>
+      )}
+              {/* Dropzone UI Placeholder */}
+              <div className="mt-6 border-2 border-dashed border-blue-400 rounded-lg py-12 text-center text-sm text-gray-600">
           <div className="flex justify-center mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +181,8 @@ export default function EventImage({ data, setData }: any) {
           Note: Only support <code>.jpg</code>, <code>.png</code>,{" "}
           <code>.svg</code> and zip files
         </p>
-      </div>
+
     </div>
+    
   );
 }

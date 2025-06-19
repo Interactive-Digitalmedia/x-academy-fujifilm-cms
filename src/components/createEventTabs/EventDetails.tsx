@@ -111,7 +111,7 @@ export default function EventDetails({ data, setData }: any) {
             }}
           >
             <SelectItem key="workshop">Workshop</SelectItem>
-            <SelectItem key="eventr">Event</SelectItem>
+            <SelectItem key="event">Event</SelectItem>
             <SelectItem key="exhibition">Exhibition</SelectItem>
           </Select>
         </div>
@@ -261,8 +261,8 @@ export default function EventDetails({ data, setData }: any) {
             type="text"
             className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             placeholder="1000"
-            value={data.title || ""}
-            onChange={(e) => setData({ ...data, title: e.target.value })}
+            value={data.amount || ""}
+            onChange={(e) => setData({ ...data, amount: e.target.value })}
           />
         </div>
       </div>

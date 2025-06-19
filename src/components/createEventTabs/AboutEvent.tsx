@@ -46,7 +46,8 @@ export default function AboutEvent({ data, setData }: any) {
           About the Event
         </label>
         {/* Optional: Replace StaticEditor with Textarea if needed */}
-        <StaticEditor />
+        <StaticEditor value={about.about}
+  onChange={(val: string) => handleChange("about", val)}/>
         <p className="mt-1 text-xs text-gray-500">
           Note: Write a compelling description of your event. Include what
           attendees can expect to learn or experience.
@@ -105,7 +106,8 @@ export default function AboutEvent({ data, setData }: any) {
         <label className="block text-sm text-[#818181] font-medium mb-1">
           Why Should You Attend?
         </label>
-        <StaticEditor />
+        <StaticEditor  value={about.whyShouldYouAttend}
+  onChange={(val: string) => handleChange("whyShouldYouAttend", val)}/>
       </div>
 
       {/* Tips Section */}
