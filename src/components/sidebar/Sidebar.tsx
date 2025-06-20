@@ -37,7 +37,7 @@ export default function Sidebar() {
   };
   const isProfile = location.pathname.startsWith("/profile");
   return (
-    <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col justify-between py-3">
+    <aside className="w-64 h-full  bg-white border-r border-gray-200 flex flex-col justify-between py-[12px]">
       <div>
         {/* Logo */}
         <div className="mb-1 flex justify-center items-center">

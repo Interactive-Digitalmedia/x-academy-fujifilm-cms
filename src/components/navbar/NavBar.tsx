@@ -1,16 +1,10 @@
 import {
   Bell,
-  Plus,
   UserPlus,
-  Calendar,
-  Users,
-  BookOpen,
-  BarChart,
-  HelpCircle,
+  CirclePlus,
+  Trash2,
   Settings,
-  CircleEllipsis,
-  LayoutDashboard,
-  UserRoundPlus,
+  SquarePen,
 } from "lucide-react";
 import InviteAdminModal from "./InviteAdminModal";
 import { Button, useDisclosure } from "@nextui-org/react";
@@ -54,23 +48,24 @@ export default function NavBar() {
       title: "Dashboard",
       buttons: [
         {
-          label: "Invite",
-          icon: UserRoundPlus,
-          action: () => console.log("Dashboard action"),
+          label: "",
+          icon: Bell,
+          action: () => console.log("Notification clicked"),
         },
       ],
     },
+
     events: {
       title: "Events",
       buttons: [
         {
-          label: "Create Event",
-          icon: Plus,
+          label: "Create New",
+          icon: CirclePlus,
           action: () => navigate("/events/create-events"),
         },
         {
           label: "Drafts",
-          icon: Settings,
+          icon: "",
           action: () => console.log("Event settings"),
         },
       ],
@@ -79,13 +74,13 @@ export default function NavBar() {
       title: "Partners",
       buttons: [
         {
-          label: "Add Partner",
-          icon: UserPlus,
+          label: "Create New",
+          icon: CirclePlus,
           action: () => navigate("/partners/create-partner"),
         },
         {
           label: "Drafts",
-          icon: BarChart,
+          icon: "",
           action: () => console.log("Partner analytics"),
         },
       ],
@@ -94,91 +89,47 @@ export default function NavBar() {
       title: "Blogs",
       buttons: [
         {
-          label: "Create new",
-          icon: Plus,
+          label: "Create New",
+          icon: CirclePlus,
           action: () => navigate("/blogs/createblogs"),
         },
         {
           label: "Drafts",
-          icon: BookOpen,
+          icon: "",
           action: () => console.log("View drafts"),
         },
       ],
     },
     community: {
       title: "Community",
-      buttons: [
-        {
-          label: "Community Action",
-          icon: Users,
-          action: () => console.log("Community action"),
-        },
-        {
-          label: "Moderation",
-          icon: Settings,
-          action: () => console.log("Moderation"),
-        },
-      ],
+      buttons: [],
     },
     submissions: {
       title: "Submissions",
-      buttons: [
-        {
-          label: "Review Submissions",
-          icon: BookOpen,
-          action: () => console.log("Review submissions"),
-        },
-        {
-          label: "Export Data",
-          icon: BarChart,
-          action: () => console.log("Export data"),
-        },
-      ],
+      buttons: [],
     },
     analytics: {
       title: "Analytics",
       buttons: [
         {
-          label: "Generate Report",
-          icon: BarChart,
+          label: "Edit Event",
+          icon: SquarePen,
           action: () => console.log("Generate report"),
         },
         {
-          label: "Export Analytics",
-          icon: Plus,
+          label: "Delete",
+          icon: Trash2,
           action: () => console.log("Export analytics"),
         },
       ],
     },
     support: {
       title: "Support",
-      buttons: [
-        {
-          label: "New Ticket",
-          icon: Plus,
-          action: () => console.log("New ticket"),
-        },
-        {
-          label: "Support Settings",
-          icon: Settings,
-          action: () => console.log("Support settings"),
-        },
-      ],
+      buttons: [],
     },
     others: {
       title: "Others",
-      buttons: [
-        {
-          label: "Other Action",
-          icon: CircleEllipsis,
-          action: () => console.log("Other action"),
-        },
-        {
-          label: "Configuration",
-          icon: Settings,
-          action: () => console.log("Configuration"),
-        },
-      ],
+      buttons: [],
     },
     profile: {
       title: "Profile",
@@ -212,21 +163,98 @@ export default function NavBar() {
   };
 
   // Render section-specific buttons
+  //changed
   const renderSectionButtons = () => {
-    if (!config?.buttons) return null;
+    if (!config?.buttons || config.buttons.every((b) => !b.label && !b.icon))
+      return null;
 
+    // On dashboard, show both invite and bell with tighter spacing
+    if (currentSection === "dashboard" && user?.userRole === "super admin") {
+      return (
+        <div className="flex items-center gap-[1px]">
+          <button
+            type="button"
+            onClick={onOpen}
+            className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 shadow-sm hover:shadow-md transition"
+          >
+            <UserPlus size={16} />
+            Invite
+          </button>
+
+          <button
+            onClick={() => console.log("Notification clicked")}
+            className="p-2 rounded-md hover:bg-gray-100 transition"
+            aria-label="Notifications"
+          >
+            <Bell size={18} className="text-gray-700" />
+          </button>
+        </div>
+      );
+    }
+
+    // Custom button style for Events and Partners, blogs
+    if (["events", "partners", "blogs", "analytics"].includes(currentSection)) {
+      return (
+        <div className="flex items-center gap-2">
+          {config.buttons.map((button, index) => {
+            const isPrimary =
+              button.label?.toLowerCase().includes("create") ||
+              button.label?.toLowerCase().includes("add") ||  button.label?.toLowerCase().includes("event");
+
+            return (
+              <button
+                key={index}
+                onClick={button.action}
+                className={`flex items-center gap-2 rounded-md px-2 py-[6.3px] text-sm justify-center font-medium min-w-[100px] transition-all ${
+                  isPrimary
+                    ? "bg-[#2196F3] text-white hover:bg-[#1976D2]" // Blue style for "Create/Add"
+                    : "bg-white text-black border border-gray-300 hover:bg-gray-100" // Secondary style for "Drafts"
+                }`}
+              >
+                {button.icon && <button.icon size={16} />}
+                {button.label}
+              </button>
+            );
+          })}
+        </div>
+      );
+    }
+
+    // Default rendering for all other sections
     return (
       <div className="flex items-center gap-2">
-        {config.buttons.map((button, index) => (
-          <Button
-            key={index}
-            onPress={button.action}
-            startContent={<button.icon size={18} />}
-            className="bg-white border border-gray-200 text-gray-800 hover:shadow-md"
-          >
-            {button.label}
-          </Button>
-        ))}
+        {config.buttons.map((button, index) => {
+          if (!button.label) {
+            const isWhiteIcon =
+              (currentSection === "community" || "submission" || "support") &&
+              button.icon === Settings;
+
+            return (
+              <button
+                key={index}
+                onClick={button.action}
+                className="p-2 rounded-md hover:bg-gray-100 transition"
+                aria-label="Icon button"
+              >
+                <button.icon
+                  size={18}
+                  className={isWhiteIcon ? "text-white" : "text-gray-700"}
+                />
+              </button>
+            );
+          }
+
+          return (
+            <Button
+              key={index}
+              onPress={button.action}
+              startContent={<button.icon size={18} />}
+              className="bg-white border border-gray-200 text-gray-800 hover:shadow-md"
+            >
+              {button.label}
+            </Button>
+          );
+        })}
       </div>
     );
   };
@@ -234,7 +262,7 @@ export default function NavBar() {
   // Render notification bell (for non-blog sections or as fallback)
   const renderNotificationBell = () => {
     // Only show if no section-specific buttons are configured
-    if (config?.buttons && config.buttons.length > 0) return null;
+    if (currentSection !== "dashboard") return null;
 
     return (
       <button
@@ -248,22 +276,21 @@ export default function NavBar() {
   };
 
   return (
-    <header className="w-full border-b border-gray-200 bg-white px-6 py-2 flex items-center justify-between">
+    <header className="w-full border-b-[1.5px] border-b-[#DBDBDB] border-gray-200 bg-white px-6 min-h-[51px] py-[8px] flex items-center">
       {/* Left side - Title */}
-      <h1 className="text-base font-semibold text-black">
+      <h1 className="text-base font-bold text-black">
         {config?.title || "Dashboard"}
       </h1>
 
-      {/* Right side - Actions */}
-      <div className="flex items-center gap-4">
-        {/* Super Admin Invite Button */}
-        {renderInviteButton()}
-
-        {/* Section-specific buttons */}
+      {/* Spacer pushes buttons to the right */}
+      <div className="ml-auto flex items-center gap-2">
+        {/* Section-specific buttons (includes Invite on dashboard) */}
         {renderSectionButtons()}
 
-        {/* Notification bell (fallback) */}
-        {renderNotificationBell()}
+        {/* Bell icon always rendered here to right-most */}
+        {currentSection === "dashboard" && user?.userRole === "super admin"
+          ? null
+          : renderNotificationBell()}
       </div>
 
       {/* Invite Admin Modal */}
