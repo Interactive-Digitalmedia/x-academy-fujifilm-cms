@@ -32,7 +32,7 @@ const StaticEditor: React.FC<StaticEditorProps> = ({ value, onChange }) => {
   // Handle content changes
   const handleInput = () => {
     if (editorRef.current) {
-      onChange(editorRef.current.innerHTML);
+      onChange(editorRef.current.innerText.trim());
     }
   };
 

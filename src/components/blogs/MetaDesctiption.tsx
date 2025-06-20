@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Input, Textarea, Button } from "@nextui-org/react";
+import { X } from "lucide-react";
 
 interface BlogData {
   title: string;
@@ -25,7 +26,7 @@ interface BlogData {
   slug: string;
   metaTitle: string;
   metaDescription: string;
-  keywords: string;
+  keywords: string[];
 }
 
 interface MetaDescriptionProps {
@@ -40,6 +41,7 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
   const [slugPreview, setSlugPreview] = React.useState("");
   const [metaTitleLength, setMetaTitleLength] = React.useState(0);
   const [metaDescLength, setMetaDescLength] = React.useState(0);
+  const [keywordInput, setKeywordInput] = React.useState("");
 
   // Auto-generate slug from title if empty
   React.useEffect(() => {
@@ -94,8 +96,23 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
     return { color: "text-red-500", text: "Too long" };
   };
 
-  const titleStatus = getTitleLengthStatus();
-  const descStatus = getDescLengthStatus();
+  const handleKeywordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e.key === "Enter" || e.key === ",") && keywordInput.trim()) {
+      e.preventDefault();
+      const trimmed = keywordInput.trim();
+      if (!blogData.keywords.includes(trimmed)) {
+        updateBlogData("keywords", [...blogData.keywords, trimmed]);
+      }
+      setKeywordInput("");
+    }
+  };
+  
+  const removeKeyword = (index: number) => {
+    const updated = [...blogData.keywords];
+    updated.splice(index, 1);
+    updateBlogData("keywords", updated);
+  };
+
 
   return (
     <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
@@ -176,13 +193,37 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
         <label className="block text-sm font-medium text-[#818181] mb-1">
           Keywords
         </label>
-        <input
-          type="text"
-          placeholder="XYZ"
-          value={blogData.keywords}
-          onChange={(e) => updateBlogData("keywords", e.target.value)}
-          className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-        />
+        <div className="space-y-1">
+  {/* Bubbles */}
+  <div className="flex flex-wrap gap-2 mb-2">
+    {blogData.keywords.map((keyword, index) => (
+      <span
+        key={index}
+        className="flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full"
+      >
+        {keyword}
+        <button
+          type="button"
+          onClick={() => removeKeyword(index)}
+          className="text-gray-600 hover:text-red-500"
+        >
+          <X size={14} />
+        </button>
+      </span>
+    ))}
+  </div>
+
+  {/* Input Field */}
+  <input
+    type="text"
+    placeholder="Type keyword and press Enter"
+    value={keywordInput}
+    onChange={(e) => setKeywordInput(e.target.value)}
+    onKeyDown={handleKeywordKeyDown}
+    className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+  />
+</div>
+
         {/* <p className="text-xs text-gray-500">
           Enter keywords separated by commas (e.g., blog, tutorial, web
           development)

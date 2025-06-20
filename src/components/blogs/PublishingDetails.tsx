@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Input, Select, SelectItem, DatePicker } from "@nextui-org/react";
 
 interface Tag {
   name: string;
@@ -24,7 +23,7 @@ interface BlogData {
   slug: string;
   metaTitle: string;
   metaDescription: string;
-  keywords: string;
+  keywords: string[];
 }
 
 interface PublishingDetailsProps {
