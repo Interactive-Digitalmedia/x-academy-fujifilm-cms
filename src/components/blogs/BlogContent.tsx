@@ -18,7 +18,7 @@ interface BlogData {
   slug: string;
   metaTitle: string;
   metaDescription: string;
-  keywords: string;
+  keywords: string[];
 }
 
 interface BlogContentProps {
@@ -66,20 +66,10 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       </div> */}
 
       {/* Content Textarea */}
-      <StaticEditor />
+      <StaticEditor  value={blogData.content}
+  onChange={handleContentChange}/>
       {/* Content Guidelines */}
-      {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-blue-800 mb-2">
-          Content Guidelines:
-        </h3>
-        <ul className="text-sm text-blue-700 space-y-1">
-          <li>• Aim for 800-2000 words for optimal SEO performance</li>
-          <li>• Use clear paragraphs and sections for better readability</li>
-          <li>• Include relevant keywords naturally throughout your content</li>
-          <li>• Add a compelling introduction and conclusion</li>
-          <li>• Rich text formatting will be available in the next update</li>
-        </ul>
-      </div> */}
+    
 
       {/* Preview Section */}
       {blogData.content && (

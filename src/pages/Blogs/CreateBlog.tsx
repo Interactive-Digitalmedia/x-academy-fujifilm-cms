@@ -6,7 +6,7 @@ import BlogImage from "@/components/blogs/BlogImage";
 import BlogContent from "@/components/blogs/BlogContent";
 import CTAButton from "@/components/blogs/CTAButton";
 import MetaDescription from "@/components/blogs/MetaDesctiption";
-import { parseZonedDateTime } from "@internationalized/date";
+import { updateBlog, uploadBlog } from "@/api/blogApi";
 interface Tag {
   name: string;
   color: string;
@@ -15,6 +15,7 @@ interface Tag {
 interface BlogData {
   title: string;
   author: string;
+  status: "draft" | "publish";
   publishingDate: any;
   tags: Tag[];
   heroImage: {
@@ -36,7 +37,7 @@ interface BlogData {
   slug: string;
   metaTitle: string;
   metaDescription: string;
-  keywords: string;
+  keywords: string[];
 }
 
 interface BlogsProps {}
@@ -46,23 +47,12 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
 
   // Main blog data state
   const [blogData, setBlogData] = React.useState<BlogData>({
-    // Step 1: Publishing Details
     title: "",
     author: "",
-    publishingDate: parseZonedDateTime("2024-06-03T10:00[America/New_York]"),
+    publishingDate: "",
     tags: [],
-
-    // Step 2: Blog Image
-    heroImage: {
-      file: null,
-      url: "",
-      description: "",
-    },
-
-    // Step 3: Blog Content
+    heroImage: { file: null, url: "", description: "" },
     content: "",
-
-    // Step 4: CTA Button
     cta: {
       text: "",
       link: "",
@@ -73,13 +63,13 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
         variant: "solid",
       },
     },
-
-    // Step 5: Meta Description
     slug: "",
     metaTitle: "",
     metaDescription: "",
-    keywords: "",
+    keywords: [],
+    status: "draft", // ← add this line
   });
+  
 
   // Helper function to update blog data
   const updateBlogData = (field: keyof BlogData, value: any) => {
@@ -97,6 +87,19 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
   // const [metaTitle, setMetaTitle] = React.useState("");
   // const [metaDescription, setMetaDescription] = React.useState("");
 
+  const [blogId, setBlogId] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const savedStep = localStorage.getItem("createBlogCurrentStep");
+    if (savedStep) {
+      setCurrentStep(Number(savedStep));
+    }
+  }, []);
+  
+  React.useEffect(() => {
+    localStorage.setItem("createBlogCurrentStep", String(currentStep));
+  }, [currentStep]);
+
   const steps = [
     { number: 1, title: "Publishing Details" },
     { number: 2, title: "Blog Image" },
@@ -105,11 +108,7 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
     { number: 5, title: "Meta Description" },
   ];
 
-  const handleNextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
+
 
   const handlePreviousStep = () => {
     if (currentStep > 0) {
@@ -117,8 +116,70 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
     }
   };
 
-  const handlePublishBlog = () => {
-    console.log("Final Blog Data:", blogData);
+
+  const transformToPayload = (blogData: BlogData) => {
+    return {
+      title: blogData.title,
+      author: blogData.author,
+      publishedDate: blogData.publishingDate,
+      tags: blogData.tags.map(tag => tag.name),
+      blogImages: [
+        {
+          url: blogData.heroImage.url,
+          description: blogData.heroImage.description,
+        },
+      ],
+      content: blogData.content,
+      cta: [
+        {
+          text: blogData.cta.text,
+          link: blogData.cta.link,
+        },
+      ],
+      metaData: {
+        slug: blogData.slug,
+        metaTitle: blogData.metaTitle,
+        metaDescription: blogData.metaDescription,
+        keywords: blogData.keywords ,
+      },
+      status: blogData.status || "draft", // ← fallback default
+    };
+  };
+  
+  
+
+  const handleNextStep = async () => {
+    const payload = transformToPayload(blogData);
+    try {
+      if (!blogId) {
+        const res = await uploadBlog(payload);
+        setBlogId(res.data._id);
+      } else {
+        await updateBlog(blogId, payload);
+      }
+      setCurrentStep((prev) => prev + 1);
+    } catch (error) {
+      console.error("Failed to save blog step:", error);
+    }
+  };
+  
+  const handlePublishBlog = async () => {
+    const payload = transformToPayload({
+      ...blogData,
+      status: "publish", // not "published"
+    });
+
+    try {
+      if (blogId) {
+        await updateBlog(blogId, payload);
+      } else {
+        const res = await uploadBlog(payload);
+        setBlogId(res.data._id);
+      }
+      console.log("✅ Blog published");
+    } catch (error) {
+      console.error("❌ Failed to publish blog:", error);
+    }
   };
 
   const renderStepContent = () => {

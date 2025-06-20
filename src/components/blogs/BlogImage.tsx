@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Input, Textarea, Button } from "@nextui-org/react";
+import { uploadImage } from "@/api/activity";
 
 interface BlogData {
   title: string;
@@ -19,7 +20,7 @@ interface BlogData {
   slug: string;
   metaTitle: string;
   metaDescription: string;
-  keywords: string;
+  keywords: string[];
 }
 
 interface BlogImageProps {
@@ -54,13 +55,12 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
     }
   };
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = async (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
-      // 10MB limit
       alert("File size must be less than 10MB");
       return;
     }
-
+  
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -71,15 +71,20 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
       alert("Only .jpg, .png, .svg files are allowed");
       return;
     }
-
-    // Create preview URL
-    const previewUrl = URL.createObjectURL(file);
-
-    updateBlogData("heroImage", {
-      ...blogData.heroImage,
-      file: file,
-      url: previewUrl,
-    });
+  
+    try {
+      const res = await uploadImage(file);
+      if (res?.publicUrl) {
+        updateBlogData("heroImage", {
+          file,
+          url: res.publicUrl,
+          description: blogData.heroImage.description,
+        });
+      }
+    } catch (err) {
+      console.error("❌ Image upload failed", err);
+      alert("Image upload failed");
+    }
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,74 +128,78 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
             />
           </div>
           <Button
-            onPress={handleAddImage}
-            color="primary"
-            variant="bordered"
-            className="px-6 text-[#1098F7] border-[#1098F7]"
-          >
-            Add Image
-          </Button>
+  onPress={handleAddImage}
+  color="primary"
+  variant="bordered"
+  className="px-6 text-[#1098F7] border-[#1098F7]"
+>
+  {blogData.heroImage.url ? "Change Image" : "Add Image"}
+</Button>
         </div>
       </div>
 
       {/* Drag & Drop Area */}
-      <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-          dragActive
-            ? "border-blue-400 bg-blue-50"
-            : "border-blue-300 bg-gray-50"
-        }`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-      >
-        {blogData.heroImage.url ? (
-          <div className="space-y-4">
-            <img
-              src={blogData.heroImage.url}
-              alt="Hero preview"
-              className="max-h-64 mx-auto rounded-lg object-cover"
-            />
-            <p className="text-sm text-gray-600">Image uploaded successfully</p>
-            <Button
-              onPress={handleAddImage}
-              color="primary"
-              variant="flat"
-              size="sm"
-            >
-              Change Image
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="mx-auto h-12 w-12 text-blue-400">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
-              </svg>
-            </div>
-            <div>
-              <p className="text-gray-600">
-                Drag your file(s) or{" "}
-                <button
-                  onClick={handleBrowse}
-                  className="text-blue-500 hover:text-blue-600 underline"
-                >
-                  browse
-                </button>
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                Max 10 MB files are allowed
-              </p>
-            </div>
-          </div>
-        )}
+     {/* Image Preview */}
+{blogData.heroImage.url ? (
+  <div className="relative w-full rounded-lg overflow-hidden">
+    <img
+      src={blogData.heroImage.url}
+      alt="Hero preview"
+      className="w-full h-64 object-cover rounded-lg border"
+    />
+    <button
+      onClick={() =>
+        updateBlogData("heroImage", {
+          ...blogData.heroImage,
+          url: "",
+          file: null,
+        })
+      }
+      className="absolute top-3 right-3 bg-white/90 p-2 rounded-md hover:bg-red-500 hover:text-white text-gray-700 shadow transition"
+      title="Remove Image"
+    >
+      🗑
+    </button>
+  </div>
+) : (
+  <div
+    className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+      dragActive ? "border-blue-400 bg-blue-50" : "border-blue-300 bg-gray-50"
+    }`}
+    onDragEnter={handleDrag}
+    onDragLeave={handleDrag}
+    onDragOver={handleDrag}
+    onDrop={handleDrop}
+  >
+    <div className="space-y-4">
+      <div className="mx-auto h-12 w-12 text-blue-400">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+          />
+        </svg>
       </div>
+      <div>
+        <p className="text-gray-600">
+          Drag your file(s) or{" "}
+          <button
+            onClick={handleBrowse}
+            className="text-blue-500 hover:text-blue-600 underline"
+          >
+            browse
+          </button>
+        </p>
+        <p className="text-sm text-gray-400 mt-1">
+          Max 10 MB files are allowed
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* File Format Note */}
       <p className="text-sm text-gray-500">
