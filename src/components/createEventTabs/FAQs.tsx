@@ -44,7 +44,7 @@ export default function FAQs({ data, setData }: any) {
         <Select
           placeholder="Select a Template"
           selectedKeys={[data.type || ""]}
-          onChange={(e) => setData({ ...data, type: e.target.value })}
+          // onChange={(e) => setData({ ...data, type: e.target.value })}
           classNames={{
             trigger:
               "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",

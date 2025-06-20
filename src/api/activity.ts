@@ -37,6 +37,17 @@ export function getTokenFromLocalStorage(): string | null {
     }
   }
 
+  export const updateActivity = async (id: string, payload: any) => {
+    const token = getTokenFromLocalStorage();
+    const res = await axios.put(`${baseUrl}activity/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return res.data;
+  };
+
   export const getActivities = async () => {
     const token = getTokenFromLocalStorage()
     if (!token) {
@@ -59,3 +70,51 @@ export function getTokenFromLocalStorage(): string | null {
       throw error
     }
   }
+
+  export const uploadImage = async (file: File) => {
+    const token = getTokenFromLocalStorage();
+    if (!token) {
+      console.error("Token is not available.");
+      return null;
+    }
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await axios.post(
+        `${baseUrl}upload-image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data; // returns { message, fileKey, publicUrl }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
+  export async function createFaq(payload: {
+    name: string;
+    items: { title: string; description: string }[];
+  }) {
+    const res = await fetch(`${baseUrl}faq/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+      },
+      body: JSON.stringify(payload),
+    });
+  
+    if (!res.ok) throw new Error("Failed to create FAQ");
+    return await res.json(); // Should return { _id: "...", ... }
+  }
+  
+  
+

@@ -5,7 +5,7 @@ import AdminControls from "@/components/createEventTabs/AdminControls";
 import EventImage from "@/components/createEventTabs/EventImage";
 import EventSchedule from "@/components/createEventTabs/EventSchedule";
 import FAQs from "@/components/createEventTabs/FAQs";
-import { uploadActivity } from "@/api/activity";
+import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
 
 const tabs = [
   "Event Details",
@@ -38,20 +38,83 @@ export default function CreateEventLayout({ data, setData }: any) {
     }
   };
 
+  // const handleNextStepOrSubmit = async () => {
+  //   if (currentTab === tabs.length - 1) {
+  //     try {
+  //       console.log("payload :", data)
+  //       const response = await uploadActivity(data);
+  //       console.log("✅ Activity successfully uploaded:", response);
+  //       // Optional: show toast or navigate
+  //     } catch (error) {
+  //       console.error("❌ Failed to upload activity:", error);
+  //       // Optional: show error toast
+  //     }
+  //   } else {
+  //     setCurrentTab((prev) => prev + 1);
+  //   }
+  // };
+
+  const [activityId, setActivityId] = useState<string | null>(null);
+
+
   const handleNextStepOrSubmit = async () => {
-    if (currentTab === tabs.length - 1) {
+
+    if (currentTab === 4) { // FAQs tab
+      const faqItems = data.FAQ || [];
+    
+      // Transform into backend format
+      const payload = {
+        name: "Custom",
+        items: faqItems.map((faq: any) => ({
+          title: faq.Q,
+          description: faq.A,
+        })),
+      };
+    
       try {
-        const response = await uploadActivity(data);
-        console.log("✅ Activity successfully uploaded:", response);
-        // Optional: show toast or navigate
-      } catch (error) {
-        console.error("❌ Failed to upload activity:", error);
-        // Optional: show error toast
+        const faqRes = await createFaq(payload);
+        const faqId = faqRes?.data?._id;
+    
+        // Store faqId inside activity data
+        setData((prev: any) => ({ ...prev, FAQ: faqId }));
+    
+        // Also update activity with faqId if activityId exists
+        if (activityId) {
+          await updateActivity(activityId, { ...data, FAQ: faqId });
+        }
+      } catch (err) {
+        console.error("❌ Failed to save FAQ:", err);
       }
-    } else {
-      setCurrentTab((prev) => prev + 1);
+    }
+
+    try {
+
+      let response;
+  
+      if (!activityId) {
+        // console.log("i")
+        // First step: create the activity
+        response = await uploadActivity(data);
+        setActivityId(response?.data._id);
+        console.log("✅ Activity created:", response.data._id);
+      } else {
+        // Update existing activity
+        response = await updateActivity(activityId, data);
+        console.log("🔄 Activity updated:", response);
+      }
+  
+      // Go to next tab or finish
+      if (currentTab === tabs.length - 1) {
+        console.log("🎉 Final submission complete");
+      } else {
+        setCurrentTab((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error("❌ Error saving activity:", error);
     }
   };
+  
+  
 
   return (
     <div className=" flex flex-col">

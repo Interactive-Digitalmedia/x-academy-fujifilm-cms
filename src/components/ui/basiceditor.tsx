@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Bold,
   Italic,
@@ -14,19 +14,38 @@ import {
   AlignRight,
 } from "lucide-react";
 
-const StaticEditor = () => {
+type StaticEditorProps = {
+  value: string;
+  onChange: (html: string) => void;
+};
+
+const StaticEditor: React.FC<StaticEditorProps> = ({ value, onChange }) => {
+  const editorRef = useRef<HTMLDivElement | null>(null);
+
+  // Set initial HTML value
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value;
+    }
+  }, [value]);
+
+  // Handle content changes
+  const handleInput = () => {
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  };
+
   return (
     <div className="rounded-lg border border-gray-300 overflow-hidden">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-300 px-3 py-2">
-        {/* Dropdown */}
         <select className="rounded border border-gray-300 bg-white px-2 py-1 text-sm focus:outline-none">
           <option>Paragraph</option>
           <option>Heading 1</option>
           <option>Heading 2</option>
         </select>
 
-        {/* Icons */}
         <button className="icon-btn">
           <Bold size={16} />
         </button>
@@ -65,15 +84,14 @@ const StaticEditor = () => {
         </button>
       </div>
 
-      {/* Editable Text Area */}
+      {/* Editable Content Area */}
       <div
+        ref={editorRef}
         contentEditable
-        className="min-h-[150px] px-4 py-3 focus:outline-none border-none"
+        onInput={handleInput}
+        className="min-h-[150px] px-4 py-3 focus:outline-none"
         suppressContentEditableWarning
-      >
-        {/* Placeholder */}
-        <p className="text-gray-500">Start writing here...</p>
-      </div>
+      />
     </div>
   );
 };
