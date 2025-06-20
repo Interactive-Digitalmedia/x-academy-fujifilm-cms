@@ -31,14 +31,17 @@ export const SubmissionRow: React.FC<SubmissionRowProps> = ({
         return "bg-yellow-400";
     }
   };
-  
-const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
   return (
-    <TableRow  onClick={() => navigate(`/submissions/${data.sno}`)} className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0 leading-tight">
+    <TableRow
+      onClick={() => navigate(`/submissions/${data.sno}`)}
+      className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0 leading-tight"
+    >
       <TableCell className="px-3 py-1">{index + 1}</TableCell>
       <TableCell className="px-3 py-1">{data.name}</TableCell>
-      <TableCell className="text-blue-600 underline">{data.link}</TableCell>
+      <TableCell className="px-3 py-1">{data.link}</TableCell>
       <TableCell className="px-3 py-1">
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${getStatusDotColor()}`} />
