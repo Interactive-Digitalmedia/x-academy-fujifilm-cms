@@ -7,6 +7,7 @@ import PromotionalImages from "@/components/concludedEventTabs/PromotionalImages
 import PostEventImages from "@/components/concludedEventTabs/PostEventImages";
 import FAQs from "@/components/concludedEventTabs/FAQs";
 import AdminControls from "@/components/concludedEventTabs/AdminControls";
+import AttendeeList from "@/components/concludedEventTabs/AttendeeList";
 
 const TABS = [
   "Event Details",
@@ -16,6 +17,7 @@ const TABS = [
   "Post-Event Images",
   "FAQs",
   "Admin Controls",
+  "Attendee List",
 ];
 
 const initialEventData = {
@@ -63,6 +65,8 @@ const EventConcluded: React.FC = () => {
         return <FAQs />;
       case "Admin Controls":
         return <AdminControls data={data} setData={setData} />;
+      case "Attendee List":
+        return <AttendeeList />;
       default:
         return <div className="text-sm text-gray-600">Coming soon...</div>;
     }
@@ -76,7 +80,7 @@ const EventConcluded: React.FC = () => {
       {/* Tabs + Content Block */}
       <div className="w-full bg-white rounded-xl shadow-md p-4">
         {/* Tab Switcher */}
-        <div className="flex flex-wrap gap-3 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           {TABS.map((tab) => (
             <button
               key={tab}
@@ -85,7 +89,7 @@ const EventConcluded: React.FC = () => {
               }`}
               style={{
                 display: "flex",
-                padding: "6px 12px",
+                padding: "6px 10px",
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "10px",
