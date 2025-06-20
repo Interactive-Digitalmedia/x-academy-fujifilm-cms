@@ -8,6 +8,8 @@ import { DateRange } from "react-day-picker";
 import { dummyCommunity } from "@/assets/dummyCommunity";
 import FilterCard from "@/components/ui/filtercard";
 import { CommunityTable } from "@/components/community/CommunityTable";
+import { XStoriesTable } from "./XStoriesTable";
+import { dummyXStories } from "@/assets/dummyXStories";
 
 const CommunityOptions: React.FC = () => {
   const [searchText, setSearchText] = useState("");
@@ -141,7 +143,7 @@ const CommunityOptions: React.FC = () => {
 
         {/* Tabs */}
         <div className="mb-6 flex flex-wrap gap-3">
-          {["Ask the Expert", "Tips & Tricks"].map((tab) => (
+          {["Ask the Expert", "Tips & Tricks", "X-Stories"].map((tab) => (
             <button
               key={tab}
               className={`btn-toggle ${
@@ -164,13 +166,17 @@ const CommunityOptions: React.FC = () => {
         </div>
 
         {/* Conditional Rendering */}
-        {activeTab === "Ask the Expert" ? (
+        {activeTab === "Ask the Expert" && (
           <CommunityTable data={filteredCommunity} />
-        ) : (
+        )}
+
+        {activeTab === "Tips & Tricks" && (
           <div className="text-center text-gray-600 py-8 text-lg font-medium">
             Tips & Tricks coming soon...
           </div>
         )}
+
+        {activeTab === "X-Stories" && <XStoriesTable stories={dummyXStories} />}
       </div>
     </div>
   );

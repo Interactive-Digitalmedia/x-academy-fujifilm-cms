@@ -29,6 +29,7 @@ import BlogDetails from "./components/blogs/BlogDetails";
 import Others from "./pages/Others/Other";
 
 import Community from "./pages/Community/Community";
+import CreateXStory from "./pages/Activity/CreateXStory";
 
 import Profile from "./pages/Profile/Profile";
 import CreateBlog from "./pages/Blogs/CreateBlog";
@@ -99,6 +100,7 @@ function App() {
             <Route path="/blogs/:blogSlug" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
+            <Route path="/community/create-xstory" element={<CreateXStory />} />
 
             <Route path="/others" element={<Others />} />
             <Route path="/profile" element={<Profile />} />
