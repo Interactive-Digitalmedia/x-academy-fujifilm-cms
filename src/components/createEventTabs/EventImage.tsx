@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { uploadImage } from "@/api/activity";
 
 export default function EventImage({ data, setData }: any) {
-  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [, setHeroFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
 

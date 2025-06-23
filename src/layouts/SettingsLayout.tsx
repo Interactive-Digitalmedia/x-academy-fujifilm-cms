@@ -1,10 +1,8 @@
-import { SettingsSidebar } from '../components/sidebar/SettingsSidebar'
 import { Separator } from '@/components/ui/separator'
 import { Outlet } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
-import useDeviceDetect from '@/hooks/useDeviceDetect'
 
 const sidebarNavItems = [
   {
@@ -18,11 +16,10 @@ const sidebarNavItems = [
 ]
 
 const SettingsLayout = () => {
-  const isMobile = useDeviceDetect()
   return (
     <section className='relative h-screen md:mb-0'>
       {/* Main content container */}
-      <div className={`hidden space-y-6 pb-16 xs:block md:block ${isMobile ? "p-4" : "p-10"}`}>
+      <div className={`hidden space-y-6 pb-16 xs:block md:block `}>
         <div className='space-y-0.5'>
           <h2 className='text-2xl font-bold tracking-tight'>Settings</h2>
           <p className='text-muted-foreground'>
@@ -33,7 +30,7 @@ const SettingsLayout = () => {
         <Separator className='h-[1px] w-full bg-foreground bg-opacity-10' />
         <div className='flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <aside className='-mx-4 lg:w-1/5'>
-            <SettingsSidebar items={sidebarNavItems} />
+            {/* <SettingsSidebar items={sidebarNavItems} /> */}
           </aside>
           <div className='flex-1 lg:max-w-2xl'>
             <Outlet />

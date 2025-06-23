@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Input, Textarea, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { uploadImage } from "@/api/activity";
 
 interface BlogData {

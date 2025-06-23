@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button} from "@nextui-org/react";
+
 
 interface BlogData {
   title: string;
@@ -37,7 +37,6 @@ const CTAButton: React.FunctionComponent<CTAButtonProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  const [showSettings, setShowSettings] = React.useState(false);
 
 
 

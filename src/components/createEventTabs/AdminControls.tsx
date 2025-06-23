@@ -1,4 +1,4 @@
-import { Switch, Input } from "@nextui-org/react";
+import { Switch } from "@nextui-org/react";
 // import { useState } from 'react'
 import { Select, SelectItem } from "@nextui-org/react";
 import useGlobalStore from "@/state/GlobalState";

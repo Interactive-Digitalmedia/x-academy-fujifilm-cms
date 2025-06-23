@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Accordion,
   AccordionItem,
@@ -16,7 +15,9 @@ const AboutUs = () => {
           <div className="w-full">
             <AccordionContent className="!border-none !p-0 !shadow-none !rounded-none">
               <div className="rounded-lg border border-gray-300">
-                <BasicEditor />
+                <BasicEditor value={""} onChange={function (html: string): void {
+                  throw new Error("Function not implemented.");
+                } } />
               </div>
             </AccordionContent>
           </div>

@@ -30,8 +30,8 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  const [wordCount, setWordCount] = React.useState(0);
-  const [charCount, setCharCount] = React.useState(0);
+  const [, setWordCount] = React.useState(0);
+  const [, setCharCount] = React.useState(0);
 
   // Calculate word and character count
   React.useEffect(() => {

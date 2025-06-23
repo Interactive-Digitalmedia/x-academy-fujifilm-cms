@@ -1,7 +1,6 @@
 // NewsletterRow.tsx
 import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type NewsletterRowProps = {

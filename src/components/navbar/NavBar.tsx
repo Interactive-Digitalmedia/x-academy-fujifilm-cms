@@ -146,21 +146,7 @@ export default function NavBar() {
   // Get current section configuration
   const config = sectionConfig[currentSection];
 
-  // Render invite button for super admin
-  const renderInviteButton = () => {
-    if (user?.userRole !== "super admin") return null;
 
-    return (
-      <button
-        type="button"
-        onClick={onOpen}
-        className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm hover:shadow-md transition"
-      >
-        <UserPlus size={16} />
-        Invite
-      </button>
-    );
-  };
 
   // Render section-specific buttons
   //changed

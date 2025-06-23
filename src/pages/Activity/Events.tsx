@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { getActivities } from '@/api/activity'
 import ActivityGrid from '@/components/events/ActivityGrid'
 import { Activity } from '@/types'

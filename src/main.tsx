@@ -4,7 +4,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App.tsx";
 // import './index.css'
 import "./global.css";
-import posthog from "posthog-js";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 // import { PlanProvider } from './context/PlanContext.tsx'

@@ -1,5 +1,4 @@
 // components/AnalyticsCards.tsx
-import React from "react";
 import {
   TrendingUp,
   TrendingDown,

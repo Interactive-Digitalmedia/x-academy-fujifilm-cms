@@ -22,7 +22,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
 
-  const navigate = useNavigate()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     //call the API

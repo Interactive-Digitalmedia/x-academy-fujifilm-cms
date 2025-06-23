@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 
 interface GearItem {
