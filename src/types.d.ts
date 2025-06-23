@@ -28,25 +28,53 @@ export type Activity = {
 };
 
 // types/ambassador.ts
-export interface Ambassador {
-  userId: string; // e.g. MongoDB ObjectId string
-  slug: string; // human-readable URL slug
-  name: string; // display name
-  profileImage: string; // avatar URL
-  coverImage: string; // banner URL (for profile page)
-  bio: string;
-  expertiseTags: string[];
-  socialLinks: {
-    instagram?: string;
-    facebook?: string;
-    portfolio?: string;
-  };
-  gear: {
-    name: string;
-    image: string;
-    productUrl: string;
-  }[];
-  isFeatured: boolean;
-}
+// export interface Ambassador {
+//   userId: string; // e.g. MongoDB ObjectId string
+//   slug: string; // human-readable URL slug
+//   name: string; // display name
+//   profileImage: string; // avatar URL
+//   coverImage: string; // banner URL (for profile page)
+//   bio: string;
+//   expertiseTags: string[];
+//   socialLinks: {
+//     instagram?: string;
+//     facebook?: string;
+//     portfolio?: string;
+//   };
+//   gear: {
+//     name: string;
+//     image: string;
+//     productUrl: string;
+//   }[];
+//   isFeatured: boolean;
+// }
 
 // Faq template schmema
+
+export interface Ambassador {
+  _id: string;
+  fullname: string;
+  userName: string;
+  type: string; // e.g., "X-Ambassador"
+  tags?: string[];
+  bio?: string;
+  location?: string;
+  joinedDate: string;
+  profileImage?: string;
+  bannerImage?: string;
+  gallery?: string[];
+  gearDetails?: {
+    productImage?: string;
+    productName?: string;
+    productLink?: string;
+  }[];
+  email: string;
+  contactNumber?: string;
+  socialMediaUrls?: {
+    facebook?: string;
+    instagram?: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+

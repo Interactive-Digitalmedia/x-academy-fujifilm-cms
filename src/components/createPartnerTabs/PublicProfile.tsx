@@ -1,3 +1,5 @@
+import { uploadImage } from "@/api/uploadImageApi";
+import { Ambassador } from "@/types";
 import { Select, SelectItem, Button } from "@nextui-org/react";
 import { useState, useRef } from "react";
 
@@ -8,10 +10,14 @@ const tagsList = [
   { name: "Wildlife", color: "bg-emerald-700" },
   { name: "Portrait", color: "bg-pink-400" },
 ];
+interface PublicProfileProps {
+  data: Partial<Ambassador>;
+  setData: React.Dispatch<React.SetStateAction<Partial<Ambassador>>>;
+}
 
-const titles = ["X - Ambassador", "X - Evangelist", "X - Creator"];
+const titles = ["X - Ambassador", "X - Evangelist"];
 
-export default function PublicProfile({ data, setData }: any) {
+export default function PublicProfile({ data, setData }: PublicProfileProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>(data.tags || []);
   const profileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -30,7 +36,7 @@ export default function PublicProfile({ data, setData }: any) {
     setData({ ...data, tags: updatedTags });
   };
 
-  const handleFileChange = (
+  const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "profile" | "cover"
   ) => {
@@ -47,19 +53,31 @@ export default function PublicProfile({ data, setData }: any) {
       return alert("Only .jpg, .png, .svg files are allowed");
     }
 
-    const url = URL.createObjectURL(file);
-    if (type === "profile") {
-      setData({ ...data, profilePic: url });
-    } else {
-      setData({ ...data, coverImage: url });
-    }
+    const field: keyof Ambassador =
+      type === "profile" ? "profileImage" : "bannerImage";
+
+    await handleImageUpload(file, field);
   };
 
   const removeImage = (type: "profile" | "cover") => {
     if (type === "profile") {
-      setData({ ...data, profilePic: "" });
+      setData({ ...data, profileImage: "" });
     } else {
-      setData({ ...data, coverImage: "" });
+      setData({ ...data, bannerImage: "" });
+    }
+  };
+
+  const handleImageUpload = async (file: File, field: keyof Ambassador) => {
+    try {
+      const result = await uploadImage(file);
+      if (result?.publicUrl) {
+        setData((prev) => ({
+          ...prev,
+          [field]: result.publicUrl,
+        }));
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
     }
   };
 
@@ -68,7 +86,19 @@ export default function PublicProfile({ data, setData }: any) {
       <h2 className="text-base font-bold mb-1">Public Profile</h2>
 
       {/* Name & Title */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-[#818181] mb-1">
+            Username
+          </label>
+          <input
+            type="text"
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            placeholder="JohnDoe"
+            value={data.userName || ""}
+            onChange={(e) => setData({ ...data, userName: e.target.value })}
+          />
+        </div>
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
             Name
@@ -77,19 +107,19 @@ export default function PublicProfile({ data, setData }: any) {
             type="text"
             className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             placeholder="John Doe"
-            value={data.name || ""}
-            onChange={(e) => setData({ ...data, name: e.target.value })}
+            value={data.fullname || ""}
+            onChange={(e) => setData({ ...data, fullname: e.target.value })}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Title
+            Type
           </label>
           <Select
             placeholder="Select title"
-            selectedKeys={data.title ? [data.title] : []}
-            onChange={(e) => setData({ ...data, title: e.target.value })}
+            selectedKeys={data.type ? [data.type] : []}
+            onChange={(e) => setData({ ...data, type: e.target.value })}
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -165,13 +195,32 @@ export default function PublicProfile({ data, setData }: any) {
           <label className="block text-sm font-medium text-[#818181] mb-1">
             Location
           </label>
-          <input
-            type="text"
-            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            placeholder="Mumbai"
-            value={data.location || ""}
+          <Select
+            placeholder="Select event location"
+            selectedKeys={data.location ? [data.location] : []}
             onChange={(e) => setData({ ...data, location: e.target.value })}
-          />
+            classNames={{
+              trigger:
+                "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
+            }}
+          >
+            {[
+              "Ahmedabad",
+              "Bangalore",
+              "Chandigarh",
+              "Chennai",
+              "Delhi",
+              "Hyderabad",
+              "Kochi",
+              "Kolkata",
+              "Mumbai",
+              "Pune",
+            ].map((city) => (
+              <SelectItem key={city} value={city}>
+                {city}
+              </SelectItem>
+            ))}
+          </Select>
         </div>
 
         <div>
@@ -181,8 +230,8 @@ export default function PublicProfile({ data, setData }: any) {
           <input
             type="date"
             className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.dateJoined || ""}
-            onChange={(e) => setData({ ...data, dateJoined: e.target.value })}
+            value={data.joinedDate || ""}
+            onChange={(e) => setData({ ...data, joinedDate: e.target.value })}
           />
         </div>
       </div>
@@ -195,18 +244,21 @@ export default function PublicProfile({ data, setData }: any) {
             Profile Picture
           </label>
           <div className="flex gap-2">
-            <input
+            {/* <input
               type="text"
               placeholder="Image URL"
               className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-              value={data.profilePic || ""}
-              onChange={(e) => setData({ ...data, profilePic: e.target.value })}
-            />
+              value={data.profileImage || ""}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleImageUpload(file, "profileImage");
+              }}
+            /> */}
 
             <Button
               variant="bordered"
               className="border-[#1098F7] text-[#1098F7] bg-white hover:bg-[#e6f4fe]"
-              onClick={() => profileInputRef.current?.click()}
+              onPress={() => profileInputRef.current?.click()}
             >
               Add Image
             </Button>
@@ -218,10 +270,10 @@ export default function PublicProfile({ data, setData }: any) {
             onChange={(e) => handleFileChange(e, "profile")}
             className="hidden"
           />
-          {data.profilePic && (
+          {data.profileImage && (
             <div className="relative inline-block mt-2">
               <img
-                src={data.profilePic}
+                src={data.profileImage}
                 alt="Profile Preview"
                 className="w-32 h-32 object-cover rounded-full border"
               />
@@ -242,18 +294,21 @@ export default function PublicProfile({ data, setData }: any) {
         <div>
           <label className="text-sm font-medium mb-1 block">Cover Image</label>
           <div className="flex gap-2">
-            <input
+            {/* <input
               type="text"
               placeholder="Image URL"
               className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-              value={data.coverImage || ""}
-              onChange={(e) => setData({ ...data, coverImage: e.target.value })}
-            />
+              value={data.bannerImage || ""}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleImageUpload(file, "bannerImage");
+              }}
+            /> */}
 
             <Button
               variant="bordered"
               className="border-[#1098F7] text-[#1098F7] bg-white hover:bg-[#e6f4fe]"
-              onClick={() => coverInputRef.current?.click()}
+              onPress={() => coverInputRef.current?.click()}
             >
               Add Image
             </Button>
@@ -265,10 +320,10 @@ export default function PublicProfile({ data, setData }: any) {
             onChange={(e) => handleFileChange(e, "cover")}
             className="hidden"
           />
-          {data.coverImage && (
+          {data.bannerImage && (
             <div className="relative mt-2">
               <img
-                src={data.coverImage}
+                src={data.bannerImage}
                 alt="Cover Preview"
                 className="w-full h-40 object-cover rounded-md border"
               />

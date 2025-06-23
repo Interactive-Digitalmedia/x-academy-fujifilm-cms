@@ -1,14 +1,15 @@
 import * as React from "react";
 import { UploadCloud, Trash2 } from "lucide-react";
+import { uploadImage } from "@/api/uploadImageApi";
+import { Ambassador } from "@/types";
 
 interface GalleryImage {
-  file: File | null;
   url: string;
 }
 
 interface GalleryProps {
-  data: any;
-  setData: (updatedData: any) => void;
+  data: Partial<Ambassador>;
+  setData: React.Dispatch<React.SetStateAction<Partial<Ambassador>>>;
 }
 
 const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
@@ -41,9 +42,8 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
     }
   };
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = async (file: File) => {
     if (file.size > 10 * 1024 * 1024) return alert("File size must be < 10MB");
-
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -54,16 +54,19 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
       return alert("Only .jpg, .png, .svg files are allowed");
     }
 
-    const previewUrl = URL.createObjectURL(file);
-    const newImage: GalleryImage = {
-      file,
-      url: previewUrl,
-    };
-
-    setData({
-      ...data,
-      galleryImages: [...(data.galleryImages || []), newImage],
-    });
+    try {
+      const result = await uploadImage(file);
+      if (result?.publicUrl) {
+        const newImage: GalleryImage = { url: result.publicUrl };
+        setData({
+          ...data,
+          gallery: [...(data.gallery || []), newImage.url], // Store only S3 URLs
+        });
+      }
+    } catch (error) {
+      console.error("Gallery upload failed:", error);
+      alert("Upload failed. Please try again.");
+    }
   };
 
   const handleAddImage = () => {
@@ -71,9 +74,9 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
   };
 
   const handleDeleteImage = (index: number) => {
-    const updatedImages = [...(data.galleryImages || [])];
+    const updatedImages = [...(data.gallery || [])];
     updatedImages.splice(index, 1); // remove the image at that index
-    setData({ ...data, galleryImages: updatedImages });
+    setData({ ...data, gallery: updatedImages });
   };
 
   return (
@@ -108,13 +111,13 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
       </div>
 
       <div className="flex flex-wrap gap-4">
-        {(data.galleryImages || []).map((img: GalleryImage, index: number) => (
+        {(data.gallery || []).map((url: string, index: number) => (
           <div
             key={index}
             className="border rounded-lg p-4 bg-gray-50 w-[172px] flex flex-col items-center space-y-2"
           >
             <img
-              src={img.url}
+              src={url}
               alt={`Gallery image ${index + 1}`}
               className="max-h-64 rounded-lg object-cover"
             />
