@@ -1,37 +1,77 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { UploadCloud, Trash2 } from "lucide-react";
-import { uploadXStory } from "@/api/uploadXStory";
+import { uploadXStory, updateXStory, getXStoryById } from "@/api/XStory";
+
+import { XStory } from "./CommunityOptions";
 
 interface GalleryImage {
   file: File | null;
   url: string;
 }
 
-const AddXStoryDialog: React.FC = () => {
+interface AddXStoryDialogProps {
+  open: boolean;
+  story: XStory | null;
+  onClose: () => void;
+}
+
+const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
+  open,
+  story,
+  onClose,
+}) => {
   const [formData, setFormData] = useState({
     xStoryName: "",
     videoLink: "",
     coverImage: null as GalleryImage | null,
   });
-
-  const [dragActive, setDragActive] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
+
+  useEffect(() => {
+    if (story?._id) {
+      setIsEditing(true);
+      const fetchStoryData = async () => {
+        try {
+          const response = await getXStoryById(story._id);
+          if (response && response.data) {
+            setFormData({
+              xStoryName: response.data.name,
+              videoLink: response.data.link,
+              coverImage: response.data.coverImage
+                ? { file: null, url: response.data.coverImage }
+                : null,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch story data:", error);
+        }
+      };
+      fetchStoryData();
+    } else {
+      setIsEditing(false);
+      setFormData({
+        xStoryName: "",
+        videoLink: "",
+        coverImage: null,
+      });
+    }
+  }, [story, open]);
 
   const handleFileSelect = (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
       alert("File size must be less than 10MB");
       return;
     }
-
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -42,7 +82,6 @@ const AddXStoryDialog: React.FC = () => {
       alert("Only .jpg, .png, .svg files are allowed");
       return;
     }
-
     const previewUrl = URL.createObjectURL(file);
     setFormData({ ...formData, coverImage: { file, url: previewUrl } });
   };
@@ -76,22 +115,42 @@ const AddXStoryDialog: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="h-[32px] px-4 text-sm bg-[#2196F3] text-white hover:bg-[#1976D2]"
-        >
-          Add X-Story
-        </Button>
-      </DialogTrigger>
+  const handleSubmit = async () => {
+    if (!formData.xStoryName || !formData.videoLink || !formData.coverImage) {
+      alert("Please fill in all fields.");
+      return;
+    }
 
+    const payload = new FormData();
+    payload.append("name", formData.xStoryName);
+    payload.append("link", formData.videoLink);
+    if (formData.coverImage.file) {
+      payload.append("coverImage", formData.coverImage.file);
+    }
+
+    try {
+      if (isEditing && story) {
+        await updateXStory(story._id, payload);
+      } else {
+        await uploadXStory(payload);
+      }
+      onClose();
+    } catch (err) {
+      console.error("Operation failed", err);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="max-w-2xl p-6">
         <DialogHeader>
-          <DialogTitle className="font-bold">New X Story</DialogTitle>
+          <DialogTitle className="font-bold">
+            {isEditing ? "Edit X Story" : "New X Story"}
+          </DialogTitle>
           <DialogDescription>
-            Fill in the details to upload a new X-Story.
+            {isEditing
+              ? "Update the details for this X-Story."
+              : "Fill in the details to upload a new X-Story."}
           </DialogDescription>
         </DialogHeader>
 
@@ -133,7 +192,7 @@ const AddXStoryDialog: React.FC = () => {
 
             <div
               className={`relative border-2 border-dashed rounded-lg text-center transition-colors h-[180px] ${
-                dragActive ? "border-blue-400 bg-blue-50" : "border-blue-300"
+                dragActive ? "border-blue-400 bg-blue-50" : "border-gray-300"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -190,35 +249,13 @@ const AddXStoryDialog: React.FC = () => {
           </div>
         </div>
 
-        {/* Save Button Footer */}
-        <div className="flex justify-end -mt-4">
+        <div className="flex justify-end pt-4">
           <Button
             size="sm"
             className="bg-[#2196F3] text-white hover:bg-[#1976D2]"
-            onClick={async () => {
-              if (
-                !formData.xStoryName ||
-                !formData.videoLink ||
-                !formData.coverImage
-              ) {
-                alert("Please fill in all fields.");
-                return;
-              }
-
-              try {
-                const response = await uploadXStory({
-                  name: formData.xStoryName,
-                  link: formData.videoLink,
-                  coverImage: formData.coverImage.url,
-                });
-
-                console.log("X-Story uploaded successfully", response);
-              } catch (err) {
-                console.error("Upload failed", err);
-              }
-            }}
+            onClick={handleSubmit}
           >
-            Save Story
+            {isEditing ? "Update Story" : "Save Story"}
           </Button>
         </div>
       </DialogContent>
@@ -226,4 +263,4 @@ const AddXStoryDialog: React.FC = () => {
   );
 };
 
-export default AddXStoryDialog;
+export default XStoryDialog;

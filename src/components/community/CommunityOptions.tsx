@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Search, Calendar, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +9,24 @@ import { dummyCommunity } from "@/assets/dummyCommunity";
 import FilterCard from "@/components/ui/filtercard";
 import { CommunityTable } from "@/components/community/CommunityTable";
 import { XStoriesTable } from "./XStoriesTable";
-import { dummyXStories } from "@/assets/dummyXStories";
-import AddXStoryDialog from "./AddXStoryDialog";
+
+import XStoryDialog from "./XStoryDialog";
+import { getAllXStories } from "@/api/XStory";
+
+export interface XStory {
+  _id: string;
+  sno: number;
+  title: string;
+  videoLink: string;
+  dateUploaded: string;
+  uploadedBy: string;
+  isCoverImage: boolean;
+}
 
 const CommunityOptions: React.FC = () => {
   const [searchText, setSearchText] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedStory, setSelectedStory] = useState<XStory | null>(null);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
   const [showCalendar, setShowCalendar] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -22,34 +35,76 @@ const CommunityOptions: React.FC = () => {
   );
   const [activeTab, setActiveTab] = useState("Ask the Expert");
   const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
+  const [xStories, setXStories] = useState<XStory[]>([]);
 
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
     return new Date(year, month - 1, day);
   };
 
+  const fetchStories = useCallback(async () => {
+    try {
+      const response = await getAllXStories();
+      const transformed: XStory[] = response.data.map(
+        (story: any, index: number) => ({
+          _id: story._id,
+          sno: index + 1,
+          title: story.name,
+          videoLink: story.link,
+          dateUploaded: new Date(story.createdAt).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          uploadedBy: "Admin",
+          isCoverImage: !!story.coverImage,
+        })
+      );
+      setXStories(transformed);
+    } catch (err) {
+      console.error("Failed to load X-Stories", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "X-Stories") {
+      fetchStories();
+    }
+  }, [activeTab, fetchStories]);
+
   useEffect(() => {
     const lowerSearch = searchText.toLowerCase();
-
     const filtered = dummyCommunity.filter((item) => {
       const matchesSearch =
         searchText.length < 3 ||
         item.raisedBy?.toLowerCase().includes(lowerSearch) ||
         item.question?.toLowerCase().includes(lowerSearch);
-
       const matchesFilters =
         !activeFilters.status || item.status === activeFilters.status;
-
       const itemDate = parseDMY(item.date);
       const from = selectedRange?.from;
       const to = selectedRange?.to;
       const matchesDate = !from || !to || (itemDate >= from && itemDate <= to);
-
       return matchesSearch && matchesFilters && matchesDate;
     });
-
     setFilteredCommunity(filtered);
   }, [searchText, selectedRange, activeFilters]);
+
+  const handleRowClick = (story: XStory) => {
+    setSelectedStory(story);
+    setDialogOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setSelectedStory(null);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedStory(null);
+    fetchStories();
+  };
 
   return (
     <div
@@ -68,12 +123,18 @@ const CommunityOptions: React.FC = () => {
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-bold">Community</h2>
 
-          {activeTab === "X-Stories" && <AddXStoryDialog />}
+          {activeTab === "X-Stories" && (
+            <Button
+              size="sm"
+              className="h-[32px] px-4 text-sm bg-[#2196F3] text-white hover:bg-[#1976D2]"
+              onClick={handleAddClick}
+            >
+              Add X-Story
+            </Button>
+          )}
         </div>
 
-        {/* Controls Row */}
         <div className="flex justify-between items-center mb-6 w-full">
-          {/* Search Bar */}
           <div className="relative w-[738px] mr-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
@@ -85,9 +146,7 @@ const CommunityOptions: React.FC = () => {
             />
           </div>
 
-          {/* Date Picker + Filter Button */}
           <div className="flex items-center gap-3">
-            {/* Calendar Toggle */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -114,7 +173,6 @@ const CommunityOptions: React.FC = () => {
               )}
             </div>
 
-            {/* Filter Button */}
             <div className="relative">
               <Button
                 variant="outline"
@@ -146,7 +204,6 @@ const CommunityOptions: React.FC = () => {
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="mb-6 flex flex-wrap gap-3">
           {["Ask the Expert", "Tips & Tricks", "X-Stories"].map((tab) => (
             <button
@@ -170,7 +227,6 @@ const CommunityOptions: React.FC = () => {
           ))}
         </div>
 
-        {/* Conditional Rendering */}
         {activeTab === "Ask the Expert" && (
           <CommunityTable data={filteredCommunity} />
         )}
@@ -181,8 +237,16 @@ const CommunityOptions: React.FC = () => {
           </div>
         )}
 
-        {activeTab === "X-Stories" && <XStoriesTable stories={dummyXStories} />}
+        {activeTab === "X-Stories" && (
+          <XStoriesTable stories={xStories} onRowClick={handleRowClick} />
+        )}
       </div>
+
+      <XStoryDialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        story={selectedStory}
+      />
     </div>
   );
 };

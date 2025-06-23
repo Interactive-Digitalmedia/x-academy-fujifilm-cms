@@ -7,21 +7,17 @@ import {
   TableHead as TH,
 } from "@/components/ui/table";
 import { XStoryRow } from "./XStoriesRow";
-
-export interface XStory {
-  sno: number;
-  title: string;
-  videoLink: string;
-  dateUploaded: string;
-  uploadedBy: string;
-  isCoverImage: boolean;
-}
+import { XStory } from "./CommunityOptions"; // Import from the central definition
 
 interface XStoriesTableProps {
   stories: XStory[];
+  onRowClick: (story: XStory) => void;
 }
 
-export const XStoriesTable: React.FC<XStoriesTableProps> = ({ stories }) => {
+export const XStoriesTable: React.FC<XStoriesTableProps> = ({
+  stories,
+  onRowClick,
+}) => {
   return (
     <div className="bg-white w-full">
       <Table className="w-full text-sm">
@@ -37,7 +33,12 @@ export const XStoriesTable: React.FC<XStoriesTableProps> = ({ stories }) => {
         </TableHeader>
         <TableBody>
           {stories.map((story, i) => (
-            <XStoryRow key={i} data={story} index={i} />
+            <XStoryRow
+              key={story._id}
+              data={story}
+              index={i}
+              onClick={() => onRowClick(story)}
+            />
           ))}
         </TableBody>
       </Table>
