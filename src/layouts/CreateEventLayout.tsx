@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventDetails from "@/components/createEventTabs/EventDetails";
 import AboutEvent from "@/components/createEventTabs/AboutEvent";
 import AdminControls from "@/components/createEventTabs/AdminControls";
@@ -6,6 +6,10 @@ import EventImage from "@/components/createEventTabs/EventImage";
 import EventSchedule from "@/components/createEventTabs/EventSchedule";
 import FAQs from "@/components/createEventTabs/FAQs";
 import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useActivityStore } from '@/Zustang/useActivityStore'
+import MainCard from "@/components/concludedEventTabs/MainCard";
 
 const tabs = [
   "Event Details",
@@ -17,7 +21,31 @@ const tabs = [
 ];
 
 export default function CreateEventLayout({ data, setData }: any) {
+  const navigate=useNavigate()
   const [currentTab, setCurrentTab] = useState(0);
+  const [originalData, setOriginalData] = useState<any>(null);
+  const [activityId, setActivityId] = useState<string | null>(null);
+    const { fetchActivitiesById } =
+      useActivityStore()
+
+      const { id } = useParams<{ id?: string }>(); 
+      useEffect(() => {
+        if (!id) return;
+      
+        (async () => {
+          try {
+            const res = await fetchActivitiesById(id);
+            setData(res);              // for form
+            setOriginalData(res);  
+            console.log(res) 
+            if(res)   // for comparison later
+            setActivityId(res._id);    // set activityId for update
+          } catch (error) {
+            toast.error("Failed to fetch activity");
+            console.error("Fetch error:", error);
+          }
+        })();
+      }, [id]);
 
   const renderCurrentTab = () => {
     switch (currentTab) {
@@ -54,70 +82,128 @@ export default function CreateEventLayout({ data, setData }: any) {
   //   }
   // };
 
-  const [activityId, setActivityId] = useState<string | null>(null);
 
+  const deepEqual = (a: any, b: any): boolean => {
+    if (a === b) return true;
+  
+    if (typeof a !== typeof b) return false;
+    if (a == null || b == null) return false;
+  
+    if (typeof a === "object") {
+      const keysA = Object.keys(a);
+      const keysB = Object.keys(b);
+      if (keysA.length !== keysB.length) return false;
+  
+      for (const key of keysA) {
+        if (!deepEqual(a[key], b[key])) return false;
+      }
+  
+      return true;
+    }
+  
+    return false;
+  };
 
-  const handleNextStepOrSubmit = async () => {
-
-    if (currentTab === 4) { // FAQs tab
+  const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
+    let updatedFAQId = data.FAQ;
+  
+    // 1. Update FAQ if on FAQ step
+    if (currentTab === 4) {
       const faqItems = data.FAQ || [];
-    
-      // Transform into backend format
-      const payload = {
+      const faqPayload = {
         name: "Custom",
-        items: faqItems.map((faq: any) => ({
-          title: faq.Q,
-          description: faq.A,
-        })),
+        items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
       };
-    
+  
       try {
-        const faqRes = await createFaq(payload);
-        const faqId = faqRes?.data?._id;
-    
-        // Store faqId inside activity data
-        setData((prev: any) => ({ ...prev, FAQ: faqId }));
-    
-        // Also update activity with faqId if activityId exists
+        const faqRes = await createFaq(faqPayload);
+        updatedFAQId = faqRes?.data?._id;
+        setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
+  
         if (activityId) {
-          await updateActivity(activityId, { ...data, FAQ: faqId });
+          await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
         }
       } catch (err) {
+        toast.error("Failed to save FAQs");
         console.error("❌ Failed to save FAQ:", err);
       }
     }
-
-    try {
-
-      let response;
   
-      if (!activityId) {
-        // console.log("i")
-        // First step: create the activity
-        response = await uploadActivity(data);
-        setActivityId(response?.data._id);
-        console.log("✅ Activity created:", response.data._id);
-      } else {
-        // Update existing activity
-        response = await updateActivity(activityId, data);
-        console.log("🔄 Activity updated:", response);
+    // 2. Prepare final payload
+    const payload = {
+      ...data,
+      FAQ: updatedFAQId,
+      ...(action && { status: action }),
+    };
+  
+    // 3. Manual deep equality check function
+    const deepEqual = (a: any, b: any): boolean => {
+      if (a === b) return true;
+      if (typeof a !== typeof b || a == null || b == null) return false;
+  
+      if (typeof a === "object") {
+        const keysA = Object.keys(a);
+        const keysB = Object.keys(b);
+        if (keysA.length !== keysB.length) return false;
+  
+        for (const key of keysA) {
+          if (!deepEqual(a[key], b[key])) return false;
+        }
+  
+        return true;
       }
   
-      // Go to next tab or finish
+      return false;
+    };
+  
+    try {
+      let response;
+  
+      // 4. CREATE
+      if (!activityId) {
+        response = await uploadActivity(payload);
+        setActivityId(response?.data?._id);
+        toast.success("Activity created!");
+      }
+      // 5. UPDATE — only if modified
+      else {
+        if (!originalData || !deepEqual(payload, originalData)) {
+          response = await updateActivity(activityId, payload);
+          toast.success("Activity updated!");
+          setOriginalData(payload); // update the reference
+        } else {
+          toast.success("No changes to update");
+        }
+      }
+  
+      // 6. Final step navigation
       if (currentTab === tabs.length - 1) {
-        console.log("🎉 Final submission complete");
+        if (action === "published" && response?.data?._id) {
+          toast.success("Published and redirecting...");
+          navigate(`/events/${response.data._id}`, {
+            state: { activity: response.data },
+          });
+        } else {
+          toast.success("Saved as draft");
+        }
       } else {
         setCurrentTab((prev) => prev + 1);
       }
     } catch (error) {
+      toast.error("Failed to save activity");
       console.error("❌ Error saving activity:", error);
     }
   };
   
   
+  
+  
 
   return (
     <div className=" flex flex-col">
+           {id &&   <MainCard
+ data={data}
+  />}
       {/* Card wrapper */}
       <div className="bgCard h-[83vh]">
         {/* Tab Navigation (inside card) */}
@@ -168,12 +254,30 @@ export default function CreateEventLayout({ data, setData }: any) {
             Previous
           </button>
 
-          <button
-            className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
-            onClick={handleNextStepOrSubmit}
-          >
-            {currentTab === tabs.length - 1 ? "Submit" : "Next Step"}
-          </button>
+          {currentTab === tabs.length - 1 ? (
+  <div className="flex gap-3">
+    <button
+      className="px-6 py-2 rounded-md text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
+      onClick={() => handleNextStepOrSubmit("draft")}
+    >
+      Save as Draft
+    </button>
+    <button
+      className="px-6 py-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white hover:bg-[#0f87dc] transition"
+      onClick={() => handleNextStepOrSubmit("published")}
+    >
+      Save & Preview
+    </button>
+  </div>
+) : (
+  <button
+    className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
+    onClick={() => handleNextStepOrSubmit()}
+  >
+    Next Step
+  </button>
+)}
+
         </div>
       </div>
     </div>

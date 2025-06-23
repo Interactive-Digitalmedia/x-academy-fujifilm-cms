@@ -19,7 +19,7 @@ const Events = () => {
   const filteredActivities =
     activeType === 'All'
       ? activities
-      : activities.filter((a) => a.type === activeType)
+      : activities.filter((a) => a.activityType === activeType)
 
   const types = ['All', 'event', 'workshop', 'exhibition']
 
