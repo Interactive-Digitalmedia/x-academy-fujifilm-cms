@@ -1,28 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Grid3X3, List, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PartnersGridView from "@/components/partners/PartnersGridView";
 import PartnersListView from "@/components/partners/PartnersListView";
-import { PartnersList } from "@/assets/PartnersList";
+// import { PartnersList } from "@/assets/PartnersList";
+import { getAmbassadors } from "@/api/ambassadors";
+import { Ambassador } from "@/types";
 
 const PartnersView: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeType, setActiveType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
 
   const types = ["All", "Ambassadors", "Evangelists"];
 
+  useEffect(() => {
+    const load = async () => {
+      const response = await getAmbassadors();
+      if (response?.data) {
+        setAmbassadors(response.data);
+      }
+    };
+    load();
+  }, []);
+
   // Filter logic
-  const filteredPartners = PartnersList.filter((partner) => {
+  const filteredPartners = ambassadors.filter((partner) => {
     const matchesType =
       activeType === "All" ||
-      partner.role.toLowerCase() === activeType.toLowerCase().slice(0, -1);
+      partner.type.toLowerCase() === activeType.toLowerCase().slice(0, -1);
 
     const matchesSearch =
       searchQuery.length < 3 ||
-      partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.role.toLowerCase().includes(searchQuery.toLowerCase());
+      partner.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      partner.type.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesType && matchesSearch;
   });
