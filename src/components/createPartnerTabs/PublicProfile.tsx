@@ -1,4 +1,4 @@
-import { Input, Select, SelectItem, Textarea, Button } from "@nextui-org/react";
+import { Select, SelectItem, Button } from "@nextui-org/react";
 import { useState, useRef } from "react";
 
 const tagsList = [

@@ -11,7 +11,9 @@ import {
 } from "@nextui-org/react";
 import { Search, Calendar, Filter, Plus, Trash2 } from "lucide-react";
 import Newsletter from "@/components/others/Newsletter";
-import AboutUs from "@/components/others/Aboutus";
+// import AboutUs from "@/components/others/Aboutus";
+import AboutUs from "@/components/others/AboutUs";
+
 
 interface Question {
   id: string;

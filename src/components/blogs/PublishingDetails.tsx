@@ -44,11 +44,6 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Travel", color: "indigo" },
   ];
 
-  const authors = [
-    { key: "john-doe", label: "John Doe" },
-    { key: "jane-smith", label: "Jane Smith" },
-    { key: "admin", label: "Admin" },
-  ];
 
   const removeTag = (index: number) => {
     const newTags = blogData.tags.filter((_, i) => i !== index);

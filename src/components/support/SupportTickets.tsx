@@ -17,8 +17,9 @@ const SupportTickets: React.FC = () => {
     {}
   );
   const [activeType, setActiveType] = useState("All");
-  const [filteredSupports, setFilteredSupports] = useState(dummySupport);
+  const [filteredSupport, setFilteredSupport] = useState<any[]>(dummySupport);
 
+  
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
     return new Date(year, month - 1, day);
@@ -55,7 +56,7 @@ const SupportTickets: React.FC = () => {
       );
     });
 
-    setFilteredSupports(filtered);
+    setFilteredSupport(filtered);
   }, [searchText, selectedRange, activeFilters, activeType]);
 
   return (
@@ -149,7 +150,10 @@ const SupportTickets: React.FC = () => {
                         ),
                       },
                     ]}
-                    onFiltered={(filtered, active) => setActiveFilters(active)}
+                    onFiltered={(filtered, active) => {
+                      setFilteredSupport(filtered);       // ✅ filtered data
+                      setActiveFilters(active);           // ✅ selected filters
+                    }}
                   />
                 </div>
               )}
@@ -185,7 +189,7 @@ const SupportTickets: React.FC = () => {
         </div>
 
         {/* Table Section */}
-        <SupportTable filteredSupports={filteredSupports} />
+        <SupportTable filteredSupports={filteredSupport} />
       </div>
     </div>
   );

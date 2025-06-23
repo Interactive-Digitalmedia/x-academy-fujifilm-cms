@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Input, Textarea, Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 
 const blankFaq = { Q: "", A: "" };

@@ -12,10 +12,10 @@ import FilterCard from "@/components/ui/filtercard";
 
 const GridView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, ] = useState<"grid" | "list">("grid");
   const [searchText, setSearchText] = useState("");
 
-  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+  const [selectedRange, ] = useState<DateRange | undefined>();
   const [filteredResults, setFilteredResults] = useState(dummyEvents);
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
     {}

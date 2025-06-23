@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { SubmissionTable } from "./submissiontable";
 import { dummySubmissions } from "@/assets/dummySubmissions";
 

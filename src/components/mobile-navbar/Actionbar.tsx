@@ -1,15 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
-import useDeviceDetect from '../../hooks/useDeviceDetect'
 import IconContainer from './IconContainer'
-import HomeIcon from '../icons/HomeIcon'
 import { cn } from '@/lib/utils'
 import posthog from 'posthog-js'
-import { Compass } from 'lucide-react'
+import { Compass, HomeIcon } from 'lucide-react'
 import { CircleDotDashed } from 'lucide-react'
 import { User } from 'lucide-react'
 
 export default function Actionbar() {
-  const isMobile = useDeviceDetect()
   const location = useLocation()
 
   interface IconData {
@@ -52,7 +49,7 @@ export default function Actionbar() {
 
   return (
     <>
-      {isMobile ? (
+       (
         <div className='fixed inset-x-0 bottom-0 z-50 flex items-center justify-around bg-black/40 px-4 py-2 shadow-lg backdrop-blur-md sm:px-6'>
           {iconData.map((icon, index) => (
             <Link
@@ -71,9 +68,7 @@ export default function Actionbar() {
             </Link>
           ))}
         </div>
-      ) : (
-        <></>
-      )}
+      ) 
     </>
   )
 }

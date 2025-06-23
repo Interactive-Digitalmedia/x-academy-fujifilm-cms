@@ -7,7 +7,6 @@ import {
   BookOpen,
   BarChart,
   HelpCircle,
-  Settings,
   CircleEllipsis,
 } from "lucide-react";
 import Logo from "/images/logo/logo.webp";

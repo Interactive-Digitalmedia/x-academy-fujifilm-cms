@@ -1,5 +1,5 @@
 
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@nextui-org/button'
 import { useState } from 'react'
@@ -22,7 +22,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
 
-  const navigate = useNavigate()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     //call the API

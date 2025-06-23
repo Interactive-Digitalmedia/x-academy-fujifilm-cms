@@ -4,11 +4,11 @@ import { Input } from '@/components/ui/input'
 import React, { useEffect, useState } from 'react'
 import { Accordion, AccordionItem } from '@nextui-org/react'
 import { Eye, EyeOff } from 'lucide-react'
-import { createOne } from '@/api/workspace/Api'
+
 import useGlobalStore from '@/state/GlobalState'
 import toast from 'react-hot-toast'
 import DeleteAccount from './components/DeleteAccount'
-import useDeviceDetect from '@/hooks/useDeviceDetect'
+
 
 const Account = () => {
   const [selectedKeys, setSelectedKeys] = useState<any>(new Set(['0']))
@@ -19,13 +19,13 @@ const Account = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false)
   const [disable, setDisable] = useState<boolean>(false)
-  const isMobile = useDeviceDetect()
+
 
   const { user } = useGlobalStore((state) => ({
     user: state.user
   }))
 
-  const bearerToken = user?.token as string
+  // const bearerToken = user?.token as string
 
   useEffect(() => {
     if (user?.googleUID) {
@@ -58,25 +58,26 @@ const Account = () => {
       console.log('Validation is good')
       // Proceed with the form submission logic here
 
-      const changePasswordUrl = `/profile/change-password`
-      const payload = {
-        currentPassword: currentPassword,
-        newPassword: newPassword
-      }
-      const response = await createOne(changePasswordUrl, bearerToken, payload)
-      console.log(response)
-      if (response.data.status === 200) {
-        toast.success('Password updated!')
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
-      } else {
-        toast.error(response.data.message)
-      }
-    } else {
-      console.log('Validation failed')
-    }
+    //   const changePasswordUrl = `/profile/change-password`
+    //   const payload = {
+    //     currentPassword: currentPassword,
+    //     newPassword: newPassword
+    //   }
+    //   // const response = await createOne(changePasswordUrl, bearerToken, payload)
+    //   console.log(response)
+    //   if (response.data.status === 200) {
+    //     toast.success('Password updated!')
+    //     setTimeout(() => {
+    //       window.location.reload()
+    //     }, 1000)
+    //   } else {
+    //     toast.error(response.data.message)
+    //   }
+    // } else {
+    //   console.log('Validation failed')
+    // }
   }
+}
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
@@ -92,7 +93,7 @@ const Account = () => {
 
   return (
     <div
-      className={`space-y-6 ${isMobile && 'h-[69vh] overflow-y-auto px-2'} `}
+      className={`space-y-6  `}
     >
       <div>
         <h3 className='text-lg font-medium'>Account</h3>

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DisplayImage from "/public/banner/displayImage.png";
 import ShieldImage from "/public/banner/shield.png";
 import DateIcon from "/public/banner/icons/dateIcon.png";
@@ -9,19 +9,16 @@ import HourglassIcon from "/public/banner/icons/hourglassIcon.png";
 import LanguageIcon from "/public/banner/icons/languageIcon.png";
 import { TooltipComponent } from "@/components/TooltipComponent";
 import React from "react";
-import useGlobalStore from "@/state/GlobalState";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 // import { EventTabs } from '@/components/activity/EventTabs' make this later
 
 const EventDetails = () => {
-  const { signedIn, setShowLoginModal } = useGlobalStore();
-  const navigate = useNavigate();
-  const pathSegments = location.pathname.split("/").filter(Boolean);
+
   const { state } = useLocation();
   const activity = state?.activity;
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState("About");
+
 
   const isEventConcluded = React.useMemo(() => {
     if (!activity?.date) return false;
@@ -37,13 +34,7 @@ const EventDetails = () => {
     tabs.push("Gallery");
   }
 
-  const handleBookNowClick = () => {
-    if (!signedIn) {
-      setShowLoginModal(true);
-      return;
-    }
-    navigate("/ticket-booking");
-  };
+
 
   return (
     <>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Input, Textarea, Button } from "@nextui-org/react";
 import { X } from "lucide-react";
 
 interface BlogData {
@@ -38,9 +37,9 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  const [slugPreview, setSlugPreview] = React.useState("");
-  const [metaTitleLength, setMetaTitleLength] = React.useState(0);
-  const [metaDescLength, setMetaDescLength] = React.useState(0);
+  const [, setSlugPreview] = React.useState("");
+  const [, setMetaTitleLength] = React.useState(0);
+  const [, setMetaDescLength] = React.useState(0);
   const [keywordInput, setKeywordInput] = React.useState("");
 
   // Auto-generate slug from title if empty
@@ -76,25 +75,6 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
   //   alert("Blog saved! Check console for complete data.");
   // };
 
-  const getTitleLengthStatus = () => {
-    if (metaTitleLength === 0)
-      return { color: "text-gray-400", text: "0 characters" };
-    if (metaTitleLength < 30)
-      return { color: "text-orange-500", text: "Too short" };
-    if (metaTitleLength <= 60)
-      return { color: "text-green-500", text: "Perfect length" };
-    return { color: "text-red-500", text: "Too long" };
-  };
-
-  const getDescLengthStatus = () => {
-    if (metaDescLength === 0)
-      return { color: "text-gray-400", text: "0 characters" };
-    if (metaDescLength < 120)
-      return { color: "text-orange-500", text: "Too short" };
-    if (metaDescLength <= 160)
-      return { color: "text-green-500", text: "Perfect length" };
-    return { color: "text-red-500", text: "Too long" };
-  };
 
   const handleKeywordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === "Enter" || e.key === ",") && keywordInput.trim()) {

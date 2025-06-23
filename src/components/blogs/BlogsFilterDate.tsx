@@ -9,8 +9,9 @@ import {
   SelectItem,
   Chip,
 } from "@nextui-org/react";
-import { Filter, Calendar, X } from "lucide-react";
-import { parseDate, getLocalTimeZone, today } from "@internationalized/date";
+import { Filter, Calendar} from "lucide-react";
+import {  getLocalTimeZone, today } from "@internationalized/date";
+import { DateValue } from '@internationalized/date';
 
 // Date Filter Component
 type DateFilterProps = {
@@ -22,17 +23,17 @@ const DateFilterPopover: React.FC<DateFilterProps> = ({
   onDateRangeChange,
   onReset,
 }) => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState<DateValue | null>(null);
+  const [endDate, setEndDate] = useState<DateValue | null>(null);
 
   const handleStartDateChange = (date: any) => {
     setStartDate(date);
-    onDateRangeChange(date?.toString(), endDate?.toString());
+    onDateRangeChange(date?.toString() ?? '', endDate?.toString() ?? '');
   };
 
   const handleEndDateChange = (date: any) => {
     setEndDate(date);
-    onDateRangeChange(startDate?.toString(), date?.toString());
+    onDateRangeChange(startDate?.toString() ?? '', date?.toString() ?? '')
   };
 
   const resetDates = () => {
