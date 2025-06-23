@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 
@@ -6,6 +6,16 @@ const blankFaq = { Q: "", A: "" };
 
 export default function FAQs({ data, setData }: any) {
   const [faqBlocks, setFaqBlocks] = useState([{ ...blankFaq }]);
+
+  useEffect(() => {
+    if (data?.FAQ?.items && Array.isArray(data.FAQ.items)) {
+      const transformed = data.FAQ.items.map((item: any) => ({
+        Q: item.question,
+        A: item.answer,
+      }));
+      setFaqBlocks(transformed);
+    }
+  }, [data?.FAQ]);
 
   const handleFieldChange = (
     index: number,
@@ -17,6 +27,7 @@ export default function FAQs({ data, setData }: any) {
     setFaqBlocks(updated);
     setData({ ...data, FAQ: updated });
   };
+
 
   const handleAddFaq = () => {
     const updated = [...faqBlocks, { ...blankFaq }];

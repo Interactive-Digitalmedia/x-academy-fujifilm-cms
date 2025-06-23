@@ -1,218 +1,309 @@
-import { useLocation } from "react-router-dom";
-import DisplayImage from "/public/banner/displayImage.png";
-import ShieldImage from "/public/banner/shield.png";
-import DateIcon from "/public/banner/icons/dateIcon.png";
-import ClockIcon from "/public/banner/icons/clockIcon.png";
-import LocationIcon from "/public/banner/icons/locationIcon.png";
-import WorkshopIcon from "/public/banner/icons/workshopIcon.png";
-import HourglassIcon from "/public/banner/icons/hourglassIcon.png";
-import LanguageIcon from "/public/banner/icons/languageIcon.png";
-import { TooltipComponent } from "@/components/TooltipComponent";
-import React from "react";
-import {  useState } from "react";
+import { Headphones } from 'lucide-react'
+import { useNavigate, useParams } from 'react-router-dom'
+import DisplayImage from '/public/banner/displayImage.png'
+import goldenBadge from '/public/banner/goldenBadge.webp'
+import silverBadge from '/public/banner/silverBadge.webp'
+import { Bookmark } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import React from 'react'
+import { EventTabs } from '@/components/events/EventTabs'
+import { useActivityStore } from '@/Zustang/useActivityStore'
+import { Activity} from '@/types'
+import DateIcon from '@/components/Activity/DateIcon'
+import TimeIcon from '@/components/Activity/TimeIcon'
+import LocationIcon from '@/components/Activity/LocationIcon'
+import TypeIcon from '@/components/Activity/TypeIcon'
+import DurationIcon from '@/components/Activity/DurationIcon'
+import LanguageIcon from '@/components/Activity/LanguageIcon'
+import { TooltipComponent } from '@/components/TooltipComponent'
 
-// import { EventTabs } from '@/components/activity/EventTabs' make this later
-
-const EventDetails = () => {
-
-  const { state } = useLocation();
-  const activity = state?.activity;
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
+const ActivityDetails = () => {
+  const { selectedActivity, fetchActivitiesById,  fetchActivities } =
+    useActivityStore()
+  // const pathSegments = location.pathname.split('/').filter(Boolean)
+  const { activityId } = useParams<{ activityId: string }>()
+  // const { state } = useLocation()
+  // const activityData = state?.activity
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [activeTab, setActiveTab] = useState('About')
+  const activity: Activity | null = selectedActivity
 
   const isEventConcluded = React.useMemo(() => {
-    if (!activity?.date) return false;
-    const eventDate = new Date(activity.date);
-    const today = new Date();
-    return eventDate < today;
-  }, [activity]);
+    if (!activity?.startDate) return false
+    const eventDate = new Date(activity.startDate)
+    const today = new Date()
+    return eventDate < today
+  }, [activity])
 
   const selectedImage =
-    activity?.gallery?.[selectedIndex] || activity?.bannerImage;
-  const tabs = ["About", "Ambassador", "Schedule", "FAQs"];
+    activity?.gallery?.[selectedIndex] || activity?.heroImage
+  const tabs = ['About', 'Ambassador', 'Schedule', 'FAQs']
   if (isEventConcluded) {
-    tabs.push("Gallery");
+    tabs.push('Gallery')
   }
 
+  useEffect(() => {
+    fetchActivities()
+  }, [])
+
+
+
+  useEffect(() => {
+    if (!activityId) return;
+  
+    const fetchData = async () => {
+      try {
+        const response = await fetchActivitiesById(activityId);
+        console.log("this is happening", response);
+        // You can set data here if needed
+        // setData(response.data);
+      } catch (err) {
+        console.error("Error fetching activity:", err);
+      }
+    };
+  
+    fetchData();
+  }, [activityId]);
+  
 
 
   return (
     <>
-      <section className="px-4 -py-2">
-        {/* White Card Wrapper */}
-        <div
-          className="mb-10 mt-4 flex flex-col gap-6 rounded-2xl bg-white p-4 shadow-lg lg:flex-row dark:bg-[#1e1e1e]"
-          style={{ minHeight: "900px" }}
-        >
-          {/* LEFT SECTION */}
-          <div className="flex-1 space-y-6 pr-2">
-            <div
-              className="relative rounded-xl p-6 shadow-sm dark:border-[#333] dark:bg-[#181818]"
-              style={{ backgroundColor: "#F4F4F4" }}
-            >
-              <h2 className="mb-1 text-2xl font-bold">{activity?.title}</h2>
-              <p className="mb-4 text-sm text-gray-400">Hosted By</p>
-              <div className="mb-4 flex items-center gap-2">
-                <img
-                  src={DisplayImage}
-                  alt="host"
-                  className="h-8 w-8 rounded-full"
-                />
-                <span className="text-lg font-medium">
-                  {activity?.ambassadorName}
-                </span>
-                <TooltipComponent text="X-Ambassador">
+     
+        <section className='w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200'>
+          <div className='flex items-center space-x-2 py-3 text-sm'>
+          {activity?.status === 'draft' ? (
+  <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-semibold">
+    Draft
+  </span>
+) : (
+  <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-semibold">
+    Published
+  </span>
+)}
+            {/* {pathSegments.map((segment, index) => {
+              const isLast = index === pathSegments.length - 1
+              return (
+                <React.Fragment key={index}>
+                  {index > 0 && <span className='text-gray-500'>/</span>}
+                  <span
+                    className={
+                      isLast
+                        ? 'font-medium capitalize text-gray-900 dark:text-white'
+                        : 'cursor-pointer capitalize text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                    }
+                    onClick={() => {
+                      // if (!isLast && segment === 'blogs') {
+                      navigate('/activity')
+                      // }
+                    }}
+                  >
+                    {activity?.title}
+                  </span>
+                </React.Fragment>
+              )
+            })} */}
+          </div>
+
+          {/* three cards  */}
+          <div className='mb-10 mt-4 flex flex-col gap-6 lg:flex-row'>
+            {/* LEFT SECTION */}
+            <div className='max-h-[calc(100vh-0px)] flex-1 overflow-y-auto pr-2 scrollbar-hide'>
+              {/* Event Overview Card */}
+
+              <div className='card relative p-4'>
+                {/* Top-right icons */}
+                <div className='absolute right-4 top-4 flex gap-2'>
+                  <button className='icon-button'>
+                    <Headphones className='h-5 w-5' />
+                  </button>
+                  <button className='icon-button'>
+                    <Bookmark className='h-5 w-5' />
+                  </button>
+                </div>
+
+                {/* Title & Host Info */}
+                <h2 className='mb-1 text-2xl font-bold'>{activity?.activityName}</h2>
+                <p className='mb-4 text-sm text-gray-400'>Hosted By</p>
+                <div className='mb-4 flex items-center gap-2'>
+                  {activity?.ambassadorId?.image && (
+                    <img
+                      src={DisplayImage}
+                      alt='host'
+                      className='h-8 w-8 rounded-full'
+                    />
+                  )}
+                  {activity?.ambassadorId?.name && (
+                    <span className='text-lg font-medium'>
+                      {activity?.ambassadorId?.name}
+                    </span>
+                  )}
+                  <TooltipComponent
+                    text={`${activity?.ambassadorId?.type === 'X-Ambassador' ? 'X-Ambassador' : 'Evangelist'} `}
+                  >
+                    <img
+                      src={
+                        activity?.ambassadorId?.type === 'X-Ambassador'
+                          ? goldenBadge
+                          : silverBadge
+                      }
+                      alt='badge'
+                      className='ml-1 h-6 cursor-pointer'
+                    />
+                  </TooltipComponent>
+                </div>
+
+                {/* Main Image */}
+                <div className='mb-2 aspect-video overflow-hidden rounded-xl'>
                   <img
-                    src={ShieldImage}
-                    alt="badge"
-                    className="ml-1 h-6 cursor-pointer"
+                    src={selectedImage}
+                    alt={activity?.activityName}
+                    className='h-full w-full object-cover'
                   />
-                </TooltipComponent>
+                </div>
+
+                {/* Dots */}
+                <div className='mt-4 flex justify-center gap-2'>
+                  {activity?.gallery?.map((_: any, i: any) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedIndex(i)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        selectedIndex === i
+                          ? 'w-8 bg-black dark:bg-white'
+                          : 'w-2 bg-[#999999]'
+                      }`}
+                    ></button>
+                  ))}
+                </div>
+
+                {/* Thumbnail Gallery */}
+                <div className='mt-6 grid w-[100%] grid-cols-5 gap-5 p-2'>
+                  {activity?.gallery
+                    ?.slice(0, 5)
+                    .map((img: string, idx: number) => {
+                      const isSelected = selectedIndex === idx
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`relative h-16 w-full cursor-pointer`}
+                          onClick={() => setSelectedIndex(idx)}
+                        >
+                          <img
+                            src={img}
+                            alt={`thumb-${idx}`}
+                            className='h-full w-full rounded-lg object-cover'
+                          />
+
+                          {isSelected && (
+                            <div>
+                              <span className='corner top-left' />
+                              <span className='corner top-right' />
+                              <span className='corner bottom-left' />
+                              <span className='corner bottom-right' />
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                </div>
               </div>
 
-              <div className="mb-2 aspect-video overflow-hidden rounded-xl">
-                <img
-                  src={selectedImage}
-                  alt={activity?.title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-
-              <div className="mt-4 flex justify-center gap-2">
-                {activity?.gallery?.map((_: any, i: any) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedIndex(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      selectedIndex === i
-                        ? "w-8 bg-black dark:bg-white"
-                        : "w-2 bg-[#999999]"
-                    }`}
-                  ></button>
-                ))}
-              </div>
-
-              <div className="mt-6 grid w-full grid-cols-5 gap-4 rounded-xl bg-gray-50 p-3 dark:bg-[#121212]">
-                {activity?.gallery
-                  ?.slice(0, 5)
-                  .map((img: string, idx: number) => {
-                    const isSelected = selectedIndex === idx;
-                    return (
-                      <div
-                        key={idx}
-                        className={`relative h-16 w-full cursor-pointer`}
-                        onClick={() => setSelectedIndex(idx)}
-                      >
-                        <img
-                          src={img}
-                          alt={`thumb-${idx}`}
-                          className="h-full w-full rounded-lg object-cover"
-                        />
-                        {isSelected && (
-                          <div>
-                            <span className="corner top-left" />
-                            <span className="corner top-right" />
-                            <span className="corner bottom-left" />
-                            <span className="corner bottom-right" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-              </div>
+              <EventTabs
+                activity={activity}
+                tabs={tabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
             </div>
 
-            {/* Uncomment when you add EventTabs */}
-            {/* <EventTabs
-              activity={activity}
-              tabs={tabs}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            /> */}
-          </div>
+            {/* RIGHT SECTION */}
+            <div className='sticky top-24 w-full space-y-6 self-start lg:w-[400px]'>
+              {/* Details Card */}
+              <div className='card space-y-4 p-4'>
+                <h3 className='text-lg font-semibold'>Details</h3>
 
-          {/* RIGHT SECTION */}
-          <div className=" top-24 w-full space-y-6 self-start rounded-xl lg:w-[310px]">
-            <div
-              className="rounded-xl  p-6 shadow-sm dark:border-[#333] dark:bg-[#181818] space-y-4"
-              style={{ backgroundColor: "#F4F4F4" }}
-            >
-              <h3 className="text-lg font-semibold">Details</h3>
-              <div className="space-y-4 text-sm">
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-red-500">
-                    <img src={DateIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Date</p>
-                    <p>
-                      {activity?.startDateTime
-                        ? new Date(activity.startDateTime).toLocaleDateString(
-                            "en-IN",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )
-                        : "N/A"}
-                    </p>
+                <div className='space-y-4 text-sm'>
+                  {/* Date */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <DateIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Date</p>
+                      <p>{activity?.startDate}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-green-500">
-                    <img src={ClockIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Time</p>
-                    <p>{activity?.time} Onwards</p>
+
+                  {/* Time */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <TimeIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Time</p>
+                      <p>{activity?.schedule?.[0]?.sessions?.[0]?.startTime} Onwards</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-orange-500">
-                    <img src={LocationIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Location</p>
-                    <p className="cursor-pointer underline">
-                      {activity?.location}
-                    </p>
+
+                  {/* Location */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <LocationIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Location</p>
+                      <p className='cursor-pointer underline'>
+                        {activity?.location}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-yellow-700">
-                    <img src={WorkshopIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Type</p>
-                    <p>{activity?.type}</p>
+
+                  {/* Type */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <TypeIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Type</p>
+                      <p>{activity?.activityType}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-blue-500">
-                    <img src={HourglassIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Duration</p>
-                    <p>{activity?.duration} Hours</p>
+
+                  {/* Duration */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <DurationIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Duration</p>
+                      <p>{activity?.duration} Hours</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 text-purple-500">
-                    <img src={LanguageIcon} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-gray-500">Language</p>
-                    <p>{activity?.language}</p>
+
+                  {/* Language */}
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-0.5'>
+                      <LanguageIcon />
+                    </div>
+                    <div>
+                      <p className='text-xs text-gray-500'>Language</p>
+                      <p>{activity?.language}</p>
+                    </div>
                   </div>
                 </div>
               </div>
+
+           
             </div>
           </div>
-        </div>
-      </section>
+        
+     
+        </section>
+ 
     </>
-  );
-};
+  )
+}
 
-export default EventDetails;
+export default ActivityDetails

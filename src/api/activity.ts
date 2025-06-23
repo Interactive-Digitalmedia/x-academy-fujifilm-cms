@@ -55,12 +55,7 @@ export const getActivities = async () => {
     return;
   }
   try {
-    const response = await axios.get(`${baseUrl}activity/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(`${baseUrl}activity/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching the activities", error);
@@ -79,12 +74,7 @@ export const uploadImage = async (file: File) => {
   formData.append("file", file);
 
   try {
-    const response = await axios.post(`${baseUrl}upload-image`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(`${baseUrl}upload-image`, formData);
     return response.data; // returns { message, fileKey, publicUrl }
   } catch (error) {
     console.error("Error uploading image:", error);
@@ -108,4 +98,17 @@ export async function createFaq(payload: {
 
   if (!res.ok) throw new Error("Failed to create FAQ");
   return await res.json(); // Should return { _id: "...", ... }
+}
+
+export const getActivitiesById = async (id: string) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}activity/${id}` // empty body
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching the billing address', error)
+    throw error
+  }
 }

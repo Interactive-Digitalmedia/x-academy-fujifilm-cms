@@ -9,19 +9,9 @@ import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Accept the rich demoActivities instead
-type EventTableProps = {
-  demoActivities: {
-    id: string;
-    title: string;
-    type: string;
-    status: string;
-    ambassadorName: string;
-    location: string;
-    startDateTime: string;
-  }[];
-};
 
-export function EventTable({ demoActivities }: EventTableProps) {
+
+export function EventTable({ demoActivities }: any) {
   const navigate = useNavigate();
 
   return (
@@ -40,24 +30,24 @@ export function EventTable({ demoActivities }: EventTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {demoActivities.map((event, index) => (
+          {demoActivities.map((event:any, index:any) => (
             <TableRow
-              key={event.id}
+              key={event._id}
               onClick={() =>
-                navigate(`/events/${event.id}`, { state: { activity: event } })
+                navigate(`/events/${event._id}`, { state: { activity: event } })
               }
               className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
               style={{ fontSize: "11px" }}
             >
               <td className="px-3 py-1">{index + 1}</td>
               <td className="px-3 py-1">
-                {new Date(event.startDateTime).toLocaleDateString()}
+                {event?.startDate}
               </td>
-              <td className="px-3 py-1">{event.title}</td>
-              <td className="px-3 py-1">{event.type}</td>
+              <td className="px-3 py-1">{event?.activityName}</td>
+              <td className="px-3 py-1">{event?.activityType}</td>
               <td className="px-3 py-1 capitalize">{event.status}</td>
-              <td className="px-3 py-1">{event.ambassadorName}</td>
-              <td className="px-3 py-1">{event.location}</td>
+              <td className="px-3 py-1">{event?.ambassadorName}</td>
+              <td className="px-3 py-1">{event?.location}</td>
               <td className="px-3 py-1 text-right">
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </td>

@@ -18,7 +18,7 @@ export default function EventImage({ data, setData }: any) {
       const res = await uploadImage(file);
       console.log("public url :", res)
       if (res?.publicUrl) {
-        setData((prev: any) => ({ ...prev, bannerImage: res.publicUrl }));
+        setData((prev: any) => ({ ...prev, heroImage: res.publicUrl }));
       }
     } catch (err) {
       console.error("❌ Error uploading hero image:", err);
@@ -69,15 +69,15 @@ export default function EventImage({ data, setData }: any) {
           Hero Image
         </label>
 
-        {data.bannerImage && (
+        {data.heroImage && (
           <div className="relative mb-3">
             <img
-              src={data.bannerImage}
+              src={data.heroImage}
               alt="Hero"
               className="rounded-md h-40 w-full object-cover border"
             />
             <button
-              onClick={() => setData({ ...data, bannerImage: "" })}
+              onClick={() => setData({ ...data, heroImage: "" })}
               className="absolute top-2 right-2 bg-white/80 text-red-600 border border-red-500 px-2 py-1 text-xs rounded-md hover:bg-red-600 hover:text-white transition"
             >
               Remove
