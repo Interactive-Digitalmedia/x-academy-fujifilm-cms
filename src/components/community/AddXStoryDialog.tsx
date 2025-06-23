@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { UploadCloud, Trash2 } from "lucide-react";
+import { uploadXStory } from "@/api/uploadXStory";
 
 interface GalleryImage {
   file: File | null;
@@ -194,9 +195,27 @@ const AddXStoryDialog: React.FC = () => {
           <Button
             size="sm"
             className="bg-[#2196F3] text-white hover:bg-[#1976D2]"
-            onClick={() => {
-              console.log("Saving story:", formData);
-              // add save logic here
+            onClick={async () => {
+              if (
+                !formData.xStoryName ||
+                !formData.videoLink ||
+                !formData.coverImage
+              ) {
+                alert("Please fill in all fields.");
+                return;
+              }
+
+              try {
+                const response = await uploadXStory({
+                  name: formData.xStoryName,
+                  link: formData.videoLink,
+                  coverImage: formData.coverImage.url,
+                });
+
+                console.log("X-Story uploaded successfully", response);
+              } catch (err) {
+                console.error("Upload failed", err);
+              }
             }}
           >
             Save Story
