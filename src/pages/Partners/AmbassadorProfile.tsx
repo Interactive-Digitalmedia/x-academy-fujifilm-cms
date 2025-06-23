@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { badgeColors } from "@/assets/badgeColors";
 import GalleryMasonryGrid from "@/components/partners/partnerpreview/GalleryMasonryGrid";

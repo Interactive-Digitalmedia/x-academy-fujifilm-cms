@@ -15,7 +15,7 @@ const AboutUs = () => {
           <div className="w-full">
             <AccordionContent className="!border-none !p-0 !shadow-none !rounded-none">
               <div className="rounded-lg border border-gray-300">
-                <BasicEditor value={""} onChange={function (html: string): void {
+                <BasicEditor value={""} onChange={function (): void {
                   throw new Error("Function not implemented.");
                 } } />
               </div>

@@ -38,8 +38,8 @@ const MetaDescription: React.FunctionComponent<MetaDescriptionProps> = ({
   updateBlogData,
 }) => {
   const [, setSlugPreview] = React.useState("");
-  const [metaTitleLength, setMetaTitleLength] = React.useState(0);
-  const [metaDescLength, setMetaDescLength] = React.useState(0);
+  const [, setMetaTitleLength] = React.useState(0);
+  const [, setMetaDescLength] = React.useState(0);
   const [keywordInput, setKeywordInput] = React.useState("");
 
   // Auto-generate slug from title if empty

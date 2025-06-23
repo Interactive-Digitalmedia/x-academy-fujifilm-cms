@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import DisplayImage from "/public/banner/displayImage.png";
 import ShieldImage from "/public/banner/shield.png";
 import DateIcon from "/public/banner/icons/dateIcon.png";

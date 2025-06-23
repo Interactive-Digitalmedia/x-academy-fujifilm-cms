@@ -4,17 +4,6 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
 
-const sidebarNavItems = [
-  {
-    title: 'Profile',
-    href: '/settings/profile'
-  },
-  {
-    title: 'Account',
-    href: '/settings/account'
-  }
-]
-
 const SettingsLayout = () => {
   return (
     <section className='relative h-screen md:mb-0'>
