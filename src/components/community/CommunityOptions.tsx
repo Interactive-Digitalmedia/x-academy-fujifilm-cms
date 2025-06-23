@@ -10,6 +10,7 @@ import FilterCard from "@/components/ui/filtercard";
 import { CommunityTable } from "@/components/community/CommunityTable";
 import { XStoriesTable } from "./XStoriesTable";
 import { dummyXStories } from "@/assets/dummyXStories";
+import AddXStoryDialog from "./AddXStoryDialog";
 
 const CommunityOptions: React.FC = () => {
   const [searchText, setSearchText] = useState("");
@@ -64,7 +65,11 @@ const CommunityOptions: React.FC = () => {
       }}
     >
       <div className="w-full">
-        <h2 className="text-xl font-bold mb-2">Community</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-bold">Community</h2>
+
+          {activeTab === "X-Stories" && <AddXStoryDialog />}
+        </div>
 
         {/* Controls Row */}
         <div className="flex justify-between items-center mb-6 w-full">
