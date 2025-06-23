@@ -71,7 +71,7 @@ function App() {
             <Route path="/concluded-event" element={<EventConcluded />} />
             <Route path="/events" element={<EventView />} />
             <Route path="/partners" element={<PartnersView />} />
-            <Route path="/partners/:id" element={<AmbassadorProfile />} />
+            <Route path="/partners/:username" element={<AmbassadorProfile />} />
 
             <Route path="/partners/:id/edit" element={<PartnersEditPage />} />
 

@@ -1,20 +1,9 @@
 import * as React from "react";
+import { Ambassador } from "@/types";
 
 interface ContactDetailsProps {
-  data: {
-    email?: string;
-    phone?: string;
-    instagram?: string;
-    facebook?: string;
-  };
-  setData: React.Dispatch<
-    React.SetStateAction<{
-      email?: string;
-      phone?: string;
-      instagram?: string;
-      facebook?: string;
-    }>
-  >;
+  data: Partial<Ambassador>;
+  setData: React.Dispatch<React.SetStateAction<Partial<Ambassador>>>;
 }
 
 export default function ContactDetails({ data, setData }: ContactDetailsProps) {
@@ -44,17 +33,19 @@ export default function ContactDetails({ data, setData }: ContactDetailsProps) {
         <div className="flex-1">
           <label
             className="block text-sm font-medium text-[#818181] mb-1"
-            htmlFor="phone"
+            htmlFor="contactNumber"
           >
             Phone
           </label>
           <input
-            id="phone"
+            id="contactNumber"
             type="tel"
             placeholder="+91 98765 43210"
             className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.phone || ""}
-            onChange={(e) => setData({ ...data, phone: e.target.value })}
+            value={data.contactNumber || ""}
+            onChange={(e) =>
+              setData({ ...data, contactNumber: e.target.value })
+            }
           />
         </div>
       </div>
@@ -73,8 +64,16 @@ export default function ContactDetails({ data, setData }: ContactDetailsProps) {
             type="url"
             placeholder="Paste URL"
             className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.instagram || ""}
-            onChange={(e) => setData({ ...data, instagram: e.target.value })}
+            value={data.socialMediaUrls?.instagram || ""}
+            onChange={(e) =>
+              setData({
+                ...data,
+                socialMediaUrls: {
+                  ...data.socialMediaUrls,
+                  instagram: e.target.value,
+                },
+              })
+            }
           />
         </div>
 
@@ -90,8 +89,16 @@ export default function ContactDetails({ data, setData }: ContactDetailsProps) {
             type="url"
             placeholder="Paste URL"
             className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.facebook || ""}
-            onChange={(e) => setData({ ...data, facebook: e.target.value })}
+            value={data.socialMediaUrls?.facebook || ""}
+            onChange={(e) =>
+              setData({
+                ...data,
+                socialMediaUrls: {
+                  ...data.socialMediaUrls,
+                  facebook: e.target.value,
+                },
+              })
+            }
           />
         </div>
       </div>

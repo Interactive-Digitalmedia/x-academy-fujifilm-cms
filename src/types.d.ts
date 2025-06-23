@@ -52,6 +52,29 @@ export type Activity = {
 
 
 // types/ambassador.ts
+// export interface Ambassador {
+//   userId: string; // e.g. MongoDB ObjectId string
+//   slug: string; // human-readable URL slug
+//   name: string; // display name
+//   profileImage: string; // avatar URL
+//   coverImage: string; // banner URL (for profile page)
+//   bio: string;
+//   expertiseTags: string[];
+//   socialLinks: {
+//     instagram?: string;
+//     facebook?: string;
+//     portfolio?: string;
+//   };
+//   gear: {
+//     name: string;
+//     image: string;
+//     productUrl: string;
+//   }[];
+//   isFeatured: boolean;
+// }
+
+// Faq template schmema
+
 export interface Ambassador {
   _id: string
   name: string
@@ -167,3 +190,4 @@ export interface Booking {
   createdAt: string
   updatedAt: string
 }
+
