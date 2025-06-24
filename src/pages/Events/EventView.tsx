@@ -8,6 +8,8 @@ import { dummyEvents } from "@/assets/dummyEvents";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import FilterCard from "@/components/ui/filtercard";
+import { getActivities} from "@/api/activity"
+import { Activity } from "@/types";
 
 const EventView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All");
@@ -55,45 +57,21 @@ const EventView: React.FC = () => {
     setFilteredResults(filtered);
   }, [activeType, searchText, selectedRange, activeFilters]);
 
-  const demoActivities = filteredResults.map((e) => ({
-    id: e.id.toString(),
-    title: e.name,
-    type: e.type,
-    status: e.status.toLowerCase(),
-    bannerImage: e.img,
-    location: e.location,
-    startDateTime: `${e.date.split("-").reverse().join("-")}T10:00:00`,
-    ambassadorName: e.organizer,
-    time: "10:00 AM",
-    duration: 60,
-    language: "English",
-    about: {
-      whyShouldYouAttend: "Lorem ipsum dolor sit amet.",
-      whatsIncluded: ["Session 1", "Session 2"],
-      about: "Lorem ipsum placeholder content.",
-    },
-    gallery: [],
-    ambassador: [],
-    FAQ: [],
-    seatCount: 100,
-    pendingSeats: 20,
-    isFeatured: false,
-    tags: [],
-  }));
+
+
+    const [activities, setActivities] = useState<Activity[]>([])
+
+  
+    useEffect(() => {
+      const load = async () => {
+        const response = await getActivities()
+        setActivities(response.data)
+      }
+      load()
+    }, [])
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "965px",
-        padding: "16px 16px 67px 16px",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "12px",
-        border: "1px solid #EDEDED",
-        background: "#FFF",
-      }}
-    >
+    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200"  >
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
@@ -236,9 +214,9 @@ const EventView: React.FC = () => {
 
         {/* Grid or Table */}
         {viewMode === "grid" ? (
-          <ActivityGrid demoActivities={demoActivities} />
+          <ActivityGrid demoActivities={activities} />
         ) : (
-          <EventTable demoActivities={demoActivities} />
+          <EventTable demoActivities={activities} />
         )}
       </div>
     </div>

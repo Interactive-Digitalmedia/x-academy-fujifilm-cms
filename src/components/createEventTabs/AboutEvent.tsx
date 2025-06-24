@@ -1,6 +1,8 @@
 import { Switch } from "@nextui-org/react";
-import StaticEditor from "../ui/basiceditor";
-import { Camera, Utensils } from "lucide-react";
+import FrameIcon from '/public/banner/icons/Frame.svg'
+import CupIcon from '/public/banner/icons/cup.svg'
+import CameraIcon from '/public/banner/icons/Camera.svg'
+import GiftIcon from '/public/banner/icons/Gift.svg'
 
 export default function AboutEvent({ data, setData }: any) {
   const about = data.about || {
@@ -17,23 +19,23 @@ export default function AboutEvent({ data, setData }: any) {
   const whatsIncludedOptions = [
     {
       label: "Lunch + Dinner",
-      value: "food",
-      icon: <Utensils className="text-green-600" />,
+      value: "lunchDinner",  
+      icon: <img src={FrameIcon} className="mr-2"/>,
     },
     {
-      label: "Camera Provided",
-      value: "camera1",
-      icon: <Camera className="text-purple-600" />,
+      label: "Refreshments + Beverages",
+      value: "refreshmentsBeverages",
+      icon: <img src={CupIcon} className="mr-2"/>,
     },
     {
-      label: "Camera Provided",
-      value: "camera2",
-      icon: <Camera className="text-purple-600" />,
+      label: "Gear Provided",
+      value: "gearProvided",
+      icon: <img src={CameraIcon} className="mr-2"/>,
     },
     {
-      label: "Camera Provided",
-      value: "camera3",
-      icon: <Camera className="text-purple-600" />,
+      label: "Fujifilms Welcome Kit",
+      value: "welcomeKit",
+      icon: <img src={GiftIcon} className="mr-2"/>,
     },
   ];
 
@@ -42,21 +44,25 @@ export default function AboutEvent({ data, setData }: any) {
       <h2 className="text-base font-bold  mb-1">About Event</h2>
       {/* About the Event */}
       <div>
-        <label className="block text-sm text-[#818181] font-medium mb-1">
-          About the Event
-        </label>
-        {/* Optional: Replace StaticEditor with Textarea if needed */}
-        <StaticEditor value={about.about}
-  onChange={(val: string) => handleChange("about", val)}/>
-        <p className="mt-1 text-xs text-gray-500">
-          Note: Write a compelling description of your event. Include what
-          attendees can expect to learn or experience.
-        </p>
-      </div>
+  <label className="block text-sm text-[#818181] font-medium mb-1 mt-[3rem]">
+    About the Event
+  </label>
+  <textarea
+    value={about.about}
+    onChange={(e) => handleChange("about", e.target.value)}
+    placeholder="Describe your event..."
+    rows={6}
+    className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+  />
+  <p className="mt-1 text-xs text-gray-500">
+    Note: Write a compelling description of your event. Include what attendees can expect to learn or experience.
+  </p>
+</div>
+
 
       {/* What's Included */}
-      <div className="w-full md:w-[420px]">
-        <label className="block text-[#818181] text-sm font-medium mb-2">
+      <div className="w-full md:w-[420px] ">
+        <label className="block text-[#818181] text-sm font-medium mb-2 mt-[3rem]">
           What's Included?
         </label>
         <div className="space-y-3">
@@ -102,13 +108,18 @@ export default function AboutEvent({ data, setData }: any) {
       </div>
 
       {/* Why Should You Attend */}
-      <div>
-        <label className="block text-sm text-[#818181] font-medium mb-1">
-          Why Should You Attend?
-        </label>
-        <StaticEditor  value={about.whyShouldYouAttend}
-  onChange={(val: string) => handleChange("whyShouldYouAttend", val)}/>
-      </div>
+      <div className="mt-4">
+  <label className="block mt-[3rem] text-sm text-[#818181] font-medium mb-1">
+    Why Should You Attend?
+  </label>
+  <textarea
+    value={about.whyShouldYouAttend}
+    onChange={(e) => handleChange("whyShouldYouAttend", e.target.value)}
+    placeholder="Enter the reasons why someone should attend..."
+    rows={5}
+    className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+  />
+</div>
 
       {/* Tips Section */}
       <div className="pt-4">

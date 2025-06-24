@@ -1,52 +1,193 @@
-export type Activity = {
-  title: string;
-  startDateTime: string;
-  time: string;
-  location: string;
-  type: string;
-  duration: number;
-  language: string;
-  about: {
-    whyShouldYouAttend: string;
-    whatsIncluded: string[];
-    about: string;
-  };
-  gallery: string[];
-  ambassador: string[];
-  status: string;
-  FAQ: {
-    Q: string;
-    A: string;
-  }[];
-  seatCount: number;
-  pendingSeats: number;
-  isFeatured: boolean;
-  bannerImage: string;
-  tags: string[];
-  ambassadorName: string;
-  gallery: string[];
-};
+import { Types } from "mongoose"
 
-// types/ambassador.ts
-export interface Ambassador {
-  userId: string; // e.g. MongoDB ObjectId string
-  slug: string; // human-readable URL slug
-  name: string; // display name
-  profileImage: string; // avatar URL
-  coverImage: string; // banner URL (for profile page)
-  bio: string;
-  expertiseTags: string[];
-  socialLinks: {
-    instagram?: string;
-    facebook?: string;
-    portfolio?: string;
-  };
-  gear: {
-    name: string;
-    image: string;
-    productUrl: string;
-  }[];
-  isFeatured: boolean;
+export type Session = {
+  day: string
+  title: string
+  speaker: string
+  startTime: string
+  endTime: string
+  description: string
 }
 
+export type DaySchedule = {
+  sessions: Session[]
+}
+
+export type AboutSection = {
+  about: string
+  whyShouldYouAttend: string
+  whatsIncluded: string[]
+}
+
+export type Activity = {
+  _id: string
+  activityName: string
+  tags: string[]
+  activityType: string
+  activityCategory: string
+  startDate: string
+  endDate: string
+  location: string
+  language: string
+  ambassadorId: Types.ObjectId // reference to Ambassador
+  pricing: string // e.g., "paid" or "free"
+  amount: number
+  about: AboutSection
+  schedule: DaySchedule[]
+  heroImage: string
+  gallery: string[]
+  postEventImages: string[]
+  eventManagerId: string[]
+  duration: number
+  status: "draft" | "published"
+  FAQ: Types.ObjectId
+  seatCount: number
+  pendingSeats: number
+  isFeatured: boolean
+  stopRegistration: boolean
+  enableWaitlist: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+
+// types/ambassador.ts
+// export interface Ambassador {
+//   userId: string; // e.g. MongoDB ObjectId string
+//   slug: string; // human-readable URL slug
+//   name: string; // display name
+//   profileImage: string; // avatar URL
+//   coverImage: string; // banner URL (for profile page)
+//   bio: string;
+//   expertiseTags: string[];
+//   socialLinks: {
+//     instagram?: string;
+//     facebook?: string;
+//     portfolio?: string;
+//   };
+//   gear: {
+//     name: string;
+//     image: string;
+//     productUrl: string;
+//   }[];
+//   isFeatured: boolean;
+// }
+
 // Faq template schmema
+
+export interface Ambassador {
+  _id: string
+  name: string
+  image?: string
+  bannaerImage?: string
+  bio?: string
+  about?: {
+    who?: string
+    about?: string
+  }
+  gallery?: string[]
+  location?: string
+  type?: string
+  tags?: string[]
+  socialMediaUrls?: {
+    facebook?: string
+    instagram?: string
+  }
+  gearDetails?: {
+    gearOwned?: string
+    productName?: string
+    productLink?: string
+  }[]
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface AboutUsContentType {
+  _id?: string
+  type:
+    | 'about'
+    | 'termsandconditions'
+    | 'privacypolicy'
+    | 'refundpolicy'
+    | 'cookiespolicy'
+    | 'communityguidelines'
+    | 'contact'
+  content?: string
+  contact?: {
+    name?: string
+    address?: string
+    phone?: string
+    email?: string
+    socialMedia?: {
+      facebook?: string
+      instagram?: string
+      youtube?: string
+      Xtwitter?: string
+    }
+  }
+  createdAt?: string
+  updatedAt?: string
+  __v?: number
+}
+
+export interface ProfileData {
+  name: string
+  email: string
+  contactNumber: string
+  profileImage: string
+  state: string
+  socialMediaUrls: {
+    instagram?: string
+    facebook?: string
+    linkedin?: string
+    twitter?: string
+  }
+  joinedAt: string
+}
+
+export interface FaqItem {
+  title: string
+  description: string
+}
+
+export interface MetaData {
+  slug?: string
+  metaTitle?: string
+  metaDescription?: string
+  keywords?: string[]
+}
+
+export interface CTA {
+  text?: string
+  link?: string
+}
+
+export interface BlogImage {
+  url?: string
+  description?: string
+}
+
+export interface Blog {
+  _id: string
+  title: string
+  author: string
+  publishedDate: string
+  tags: string[]
+  blogImages: BlogImage[]
+  content: string
+  metaData?: MetaData
+  cta?: CTA[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Booking {
+  _id: string
+  userId: string
+  activityId: string
+  numberOfSeats: number
+  status: 'booked' | 'waitlisted' | 'cancelled'
+  createdAt: string
+  updatedAt: string
+}
+

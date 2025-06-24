@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MainCard from "@/components/concludedEventTabs/MainCard";
+// import MainCard from "@/components/concludedEventTabs/MainCard";
 import EventDetails from "@/components/concludedEventTabs/EventDetails";
 import AboutEvent from "@/components/concludedEventTabs/AboutEvent";
 import EventSchedule from "@/components/concludedEventTabs/EventSchedule";
@@ -75,7 +75,7 @@ const EventConcluded: React.FC = () => {
   return (
     <div className="w-full">
       {/* Top Placeholder Card */}
-      <MainCard />
+      {/* <MainCard /> */}
 
       {/* Tabs + Content Block */}
       <div className="w-full bg-white rounded-xl shadow-md p-4">

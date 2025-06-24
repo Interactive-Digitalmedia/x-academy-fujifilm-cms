@@ -2,22 +2,12 @@ import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Ambassador } from "@/types";
 
 // Props definition
-interface Partner {
-  sno: number;
-  name: string;
-  role: string;
-  city: string;
-  countryEmoji: string;
-  upcomingEvents: number;
-  totalEvents: number;
-  fujiGearOwned: number;
-  imageUrl: string;
-}
 
 interface PartnerRowProps {
-  partner: Partner;
+  partner: Ambassador;
   index: number;
 }
 
@@ -28,23 +18,23 @@ const PartnerRow: React.FC<PartnerRowProps> = ({ partner, index }) => {
     <TableRow
       onClick={() =>
         navigate(
-          `/partners/${encodeURIComponent(partner.name.toLowerCase().replace(/\s+/g, "-"))}`
+          `/partners/${encodeURIComponent(partner.fullname.toLowerCase().replace(/\s+/g, "-"))}`
         )
       }
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >
       <TableCell className="px-3 py-1">{index + 1}</TableCell>
-      <TableCell className="px-3 py-1">{partner.name}</TableCell>
-      <TableCell className="px-3 py-1 capitalize">{partner.role}</TableCell>
+      <TableCell className="px-3 py-1">{partner.fullname}</TableCell>
+      <TableCell className="px-3 py-1 capitalize">{partner.type}</TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
-        {partner.upcomingEvents}
+        {partner?.upcomingEvents}
       </TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
-        {partner.totalEvents}
+        {partner?.totalEvents}
       </TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
-        {partner.fujiGearOwned}
+        {partner?.gearDetails?.length}
       </TableCell>
       <TableCell className="px-3 py-1 text-right">
         <ChevronRight className="w-4 h-4 text-gray-400" />

@@ -1,11 +1,10 @@
-
 import React from "react";
 import { ExternalLink } from "lucide-react";
 
 interface GearItem {
-  name: string;
-  image: string;
-  link: string;
+  productImage?: string;
+  productName?: string;
+  productLink?: string;
 }
 
 interface GearDetailsGridProps {
@@ -23,18 +22,18 @@ const GearDetailsGrid: React.FC<GearDetailsGridProps> = ({ gear }) => {
           <div>
             <div className="mb-4 rounded-lg bg-white p-2">
               <img
-                src={item.image}
-                alt={item.name}
+                src={item?.productImage}
+                alt={item?.productName}
                 className="mx-auto h-32 object-contain"
               />
             </div>
             <p className="mb-4 text-sm font-medium leading-snug dark:text-white min-h-[48px]">
-              {item.name}
+              {item.productName}
             </p>
           </div>
 
           <a
-            href={item.link}
+            href={item?.productLink}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-auto flex items-center justify-center normal-btn px-4 py-2 text-sm font-medium text-white hover:bg-[#007DD6] transition"

@@ -1,71 +1,38 @@
 import React, { useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
+import { Ambassador } from "@/types";
+import { uploadImage } from "@/api/uploadImageApi";
 
 interface GearItem {
-  title: string;
-  link: string;
-  imageUrl: string;
-  file?: File | null;
+  productName?: string;
+  productLink?: string;
+  productImage?: string;
 }
 
 interface GearsProps {
-  data: any;
-  setData: (updatedData: any) => void;
+  data: Partial<Ambassador>;
+  setData: React.Dispatch<React.SetStateAction<Partial<Ambassador>>>;
 }
 
 const Gears: React.FC<GearsProps> = ({ data, setData }) => {
-  const [gearBlocks, setGearBlocks] = useState<GearItem[]>([
-    { title: "", link: "", imageUrl: "", file: null },
-  ]);
+  const [gearBlocks, setGearBlocks] = useState<GearItem[]>(
+    data.gearDetails || [{ productName: "", productLink: "", productImage: "" }]
+  );
+
+  const fileInputRefs = useRef<HTMLInputElement[]>([]);
 
   const handleFieldChange = (
     index: number,
     field: keyof GearItem,
-    value: string | File | null
+    value: string
   ) => {
     const updated = [...gearBlocks];
-
-    if (field === "file") {
-      const file = value as File;
-      updated[index].file = file;
-      updated[index].imageUrl = file ? URL.createObjectURL(file) : "";
-    } else {
-      updated[index][field] = value as string;
-    }
-
+    updated[index][field] = value;
     setGearBlocks(updated);
-
-    // Sync valid gearBlocks to parent
-    const updatedGears = updated.filter(
-      (gear) => gear.title && gear.link && gear.imageUrl
-    );
-    setData({ ...data, gears: updatedGears });
+    setData({ ...data, gearDetails: updated });
   };
 
-  const addGearBlock = () => {
-    setGearBlocks([
-      ...gearBlocks,
-      { title: "", link: "", imageUrl: "", file: null },
-    ]);
-  };
-
-  const deleteGearBlock = (index: number) => {
-    const updated = gearBlocks.filter((_, i) => i !== index);
-    setGearBlocks(updated);
-
-    const updatedGears = updated.filter(
-      (gear) => gear.title && gear.link && gear.imageUrl
-    );
-    setData({ ...data, gears: updatedGears });
-  };
-
-  const fileInputRefs = useRef<HTMLInputElement[]>([]);
-
-  const handleFileInputClick = (index: number) => {
-    fileInputRefs.current[index]?.click();
-  };
-
-  const handleFileUpload = (
+  const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
@@ -83,44 +50,73 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
       return;
     }
 
-    handleFieldChange(index, "file", file);
+    try {
+      const result = await uploadImage(file);
+      if (result?.publicUrl) {
+        handleFieldChange(index, "productImage", result.publicUrl);
+      }
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    }
+  };
+
+  const addGearBlock = () => {
+    const updated = [
+      ...gearBlocks,
+      { productName: "", productLink: "", productImage: "" },
+    ];
+    setGearBlocks(updated);
+    setData({ ...data, gearDetails: updated });
+  };
+
+  const deleteGearBlock = (index: number) => {
+    const updated = gearBlocks.filter((_, i) => i !== index);
+    setGearBlocks(updated);
+    setData({ ...data, gearDetails: updated });
+  };
+
+  const handleFileInputClick = (index: number) => {
+    fileInputRefs.current[index]?.click();
   };
 
   return (
     <div className="space-y-3 mt-[-8px]">
       <h2 className="text-base font-bold mb-1">Gears</h2>
 
-      {/* Gears Preview */}
-      {gearBlocks.some((gear) => gear.imageUrl) && (
+      {/* Preview */}
+      {gearBlocks.some((g) => g.productImage) && (
         <div>
           <h3 className="text-[13px] font-bold -mt-2 mb-2">Gears Owned</h3>
           <div className="flex gap-4 flex-wrap">
-            {gearBlocks
-              .filter((gear) => gear.imageUrl)
-              .map((gear, index) => (
-                <div
-                  key={index}
-                  className="relative border rounded-xl p-3 w-[140px] text-center bg-white shadow-sm"
-                >
-                  <img
-                    src={gear.imageUrl}
-                    alt="gear"
-                    className="w-full h-[100px] object-cover rounded"
-                  />
-                  <p className="mt-2 text-sm font-medium">{gear.title}</p>
-                  <button
-                    onClick={() => deleteGearBlock(index)}
-                    className="absolute top-1.5 right-1.5 p-1 bg-white rounded-full shadow hover:bg-gray-100"
+            {gearBlocks.map(
+              (gear, index) =>
+                gear.productImage && (
+                  <div
+                    key={index}
+                    className="relative border rounded-xl p-3 w-[140px] text-center bg-white shadow-sm"
                   >
-                    <Trash2 className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              ))}
+                    <img
+                      src={gear.productImage}
+                      alt="gear"
+                      className="w-full h-[100px] object-cover rounded"
+                    />
+                    {/* <p className="mt-2 text-sm font-medium">
+                      {gear.productName}
+                    </p> */}
+                    <button
+                      onClick={() => deleteGearBlock(index)}
+                      className="absolute top-1.5 right-1.5 p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                    >
+                      <Trash2 className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+                )
+            )}
           </div>
         </div>
       )}
 
-      {/* Add Gear Cards */}
+      {/* Gear Form */}
       {gearBlocks.map((gear, index) => (
         <div
           key={index}
@@ -135,12 +131,12 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
               </label>
               <input
                 type="text"
-                placeholder="Product Title"
-                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-                value={gear.title}
+                value={gear.productName}
                 onChange={(e) =>
-                  handleFieldChange(index, "title", e.target.value)
+                  handleFieldChange(index, "productName", e.target.value)
                 }
+                placeholder="Product Title"
+                className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm"
               />
             </div>
 
@@ -150,17 +146,16 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
               </label>
               <input
                 type="text"
-                placeholder="Product URL"
-                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-                value={gear.link}
+                value={gear.productLink}
                 onChange={(e) =>
-                  handleFieldChange(index, "link", e.target.value)
+                  handleFieldChange(index, "productLink", e.target.value)
                 }
+                placeholder="Product URL"
+                className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm"
               />
             </div>
           </div>
 
-          {/* Image Input */}
           <div className="flex items-center gap-3 flex-wrap">
             <div className="flex-1 min-w-[240px]">
               <label className="block text-sm font-medium text-[#818181] mb-1">
@@ -168,12 +163,12 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
               </label>
               <input
                 type="text"
-                placeholder="Image URL"
-                className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-                value={gear.imageUrl}
+                value={gear.productImage}
                 onChange={(e) =>
-                  handleFieldChange(index, "imageUrl", e.target.value)
+                  handleFieldChange(index, "productImage", e.target.value)
                 }
+                placeholder="Image URL"
+                className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm"
               />
             </div>
 
@@ -196,7 +191,7 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
         </div>
       ))}
 
-      {/* Add Item Button */}
+      {/* Add Item */}
       <div className="pt-2 flex justify-end">
         <button
           type="button"

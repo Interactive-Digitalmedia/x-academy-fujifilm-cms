@@ -1,5 +1,5 @@
 // EventDetails.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 
 const allTags = [
@@ -21,6 +21,12 @@ const ambassadors = [
 
 export default function EventDetails({ data, setData }: any) {
   const [selectedTags, setSelectedTags] = useState<string[]>(data.tags || []);
+
+  useEffect(() => {
+    if (Array.isArray(data?.tags)) {
+      setSelectedTags(data.tags);
+    }
+  }, [data?.tags]);
 
   const handleTagToggle = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
@@ -47,8 +53,8 @@ export default function EventDetails({ data, setData }: any) {
           type="text"
           className="w-full placeholder:text-[15px] border rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
           placeholder="Photography Workshop"
-          value={data.title || ""}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={data.activityName || ""}
+          onChange={(e) => setData({ ...data, activityName: e.target.value })}
         />
       </div>
 
@@ -103,8 +109,8 @@ export default function EventDetails({ data, setData }: any) {
           </label>
           <Select
             placeholder="Select Event Type"
-            selectedKeys={[data.type || ""]}
-            onChange={(e) => setData({ ...data, type: e.target.value })}
+            selectedKeys={[data.activityType || ""]}
+            onChange={(e) => setData({ ...data, activityType: e.target.value })}
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -122,8 +128,8 @@ export default function EventDetails({ data, setData }: any) {
           </label>
           <Select
             placeholder="Select Event Category"
-            selectedKeys={[data.category || ""]}
-            onChange={(e) => setData({ ...data, category: e.target.value })}
+            selectedKeys={[data.activityCategory || ""]}
+            onChange={(e) => setData({ ...data, activityCategory: e.target.value })}
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -134,31 +140,40 @@ export default function EventDetails({ data, setData }: any) {
           </Select>
         </div>
 
-        <div>
-          <label className="block text-sm  text-[#818181] font-medium mb-1">
-            Start Date & Time
-          </label>
-          <input
-            type="datetime-local"
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.startDateTime || ""}
-            onChange={(e) =>
-              setData({ ...data, startDateTime: e.target.value })
-            }
-          />
-        </div>
+        <div className="w-full">
+  <label className="block text-sm text-[#818181] font-medium mb-1">
+    Start Date
+  </label>
+  <div className="relative">
+    <input
+      type="date"
+      placeholder="dd/mm/yyyy"
+      className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      value={data.startDate || ""}
+      onChange={(e) =>
+        setData({ ...data, startDate: e.target.value })
+      }
+    />
+  </div>
+</div>
 
-        <div>
-          <label className="block text-sm text-[#818181] font-medium mb-1">
-            End Date & Time
-          </label>
-          <input
-            type="datetime-local"
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={data.endDateTime || ""}
-            onChange={(e) => setData({ ...data, endDateTime: e.target.value })}
-          />
-        </div>
+<div className="w-full">
+  <label className="block text-sm text-[#818181] font-medium mb-1">
+    End Date
+  </label>
+  <div className="relative">
+    <input
+      type="date"
+      placeholder="dd/mm/yyyy"
+      className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      value={data.endDate || ""}
+      onChange={(e) =>
+        setData({ ...data, endDate: e.target.value })
+      }
+    />
+  
+  </div>
+</div>
 
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1">
@@ -252,7 +267,7 @@ export default function EventDetails({ data, setData }: any) {
             <SelectItem key="paid">Paid</SelectItem>
           </Select>
         </div>
-
+        {data.pricing === "paid" && (
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1">
             Amount
@@ -264,7 +279,7 @@ export default function EventDetails({ data, setData }: any) {
             value={data.amount || ""}
             onChange={(e) => setData({ ...data, amount: e.target.value })}
           />
-        </div>
+        </div>)}
       </div>
     </div>
   );

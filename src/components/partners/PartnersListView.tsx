@@ -1,19 +1,9 @@
 import React from "react";
 import PartnersTable from "./PartnersTable";
-interface Partner {
-  sno: number;
-  name: string;
-  role: string;
-  city: string;
-  countryEmoji: string;
-  upcomingEvents: number;
-  totalEvents: number;
-  fujiGearOwned: number;
-  imageUrl: string;
-}
+import { Ambassador } from "@/types";
 
 interface PartnersListViewProps {
-  partners: Partner[];
+  partners: Ambassador[];
 }
 
 const PartnersListView: React.FC<PartnersListViewProps> = ({ partners }) => {

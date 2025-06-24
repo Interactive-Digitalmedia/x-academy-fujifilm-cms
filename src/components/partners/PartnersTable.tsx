@@ -6,21 +6,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import PartnerRow from "./PartnerRow";
-
-interface Partner {
-  sno: number;
-  name: string;
-  role: string;
-  city: string;
-  countryEmoji: string;
-  upcomingEvents: number;
-  totalEvents: number;
-  fujiGearOwned: number;
-  imageUrl: string;
-}
+import { Ambassador } from "@/types";
 
 interface PartnersTableProps {
-  partners: Partner[];
+  partners: Ambassador[];
 }
 
 const PartnersTable: React.FC<PartnersTableProps> = ({ partners }) => {
@@ -41,7 +30,7 @@ const PartnersTable: React.FC<PartnersTableProps> = ({ partners }) => {
       </TableHeader>
       <TableBody>
         {partners.map((partner, index) => (
-          <PartnerRow key={partner.sno} partner={partner} index={index} />
+          <PartnerRow key={index} partner={partner} index={index} />
         ))}
       </TableBody>
     </Table>
