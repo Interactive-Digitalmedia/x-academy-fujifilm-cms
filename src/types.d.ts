@@ -82,6 +82,7 @@ export interface Ambassador {
   bannerImage?: string
   userName: string
   bio?: string
+  about?: string
   joinedDate: string
   about?: {
     who?: string
