@@ -203,7 +203,7 @@ const AmbassadorProfile = () => {
                       About Ambassador
                     </h4>
                     <p className="whitespace-pre-line leading-relaxed">
-                      {ambassador.bio}
+                      {ambassador?.about}
                     </p>
                   </div>
                 </div>

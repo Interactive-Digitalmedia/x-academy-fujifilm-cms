@@ -15,7 +15,7 @@ interface PublicProfileProps {
   setData: React.Dispatch<React.SetStateAction<Partial<Ambassador>>>;
 }
 
-const titles = ["X - Ambassador", "X - Evangelist"];
+const titles = ["X-Ambassador", "X-Evangelist"];
 
 export default function PublicProfile({ data, setData }: PublicProfileProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>(data.tags || []);
@@ -202,6 +202,17 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
           placeholder="Write a short bio"
           value={data.bio || ""}
           onChange={(e) => setData({ ...data, bio: e.target.value })}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-[#818181] mb-1">
+          About
+        </label>
+        <textarea
+          className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+          placeholder="Write a short bio"
+          value={data.about || ""}
+          onChange={(e) => setData({ ...data, about: e.target.value })}
         />
       </div>
 
