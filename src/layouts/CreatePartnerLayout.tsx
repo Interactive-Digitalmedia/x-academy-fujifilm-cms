@@ -33,7 +33,6 @@ export default function CreatePartnerLayout({
   const [initialData] = useState<Partial<Ambassador>>(data || {});
   const isDataChanged =
     JSON.stringify(formData) !== JSON.stringify(initialData);
-
   const renderCurrentTab = () => {
     switch (currentTab) {
       case 0:
@@ -52,8 +51,8 @@ export default function CreatePartnerLayout({
   const validateStep = (step: number, formData: Partial<Ambassador>) => {
     switch (step) {
       case 0: // Public Profile
-        if (!formData.fullname?.trim()) return "Name is required";
         if (!formData.userName?.trim()) return "Username is required";
+        if (!formData.fullname?.trim()) return "Name is required";
         if (!formData.type?.trim()) return "Type is required";
         // if (!formData.bio?.trim()) return "Bio is required";
         // if (!formData.location?.trim()) return "Location is required";
@@ -77,9 +76,9 @@ export default function CreatePartnerLayout({
       //   return null;
 
       case 3: // Contact Details
-        if (!formData.email?.trim()) return "Email is required";
-        if (!formData.contactNumber?.trim())
-          return "Contact number is required";
+        if (!formData?.email?.trim()) return "Email is required";
+        // if (!formData?.contactNumber?.trim())
+        //   return "Contact number is required";
         return null;
 
       default:
@@ -87,39 +86,66 @@ export default function CreatePartnerLayout({
     }
   };
 
+  // const handleNextStepOrSubmit = async () => {
+  //   const validationError = validateStep(currentTab, formData);
+  //   if (validationError) {
+  //     toast.error(validationError);
+  //     return;
+  //   }
+  //   console.log(currentTab, tabs.length);
+
+  //   if (currentTab === tabs.length - 1) {
+  //     try {
+  //       const res = await createAmbassadors(formData);
+  //       if (res.status === 201) {
+  //         toast.success("Ambassador profile created!");
+  //         setTimeout(() => navigate("/partners"), 1500);
+  //       } else {
+  //         toast.error(res.message);
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ Submission failed:", error);
+  //     }
+  //   } else {
+  //     setCurrentTab((prev) => prev + 1);
+  //   }
+  // };
+
   const handleNextStepOrSubmit = async () => {
     const validationError = validateStep(currentTab, formData);
     if (validationError) {
       toast.error(validationError);
       return;
     }
-    if (currentTab === tabs.length - 1) {
-      try {
-        if (mode === "update") {
-          console.log(formData._id);
-
-          // const res = await updateAmbassador(formData);
-
-          // if (res.status === 200) {
-          //   toast.success("Ambassador updated!");
-          //   onSuccess?.();
-          // } else {
-          //   toast.error(res.message);
-          // }
+    try {
+      if (currentTab === 0 && !formData._id) {
+        const res = await createAmbassadors(formData);
+        if (res.status === 201) {
+          toast.success("Ambassador created!");
+          setFormData((prev) => ({
+            ...prev,
+            _id: res.data._id,
+          }));
+          setCurrentTab((prev) => prev + 1);
         } else {
-          const res = await createAmbassadors(formData);
-          if (res.status === 201) {
-            toast.success("Ambassador profile created!");
+          toast.error(res.message);
+        }
+      } else if (formData._id) {
+        const res = await updateAmbassador(formData._id, formData);
+        if (res.status === 200) {
+          toast.success("Changes saved!");
+          if (currentTab === tabs.length - 1) {
             setTimeout(() => navigate("/partners"), 1500);
           } else {
-            toast.error(res.message);
+            setCurrentTab((prev) => prev + 1);
           }
+        } else {
+          toast.error(res.message);
         }
-      } catch (error) {
-        console.error("❌ Submission failed:", error);
       }
-    } else {
-      setCurrentTab((prev) => prev + 1);
+    } catch (error) {
+      console.error("❌ Error during submission:", error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -143,11 +169,10 @@ export default function CreatePartnerLayout({
       toast.error("Something went wrong!");
     }
   };
-console.log(formData);
 
   return (
     <div className="flex flex-col">
-      <div className="bgCard h-[83vh] flex flex-col">
+      <div className="bgCard h-[89vh] flex flex-col">
         {/* Tab Navigation */}
         <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
           {tabs.map((tab, index) => (
@@ -205,7 +230,7 @@ console.log(formData);
                 disabled={!isDataChanged}
                 className={`px-6 py-2 rounded-lg font-medium ${
                   isDataChanged
-                    ? "bg-green-600 text-white hover:bg-green-700"
+                    ? "bg-[#1098F7] text-white"
                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
               >

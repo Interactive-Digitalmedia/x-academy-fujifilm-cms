@@ -157,7 +157,7 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex-1 min-w-[240px]">
+            {/* <div className="flex-1 min-w-[240px]">
               <label className="block text-sm font-medium text-[#818181] mb-1">
                 Image URL
               </label>
@@ -170,7 +170,7 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
                 placeholder="Image URL"
                 className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm"
               />
-            </div>
+            </div> */}
 
             <button
               type="button"

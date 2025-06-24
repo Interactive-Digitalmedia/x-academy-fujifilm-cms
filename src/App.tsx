@@ -42,7 +42,7 @@ import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
 import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
-import PartnersEditPage from "./pages/Partners/PartnersEditPage";
+// import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
   return (
@@ -73,7 +73,7 @@ function App() {
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:username" element={<AmbassadorProfile />} />
 
-            <Route path="/partners/:id/edit" element={<PartnersEditPage />} />
+            {/* <Route path="/partners/:id/edit" element={<PartnersEditPage />} /> */}
 
             <Route path="/create-partner" element={<CreatePartner />} />
 
