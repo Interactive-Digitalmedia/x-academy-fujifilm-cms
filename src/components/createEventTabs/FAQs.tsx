@@ -9,7 +9,7 @@ export default function FAQs({ data, setData }: any) {
 
   useEffect(() => {
     if (data?.FAQ?.items && Array.isArray(data.FAQ.items)) {
-      const transformed = data.FAQ.items.map((item: any) => ({
+      const transformed = data?.FAQ?.items?.map((item: any) => ({
         Q: item.question,
         A: item.answer,
       }));
@@ -62,18 +62,18 @@ export default function FAQs({ data, setData }: any) {
           }}
         >
           <SelectItem key="workshop">Workshop</SelectItem>
-          <SelectItem key="eventr">Event</SelectItem>
+          <SelectItem key="event">Event</SelectItem>
           <SelectItem key="exhibition">Exhibition</SelectItem>
         </Select>
       </div>
 
       {/* FAQ Blocks */}
-      {faqBlocks.map((faq, index) => (
+      {faqBlocks?.map((faq, index) => (
         <div
           key={index}
           className="space-y-4 p-6 rounded-xl border bg-white relative"
         >
-          {faqBlocks.length > 1 && (
+          {faqBlocks?.length > 1 && (
             <button
               type="button"
               onClick={() => handleRemoveFaq(index)}
