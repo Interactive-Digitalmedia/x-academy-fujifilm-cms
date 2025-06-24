@@ -16,11 +16,7 @@ const PartnerRow: React.FC<PartnerRowProps> = ({ partner, index }) => {
 
   return (
     <TableRow
-      onClick={() =>
-        navigate(
-          `/partners/${encodeURIComponent(partner.fullname.toLowerCase().replace(/\s+/g, "-"))}`
-        )
-      }
+      onClick={() => navigate(`/partners/${partner?.userName}`)}
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >

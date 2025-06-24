@@ -13,7 +13,7 @@ export default function ContactDetails({ data, setData }: ContactDetailsProps) {
 
       {/* Row 1: Email and Phone */}
       <div className="flex gap-6">
-        <div className="flex-1">
+        {/* <div className="flex-1">
           <label
             className="block text-sm font-medium text-[#818181] mb-1"
             htmlFor="email"
@@ -28,7 +28,7 @@ export default function ContactDetails({ data, setData }: ContactDetailsProps) {
             value={data.email || ""}
             onChange={(e) => setData({ ...data, email: e.target.value })}
           />
-        </div>
+        </div> */}
 
         <div className="flex-1">
           <label

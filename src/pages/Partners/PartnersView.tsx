@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Search, Grid3X3, List, Filter } from "lucide-react";
+import { Search, Grid3X3, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PartnersGridView from "@/components/partners/PartnersGridView";
 import PartnersListView from "@/components/partners/PartnersListView";
 // import { PartnersList } from "@/assets/PartnersList";
-import { getAmbassadors } from "@/api/ambassadors";
+import { getAmbassadors, searchAmbassadors } from "@/api/ambassadors";
 import { Ambassador } from "@/types";
+import { debounce } from "@/utils/debounce";
 
 const PartnersView: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeType, setActiveType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const types = ["All", "Ambassadors", "Evangelists"];
 
   useEffect(() => {
+    const shouldFetchAll = activeType === "All" && searchQuery.length < 3;
+    if (!shouldFetchAll) return;
     const load = async () => {
       const response = await getAmbassadors();
       if (response?.data) {
@@ -24,21 +27,23 @@ const PartnersView: React.FC = () => {
       }
     };
     load();
-  }, []);
+  }, [activeType, searchQuery]);
 
-  // Filter logic
-  const filteredPartners = ambassadors.filter((partner) => {
-    const matchesType =
-      activeType === "All" ||
-      partner.type.toLowerCase() === activeType.toLowerCase().slice(0, -1);
-
-    const matchesSearch =
-      searchQuery.length < 3 ||
-      partner.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.type.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesType && matchesSearch;
-  });
+  useEffect(() => {
+    const shouldSearch = searchQuery.length >= 3 || activeType !== "All";
+    if (!shouldSearch) return;
+    setLoading(true);
+    const fetchData = async () => {
+      const response = await searchAmbassadors(searchQuery, activeType);
+      if (response?.data) {
+        setAmbassadors(response.data);
+      }
+      setLoading(false);
+    };
+    const debouncedFetch = debounce(fetchData, 1000);
+    debouncedFetch();
+    return () => debouncedFetch.cancel();
+  }, [searchQuery, activeType]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
@@ -46,7 +51,7 @@ const PartnersView: React.FC = () => {
         {/* Search + Toggles + Filter Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
           {/* Search Bar */}
-          <div className="relative flex-1 min-w-[280px] max-w-[840px] mr-4">
+          <div className="relative flex-1 min-w-[280px] w-full mr-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -77,11 +82,11 @@ const PartnersView: React.FC = () => {
                 <List className="h-4 w-4" />
               </Button>
             </div>
-
+            {/* 
             <Button variant="outline" size="sm" className="h-[41px] px-3 gap-2">
               <Filter className="h-4 w-4" />
               <span className="text-sm">Filters</span>
-            </Button>
+            </Button> */}
           </div>
         </div>
 
@@ -111,11 +116,18 @@ const PartnersView: React.FC = () => {
           ))}
         </div>
 
-        {/* View Mode Switch */}
-        {viewMode === "grid" ? (
-          <PartnersGridView partners={filteredPartners} />
+        {loading ? (
+          <div className="flex justify-center items-center py-10 text-muted-foreground text-sm">
+            Loading partners...
+          </div>
+        ) : ambassadors.length === 0 ? (
+          <div className="flex justify-center items-center py-10 text-muted-foreground text-sm">
+            No partners found.
+          </div>
+        ) : viewMode === "grid" ? (
+          <PartnersGridView partners={ambassadors} />
         ) : (
-          <PartnersListView partners={filteredPartners} />
+          <PartnersListView partners={ambassadors} />
         )}
       </div>
     </div>
