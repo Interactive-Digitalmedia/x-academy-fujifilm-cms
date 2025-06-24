@@ -346,14 +346,14 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           {/* Right Side Controls */}
           <div className="flex items-center gap-3">
             {/* View Toggle Icons */}
-            <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
+            {/* <div className="flex items-center gap-1 border border-muted rounded-md bg-muted/20 p-1">
               <Button variant="secondary" size="sm" className="p-2 h-8 w-8">
                 <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
                 <List className="h-4 w-4" />
               </Button>
-            </div>
+            </div> */}
 
             {/* Date Filter */}
             <DateFilterPopover

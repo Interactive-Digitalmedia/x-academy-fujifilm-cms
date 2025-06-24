@@ -14,7 +14,6 @@ import Newsletter from "@/components/others/Newsletter";
 // import AboutUs from "@/components/others/Aboutus";
 import AboutUs from "@/components/others/AboutUs";
 
-
 interface Question {
   id: string;
   query: string;
@@ -31,7 +30,7 @@ interface Template {
 interface OthersProps {}
 
 const Others: React.FunctionComponent<OthersProps> = () => {
-  const [activeTab, setActiveTab] = React.useState("faq");
+  const [activeTab, setActiveTab] = React.useState("FAQ");
   const [templates, setTemplates] = React.useState<Template[]>([
     {
       id: "1",
@@ -120,9 +119,9 @@ const Others: React.FunctionComponent<OthersProps> = () => {
   };
 
   const renderFAQContent = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header with New Template Button */}
-      <div className="flex justify-between items-center">
+      {/* <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-800">
           Frequently Asked Questions
         </h1>
@@ -133,7 +132,7 @@ const Others: React.FunctionComponent<OthersProps> = () => {
         >
           New Template
         </Button>
-      </div>
+      </div> */}
 
       {/* Templates Accordion */}
       <div className="">
@@ -170,7 +169,7 @@ const Others: React.FunctionComponent<OthersProps> = () => {
                 </div>
               }
             >
-              <div className="space-y-4 p-4">
+              <div className="-space-y-4 -mt-12 p-4">
                 {/* Questions */}
                 {template.questions.map((question, index) => (
                   <div key={question.id} className="space-y-3 p-4  rounded-lg">
@@ -281,6 +280,10 @@ const Others: React.FunctionComponent<OthersProps> = () => {
 
   return (
     <div className="bg-white h-max rounded-xl p-4">
+      <div className="text-l font-bold text-gray-800 mb-4">
+        {" "}
+        {activeTab === "FAQ" ? "Frequently Asked Questions" : activeTab}
+      </div>
       {/* Search and Filter Header */}
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1 ">
@@ -312,30 +315,43 @@ const Others: React.FunctionComponent<OthersProps> = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <Tabs
-        selectedKey={activeTab}
-        onSelectionChange={(key) => setActiveTab(key as string)}
-        aria-label="Others sections"
-        color="primary"
-        variant="underlined"
-        classNames={{
-          tabList:
-            "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-          cursor: "w-full bg-primary",
-          tab: "max-w-fit px-0 h-12",
-        }}
-      >
-        <Tab key="faq" title="FAQ">
-          {renderFAQContent()}
-        </Tab>
-        <Tab key="newsletter" title="Newsletter Subscriptions">
-          <Newsletter />
-        </Tab>
 
-        <Tab key="about" title="About Us">
-          {<AboutUs />}
-        </Tab>
-      </Tabs>
+      {/* Custom Tab Buttons */}
+      <div className="mb-6 flex flex-wrap gap-3">
+        {["FAQ", "Newsletter Subscriptions", "About Us"].map((tab) => (
+          <button
+            key={tab}
+            className={`btn-toggle ${
+              activeTab === tab ? "btn-toggle-active" : "btn-toggle-inactive"
+            }`}
+            style={{
+              display: "flex",
+              width: "auto",
+              padding: "6px 12px",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+              borderRadius: "8px",
+              border: "1.5px solid",
+              borderColor: activeTab === tab ? "#0070f3" : "#d1d5db",
+              backgroundColor: activeTab === tab ? "#0070f3" : "#ffffff",
+              color: activeTab === tab ? "#000000" : "#000000",
+              fontWeight: 500,
+            }}
+            onClick={() => setActiveTab(tab)}
+            type="button"
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div>
+        {activeTab === "FAQ" && renderFAQContent()}
+        {activeTab === "Newsletter Subscriptions" && <Newsletter />}
+        {activeTab === "About Us" && <AboutUs />}
+      </div>
     </div>
   );
 };
