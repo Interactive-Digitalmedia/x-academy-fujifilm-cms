@@ -109,10 +109,10 @@ export default function CreateEventLayout({ data, setData }: any) {
   
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
-      const faqItems = data.FAQ || [];
+      const faqItems = Array.isArray(data.FAQ) ? data.FAQ : data.FAQ?.items || [];
       const faqPayload = {
         name: "Custom",
-        items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
+        items: faqItems?.map((f: any) => ({ question: f.Q, answer: f.A })),
       };
   
       try {
@@ -194,6 +194,21 @@ export default function CreateEventLayout({ data, setData }: any) {
       console.error("❌ Error saving activity:", error);
     }
   };
+
+  const handleStatusUpdate = async (nextStatus: "draft" | "published") => {
+    if (!activityId) {
+      toast.error("Create the activity first!");
+      return;
+    }
+    try {
+      await updateActivity(activityId, { status: nextStatus });
+      setData((p: any) => ({ ...p, status: nextStatus }));
+      toast.success(`Status changed to ${nextStatus}`);
+    } catch (err) {
+      toast.error("Failed to update status");
+      console.error(err);
+    }
+  };
   
   
   
@@ -201,9 +216,7 @@ export default function CreateEventLayout({ data, setData }: any) {
 
   return (
     <div className=" flex flex-col">
-           {id &&   <MainCard
- data={data}
-  />}
+           {id &&     <MainCard data={data} onStatusUpdate={handleStatusUpdate} />}
       {/* Card wrapper */}
       <div className="bgCard h-[83vh]">
         {/* Tab Navigation (inside card) */}

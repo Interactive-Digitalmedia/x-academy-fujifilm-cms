@@ -8,13 +8,23 @@ import {
   Download,
 } from "lucide-react";
 import { Activity } from "@/types";
+import DeleteEventButton from "../events/DeleteEventButton";
 
 type MainCardProps = {
-data : Activity
+data : Activity,
+onStatusUpdate: (newStatus: "draft" | "published") => void | Promise<void>;
 };
 
+type Status = "draft" | "published" ;
+
+const statusLabel: Record<Status, string> = {
+  draft: "Draft",
+  published: "Published",
+};
+
+
 const MainCard: React.FC<MainCardProps> = ({
-data
+data, onStatusUpdate
 }) => {
   /* ---------- Helpers ---------- */
   const formattedDate = new Date(data?.startDate).toLocaleDateString("en-US", {
@@ -32,6 +42,8 @@ data
     "bg-[#4BCFFF]",
     "bg-[#8847FF]",
   ];
+
+  const nextStatus: Status = status === "draft" ? "published" : "draft";
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md p-4 mb-6">
@@ -77,13 +89,17 @@ data
 
         {/* Buttons */}
         <div className="flex items-center gap-2">
+        <DeleteEventButton activityId={data._id} />
           <button className="border p-2 rounded-md">
             <Copy className="w-4 h-4" />
           </button>
           <button className="border p-2 rounded-md">
             <Download className="w-4 h-4" />
           </button>
-          <button className="bg-[#1098F7] text-white text-sm px-4 py-2 rounded-md">
+          <button
+            onClick={() => onStatusUpdate(nextStatus)}
+            className="bg-[#1098F7] text-white text-sm px-4 py-2 rounded-md"
+          >
             Change&nbsp;Status
           </button>
         </div>
