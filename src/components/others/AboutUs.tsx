@@ -8,16 +8,19 @@ import BasicEditor from "../ui/basiceditor";
 
 const AboutUs = () => {
   return (
-    <div className="mx-auto -mt-2 w-[100%] max-w-5xl px-2">
+    <div className="mx-auto -mt-5 w-[100%] max-w-5xl px-2">
       <Accordion type="multiple" className="w-full">
         <AccordionItem value="about">
           <AccordionTrigger>About X Academy</AccordionTrigger>
           <div className="w-full">
             <AccordionContent className="!border-none !p-0 !shadow-none !rounded-none">
               <div className="rounded-lg border border-gray-300">
-                <BasicEditor value={""} onChange={function (): void {
-                  throw new Error("Function not implemented.");
-                } } />
+                <BasicEditor
+                  value={""}
+                  onChange={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               </div>
             </AccordionContent>
           </div>

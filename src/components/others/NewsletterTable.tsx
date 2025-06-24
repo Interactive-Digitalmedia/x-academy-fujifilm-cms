@@ -26,7 +26,7 @@ export const NewsletterTable: React.FC<NewsletterTableProps> = ({
   newsletterData,
 }) => {
   return (
-    <div className="bg-white w-full mt-0 pt-0">
+    <div className="bg-white w-full -mt-6 pt-0">
       <Table className="w-full text-sm">
         <TableHeader>
           <TableRow className="border-b border-gray-300 text-gray-500 text-xs uppercase">

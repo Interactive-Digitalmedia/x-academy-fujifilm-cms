@@ -111,7 +111,7 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
       {/* <SearchBar /> */}
       <div className="bg-white h-max rounded-xl p-4">
         {/* Navigation Breadcrumb */}
-        <div className="">
+        {/* <div className="">
           <div className="">
             <div className="flex items-center space-x-2 text-sm">
               <button
@@ -146,20 +146,32 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
               })}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Main Content */}
         <article className="px-10">
+          {/* gallery image */}
+          <div className="-mb-2 max-h-[250px] overflow-hidden rounded-lg">
+            <img
+              src={currentBlog.gallery[currentImageIndex]}
+              alt={currentBlog.title}
+              className="h-64 w-full cursor-pointer object-cover md:h-96 lg:h-[500px]"
+              onClick={() => {
+                // Cycle through gallery images on click
+                setCurrentImageIndex((prev) =>
+                  prev === currentBlog.gallery.length - 1 ? 0 : prev + 1
+                );
+              }}
+            />
+          </div>
           {/* Article Header */}
           <header className="">
             {/* Published Date */}
-
-            {/* Action Buttons */}
-            <div className="mb-6 mt-4 flex items-center justify-between space-x-2">
+            <div className="mb-2 mt-4 flex items-center justify-between space-x-2">
               <div className="text-sm font-medium">
                 {currentBlog.publishedDate}
               </div>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <Button
                   isIconOnly
                   className="h-10 w-10 rounded-full p-0"
@@ -176,11 +188,11 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
                 >
                   <Upload size={16} />
                 </Button>
-              </div>
+              </div> */}
             </div>
 
             {/* Category Tags - Fixed to use tag objects */}
-            <div className="mb-6 flex flex-wrap gap-2">
+            <div className="mb-2 flex flex-wrap gap-2">
               {currentBlog.tags?.map((tag: any, index: number) => (
                 <span
                   key={index}
@@ -202,13 +214,13 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
             </div>
 
             {/* Title */}
-            <h1 className="mb-6 text-4xl font-bold leading-tight">
+            <h1 className="mb-2 text-3xl font-bold leading-tight">
               {currentBlog.title}
             </h1>
 
             {/* Author Info */}
-            <div className="card mb-8 flex w-fit items-center gap-4 rounded-full p-2">
-              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+            <div className="card mb-4 flex w-fit items-center gap-1 rounded-full p-1.5">
+              <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 {currentBlog.authorAvatar ? (
                   <img
                     src={currentBlog.authorAvatar}
@@ -226,23 +238,9 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
           </header>
 
           {/* Featured Image Gallery - Now properly using gallery array */}
-          <div className="mb-12">
-            <div className="mb-4 overflow-hidden rounded-lg">
-              <img
-                src={currentBlog.gallery[currentImageIndex]}
-                alt={currentBlog.title}
-                className="h-64 w-full cursor-pointer object-cover md:h-96 lg:h-[500px]"
-                onClick={() => {
-                  // Cycle through gallery images on click
-                  setCurrentImageIndex((prev) =>
-                    prev === currentBlog.gallery.length - 1 ? 0 : prev + 1
-                  );
-                }}
-              />
-            </div>
 
-            {/* Image Gallery Thumbnails */}
-            {currentBlog.gallery.length > 1 && (
+          {/* Image Gallery Thumbnails */}
+          {/* {currentBlog.gallery.length > 1 && (
               <div className="flex justify-center space-x-2">
                 {currentBlog.gallery.map((image: string, index: number) => (
                   <button
@@ -262,11 +260,10 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
                   </button>
                 ))}
               </div>
-            )}
-          </div>
+            )} */}
 
           {/* Article Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none">
+          <div className="text-gray-800 dark:text-gray-200 text-base leading-relaxed font-normal">
             {formatContent(currentBlog.content)}
           </div>
         </article>
