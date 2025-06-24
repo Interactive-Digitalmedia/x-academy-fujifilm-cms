@@ -77,17 +77,19 @@ export type Activity = {
 
 export interface Ambassador {
   _id: string
-  name: string
-  image?: string
-  bannaerImage?: string
+  fullname: string
+  profileImage?: string
+  bannerImage?: string
+  userName: string
   bio?: string
+  joinedDate: string
   about?: {
     who?: string
     about?: string
   }
   gallery?: string[]
   location?: string
-  type?: string
+  type: string
   tags?: string[]
   socialMediaUrls?: {
     facebook?: string
@@ -98,6 +100,10 @@ export interface Ambassador {
     productName?: string
     productLink?: string
   }[]
+  email: string
+  contactNumber: string
+  totalEvents?: string
+  upcomingEvents?: string
   createdAt?: string
   updatedAt?: string
 }

@@ -86,10 +86,10 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
       <h2 className="text-base font-bold mb-1">Public Profile</h2>
 
       {/* Name & Title */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Username
+            Username <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -101,7 +101,7 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
         </div>
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Name
+            Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -111,10 +111,26 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
             onChange={(e) => setData({ ...data, fullname: e.target.value })}
           />
         </div>
+        <div className="flex-1">
+          <label
+            className="block text-sm font-medium text-[#818181] mb-1"
+            htmlFor="email"
+          >
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            value={data.email || ""}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
+          />
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Type
+            Type <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select title"
@@ -139,7 +155,7 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
         <label className="block text-sm font-medium text-[#818181] mb-2">
           Tags
         </label>
-        <div className="flex gap-2 flex-wrap px-2 py-1 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
+        <div className="flex gap-2 flex-wrap px-2 py-1 h-10 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
           {selectedTags.map((tag) => {
             const tagColor =
               tagsList.find((t) => t.name === tag)?.color || "bg-gray-400";

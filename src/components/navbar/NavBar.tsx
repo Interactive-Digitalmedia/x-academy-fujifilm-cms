@@ -92,11 +92,11 @@ const eventId = params.activityId || location.pathname.split("/")[2]; // fallbac
           icon: CirclePlus,
           action: () => navigate("/partners/create-partner"),
         },
-        {
-          label: "Drafts",
-          icon: "",
-          action: () => console.log("Partner analytics"),
-        },
+        // {
+        //   label: "Drafts",
+        //   icon: "",
+        //   action: () => console.log("Partner analytics"),
+        // },
       ],
     },
 
