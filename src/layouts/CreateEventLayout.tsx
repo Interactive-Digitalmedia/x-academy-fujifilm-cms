@@ -8,8 +8,9 @@ import FAQs from "@/components/createEventTabs/FAQs";
 import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useActivityStore } from '@/Zustang/useActivityStore'
+import { useActivityStore } from "@/Zustang/useActivityStore";
 import MainCard from "@/components/concludedEventTabs/MainCard";
+import { Activity } from "@/types";
 
 const tabs = [
   "Event Details",
@@ -21,50 +22,167 @@ const tabs = [
 ];
 
 export default function CreateEventLayout({ data, setData }: any) {
-  const navigate=useNavigate()
-  const [currentTab, setCurrentTab] = useState(0);
-  const [originalData, setOriginalData] = useState<any>(null);
+  const [formData, setFormData] = useState<Activity>({} as Activity);
+  const [originalData, setOriginalData] = useState<Activity | null>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
-    const { fetchActivitiesById } =
-      useActivityStore()
+  const [currentTab, setCurrentTab] = useState(0);
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+  const { fetchActivitiesById } = useActivityStore();
 
-      const { id } = useParams<{ id?: string }>(); 
-      useEffect(() => {
-        if (!id) return;
-      
-        (async () => {
-          try {
-            const res = await fetchActivitiesById(id);
-            setData(res);              // for form
-            setOriginalData(res);  
-            console.log(res) 
-            if(res)   // for comparison later
-            setActivityId(res._id);    // set activityId for update
-          } catch (error) {
-            toast.error("Failed to fetch activity");
-            console.error("Fetch error:", error);
-          }
-        })();
-      }, [id]);
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      try {
+        const res = await fetchActivitiesById(id);
+        if (res) {
+          setOriginalData(res);
+          setFormData(res);
+          console.log(res);
+          setActivityId(res._id);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch activity");
+        console.error("Fetch error:", error);
+      }
+    })();
+  }, [id]);
 
   const renderCurrentTab = () => {
     switch (currentTab) {
       case 0:
-        return <EventDetails data={data} setData={setData} />;
+        return <EventDetails data={formData} setData={setFormData} />;
       case 1:
-        return <AboutEvent data={data} setData={setData} />;
+        return <AboutEvent data={formData} setData={setFormData} />;
       case 2:
-        return <EventSchedule data={data} setData={setData} />;
+        return <EventSchedule data={formData} setData={setFormData} />;
       case 3:
-        return <EventImage data={data} setData={setData} />;
+        return <EventImage data={formData} setData={setFormData} />;
       case 4:
-        return <FAQs data={data} setData={setData} />;
+        return <FAQs data={formData} setData={setFormData} />;
       case 5:
-        return <AdminControls data={data} setData={setData} />;
+        return <AdminControls data={formData} setData={setFormData} />;
       default:
         return null;
     }
   };
+
+  const validateActivityStep = (
+    step: number,
+    data: Partial<Activity>
+  ): string | null => {
+    switch (step) {
+      case 0: // Event Details
+        if (!data.activityName?.trim()) return "Event name is required.";
+        if (!data.activityType?.trim()) return "Event type is required.";
+        if (!data.activityCategory?.trim())
+          return "Event category is required.";
+        if (!data.startDate?.trim()) return "Start date is required.";
+        if (!data.endDate?.trim()) return "End date is required.";
+        if (new Date(data.endDate) < new Date(data.startDate))
+          return "End date cannot be before start date.";
+        if (!data.location?.trim()) return "Location is required.";
+        if (!data.ambassadorId || data.ambassadorId.length === 0)
+          return "At least one host is required.";
+        if (!data.pricing) return "Pricing is required.";
+        if (data.pricing === "paid" && (!data.amount || data.amount <= 0))
+          return "Valid amount is required for paid events.";
+        return null;
+
+      case 1: // About Event
+        if (!data.about?.about?.trim())
+          return "Event about section is required.";
+        // if (!data.about?.whyShouldYouAttend?.trim())
+        //   return "Why should you attend is required.";
+        // if (!data.about?.whatsIncluded || data.about.whatsIncluded.length === 0)
+        //   return "At least one 'What's Included' item is required.";
+        return null;
+
+      case 2: // Schedule
+        if (!data.schedule || data.schedule.length === 0)
+          return "At least one schedule day is required.";
+        for (const day of data.schedule) {
+          if (!day.sessions || day.sessions.length === 0)
+            return "Each day should have at least one session.";
+          for (const session of day.sessions) {
+            if (
+              !session.title?.trim() ||
+              !session.startTime?.trim() ||
+              !session.endTime?.trim()
+            ) {
+              return "Each session must have title, start and end time.";
+            }
+          }
+        }
+        return null;
+
+      case 3: // Images
+        if (!data.heroImage) return "Hero image is required.";
+        return null;
+
+      default:
+        return null;
+    }
+  };
+
+  // const handleNextStepOrSubmit = async () => {
+  //   const validationError = validateActivityStep(currentTab, formData);
+  //   if (validationError) {
+  //     toast.error(validationError);
+  //     return;
+  //   }
+  //   try {
+  //     if (currentTab === 0 && !formData._id) {
+  //       const res = await uploadActivity(formData);
+  //       if (res.status === 201) {
+  //         toast.success("Activity created!");
+  //         setFormData((prev) => ({
+  //           ...prev,
+  //           _id: res.data._id,
+  //         }));
+  //         setCurrentTab((prev) => prev + 1);
+  //       } else {
+  //         toast.error(res.message);
+  //       }
+  //     } else if (formData._id) {
+  //       const res = await updateActivity(formData._id, formData);
+  //       if (res.status === 200 || res.success) {
+  //         toast.success("Changes saved!");
+  //         if (currentTab === tabs.length - 1) {
+  //           setTimeout(() => navigate("/partners"), 1500);
+  //         } else {
+  //           setCurrentTab((prev) => prev + 1);
+  //         }
+  //       } else {
+  //         toast.error(res.message);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error during submission:", error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
+
+  // const handleUpdateSubmit = async () => {
+  //   const validationError = validateActivityStep(currentTab, formData);
+  //   if (validationError) {
+  //     toast.error(validationError);
+  //     return;
+  //   }
+  //   if (!formData._id) return;
+  //   try {
+  //     const res = await updateActivity(formData?._id, formData);
+  //     if (res.status === 200) {
+  //       toast.success("Ambassador updated!");
+  //       // onSuccess?.();
+  //     } else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Update failed", error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
 
   // const handleNextStepOrSubmit = async () => {
   //   if (currentTab === tabs.length - 1) {
@@ -82,31 +200,34 @@ export default function CreateEventLayout({ data, setData }: any) {
   //   }
   // };
 
-
   const deepEqual = (a: any, b: any): boolean => {
     if (a === b) return true;
-  
+
     if (typeof a !== typeof b) return false;
     if (a == null || b == null) return false;
-  
+
     if (typeof a === "object") {
       const keysA = Object.keys(a);
       const keysB = Object.keys(b);
       if (keysA.length !== keysB.length) return false;
-  
+
       for (const key of keysA) {
         if (!deepEqual(a[key], b[key])) return false;
       }
-  
+
       return true;
     }
-  
+
     return false;
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
-    let updatedFAQId = data.FAQ;
-  
+    const validationError = validateActivityStep(currentTab, formData);
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+    let updatedFAQId = data?.FAQ;
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
       const faqItems = data.FAQ || [];
@@ -114,12 +235,12 @@ export default function CreateEventLayout({ data, setData }: any) {
         name: "Custom",
         items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
       };
-  
+
       try {
         const faqRes = await createFaq(faqPayload);
         updatedFAQId = faqRes?.data?._id;
         setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
-  
+
         if (activityId) {
           await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
         }
@@ -128,37 +249,35 @@ export default function CreateEventLayout({ data, setData }: any) {
         console.error("❌ Failed to save FAQ:", err);
       }
     }
-  
+
     // 2. Prepare final payload
     const payload = {
       ...data,
       FAQ: updatedFAQId,
       ...(action && { status: action }),
     };
-  
+
     // 3. Manual deep equality check function
     const deepEqual = (a: any, b: any): boolean => {
       if (a === b) return true;
       if (typeof a !== typeof b || a == null || b == null) return false;
-  
+
       if (typeof a === "object") {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
         if (keysA.length !== keysB.length) return false;
-  
+
         for (const key of keysA) {
           if (!deepEqual(a[key], b[key])) return false;
         }
-  
         return true;
       }
-  
       return false;
     };
-  
+
     try {
       let response;
-  
+
       // 4. CREATE
       if (!activityId) {
         response = await uploadActivity(payload);
@@ -175,7 +294,7 @@ export default function CreateEventLayout({ data, setData }: any) {
           toast.success("No changes to update");
         }
       }
-  
+
       // 6. Final step navigation
       if (currentTab === tabs.length - 1) {
         if (action === "published" && response?.data?._id) {
@@ -194,18 +313,12 @@ export default function CreateEventLayout({ data, setData }: any) {
       console.error("❌ Error saving activity:", error);
     }
   };
-  
-  
-  
-  
 
   return (
     <div className=" flex flex-col">
-           {id &&   <MainCard
- data={data}
-  />}
+      {id && <MainCard data={formData} />}
       {/* Card wrapper */}
-      <div className="bgCard h-[83vh]">
+      <div className="bgCard h-[88vh]">
         {/* Tab Navigation (inside card) */}
         <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
           {tabs.map((tab, index) => (
@@ -240,9 +353,7 @@ export default function CreateEventLayout({ data, setData }: any) {
         </div>
 
         {/* Tab Content */}
-        <div className="flex-1 overflow-y-auto p-6 max-h-[58vh]">
-          {renderCurrentTab()}
-        </div>
+        <div className="flex-1 overflow-y-auto p-6 ">{renderCurrentTab()}</div>
 
         {/* Footer Buttons */}
         <div className="mt-2 flex justify-between">
@@ -255,29 +366,28 @@ export default function CreateEventLayout({ data, setData }: any) {
           </button>
 
           {currentTab === tabs.length - 1 ? (
-  <div className="flex gap-3">
-    <button
-      className="px-6 py-2 rounded-md text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
-      onClick={() => handleNextStepOrSubmit("draft")}
-    >
-      Save as Draft
-    </button>
-    <button
-      className="px-6 py-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white hover:bg-[#0f87dc] transition"
-      onClick={() => handleNextStepOrSubmit("published")}
-    >
-      Save & Preview
-    </button>
-  </div>
-) : (
-  <button
-    className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
-    onClick={() => handleNextStepOrSubmit()}
-  >
-    Next Step
-  </button>
-)}
-
+            <div className="flex gap-3">
+              <button
+                className="px-6 py-2 rounded-md text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
+                onClick={() => handleNextStepOrSubmit("draft")}
+              >
+                Save as Draft
+              </button>
+              <button
+                className="px-6 py-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white hover:bg-[#0f87dc] transition"
+                onClick={() => handleNextStepOrSubmit("published")}
+              >
+                Save & Preview
+              </button>
+            </div>
+          ) : (
+            <button
+              className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
+              onClick={() => handleNextStepOrSubmit()}
+            >
+              Next Step
+            </button>
+          )}
         </div>
       </div>
     </div>

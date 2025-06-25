@@ -67,14 +67,14 @@ const eventId = params.activityId || location.pathname.split("/")[2]; // fallbac
             {
               label: "Update",
               icon: SquarePen,
-              action: () => navigate(`/events/create-events/${eventId}`),
+              action: () => navigate(`/events/update-events/${eventId}`),
             },
           ]
         : [
             {
               label: "Create New",
               icon: CirclePlus,
-              action: () => navigate("/events/create-events"),
+              action: () => navigate("/events/update-events"),
             },
             {
               label: "Drafts",

@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 
-const days = [
-  "Day 1 - Friday, May 16th 2025",
-  "Day 2 - Saturday, May 17th 2025",
-  "Day 3 - Sunday, May 18th 2025",
-];
+// const days = [
+//   "Day 1 - Friday, May 16th 2025",
+//   "Day 2 - Saturday, May 17th 2025",
+//   "Day 3 - Sunday, May 18th 2025",
+// ];
 
 const blankSession = {
   dayTitle: "",
@@ -28,57 +28,53 @@ export default function EventSchedule({ data, setData }: any) {
     | "endTime"
     | "bullets";
 
-    /* 1. Convert `data.schedule` -> sessionBlocks on mount / when data changes */
-useEffect(() => {
-  if (!data?.schedule?.length) return;
+  /* 1. Convert `data.schedule` -> sessionBlocks on mount / when data changes */
+  useEffect(() => {
+    if (!data?.schedule?.length) return;
 
-  const restored = data.schedule[0]?.sessions?.map((s: any) => ({
-    dayTitle   : s.day,           // stored as plain `day` in DB
-    title      : s.title,
-    speaker    : s.speaker,
-    startTime  : s.startTime,
-    endTime    : s.endTime,
-    bullets    : s.description,
-  })) || [{ ...blankSession }];
+    const restored = data.schedule[0]?.sessions?.map((s: any) => ({
+      dayTitle: s.day, // stored as plain `day` in DB
+      title: s.title,
+      speaker: s.speaker,
+      startTime: s.startTime,
+      endTime: s.endTime,
+      bullets: s.description,
+    })) || [{ ...blankSession }];
 
-  setSessionBlocks(restored);
-}, [data?.schedule]);
+    setSessionBlocks(restored);
+  }, [data?.schedule]);
 
+  const handleFieldChange = (
+    index: number,
+    field: SessionField,
+    value: string
+  ) => {
+    const updated = [...sessionBlocks];
+    updated[index][field] = value;
+    setSessionBlocks(updated);
 
+    // Transform sessions into MongoDB schema format
+    const formattedSessions = updated.map((session) => ({
+      day: session.dayTitle,
+      title: session.title,
+      speaker: session.speaker,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      description: session.bullets,
+    }));
 
+    // Store in schema format
+    setData({
+      ...data,
+      schedule: [{ sessions: formattedSessions }],
+    });
+  };
 
-    const handleFieldChange = (
-      index: number,
-      field: SessionField,
-      value: string
-    ) => {
-      const updated = [...sessionBlocks];
-      updated[index][field] = value;
-      setSessionBlocks(updated);
-    
-      // Transform sessions into MongoDB schema format
-      const formattedSessions = updated.map((session) => ({
-        day: session.dayTitle,
-        title: session.title,
-        speaker: session.speaker,
-        startTime: session.startTime,
-        endTime: session.endTime,
-        description: session.bullets,
-      }));
-    
-      // Store in schema format
-      setData({
-        ...data,
-        schedule: [{ sessions: formattedSessions }],
-      });
-    };
-
-    const getTakenDays = (idx: number) =>
-      sessionBlocks
-        .filter((_, i) => i !== idx)          // all other blocks
-        .map((s) => s.dayTitle)               // their chosen day
-        .filter(Boolean);  
-    
+  const getTakenDays = (idx: number) =>
+    sessionBlocks
+      .filter((_, i) => i !== idx) // all other blocks
+      .map((s) => s.dayTitle) // their chosen day
+      .filter(Boolean);
 
   const handleAddBlock = () => {
     setSessionBlocks([...sessionBlocks, { ...blankSession }]);
@@ -94,14 +90,14 @@ useEffect(() => {
   // utils/dateRange.ts
   const buildDayList = (start: string, end: string): string[] => {
     if (!start || !end) return [];
-  
+
     const startDate = new Date(start);
     const endDate = new Date(end);
     if (startDate > endDate) return [];
-  
+
     const days: string[] = [];
     let cur = new Date(startDate);
-  
+
     let dayIndex = 1;
     const formatter = new Intl.DateTimeFormat("en-US", {
       weekday: "long",
@@ -109,13 +105,13 @@ useEffect(() => {
       day: "numeric",
       year: "numeric",
     });
-  
+
     while (cur <= endDate) {
       days.push(`Day ${dayIndex} - ${formatter.format(cur)}`);
       cur.setDate(cur.getDate() + 1);
       dayIndex++;
     }
-  
+
     return days;
   };
 
@@ -126,14 +122,13 @@ useEffect(() => {
 
   useEffect(() => {
     if (!dayOptions.length) return;
-  
+
     setSessionBlocks((prev) =>
       prev.map((block) =>
         dayOptions.includes(block.dayTitle) ? block : { ...block, dayTitle: "" }
       )
     );
   }, [dayOptions]);
-  
 
   return (
     <div className="space-y-2 mt-[-25px]">
@@ -164,29 +159,32 @@ useEffect(() => {
               Select Day
             </label>
             <Select
-  placeholder={
-    dayOptions.length ? "Select day" : "Choose start/end dates first"
-  }
-  isDisabled={!dayOptions.length}
-  selectedKeys={session.dayTitle ? [session.dayTitle] : []}
-  onChange={(e) => handleFieldChange(index, "dayTitle", e.target.value)}
-  classNames={{
-    trigger:
-      "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
-  }}
->
-  {dayOptions.map((day) => (
-    <SelectItem
-      key={day}
-      value={day}
-      // disable if some OTHER block already picked this day
-      isDisabled={getTakenDays(index).includes(day)}
-    >
-      {day}
-    </SelectItem>
-  ))}
-</Select>
-
+              placeholder={
+                dayOptions.length
+                  ? "Select day"
+                  : "Choose start/end dates first"
+              }
+              isDisabled={!dayOptions.length}
+              selectedKeys={session.dayTitle ? [session.dayTitle] : []}
+              onChange={(e) =>
+                handleFieldChange(index, "dayTitle", e.target.value)
+              }
+              classNames={{
+                trigger:
+                  "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
+              }}
+            >
+              {dayOptions.map((day) => (
+                <SelectItem
+                  key={day}
+                  value={day}
+                  // disable if some OTHER block already picked this day
+                  isDisabled={getTakenDays(index).includes(day)}
+                >
+                  {day}
+                </SelectItem>
+              ))}
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

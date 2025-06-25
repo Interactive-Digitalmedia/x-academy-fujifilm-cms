@@ -34,11 +34,11 @@ import CreateXStory from "./pages/Activity/CreateXStory";
 import Profile from "./pages/Profile/Profile";
 import CreateBlog from "./pages/Blogs/CreateBlog";
 
-import PartnersView from "./pages/Partners/PartnersView";
+import PartnersView from "./pages/Ambassadors/PartnersView";
 import Support from "./pages/Support/Support";
 import SupportDetails from "./pages/Support/SupportDetails";
 import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
-import AmbassadorProfile from "./pages/Partners/AmbassadorProfile";
+import AmbassadorProfile from "./pages/Ambassadors/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
 import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
@@ -58,27 +58,19 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route path="/events/create-events" element={<CreateEvent />} />
-            <Route path="/events/create-events/:id" element={<CreateEvent />} />
+            <Route path="/events/update-events/:id" element={<CreateEvent />} />
             <Route path="/events" element={<EventView />} />
             <Route path="/events/:activityId" element={<EventDetails />} />
-
-            <Route
-              path="/partners/create-partner"
-              element={<CreatePartner />}
-            />
 
             <Route path="/create-events" element={<CreateEvent />} />
             <Route path="/concluded-event" element={<EventConcluded />} />
             <Route path="/events" element={<EventView />} />
+
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:username" element={<AmbassadorProfile />} />
-
+            <Route path="/create-partner" element={<CreatePartner />} />
             {/* <Route path="/partners/:id/edit" element={<PartnersEditPage />} /> */}
 
-            <Route path="/create-partner" element={<CreatePartner />} />
-
-            <Route path="/events" element={<EventView />} />
-            <Route path="/partners" element={<PartnersView />} />
             <Route path="/submissions" element={<Submissions />} />
             <Route path="/submissions/:id" element={<SubmissionDetails />} />
             <Route path="/analytics" element={<Analytics />} />

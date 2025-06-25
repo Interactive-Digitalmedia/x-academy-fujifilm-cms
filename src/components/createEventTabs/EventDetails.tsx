@@ -1,6 +1,7 @@
 // EventDetails.tsx
 import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
+import { getAmbassadors } from "@/api/ambassadors";
 
 const allTags = [
   { name: "Event", color: "bg-purple-600" },
@@ -21,6 +22,17 @@ const ambassadors = [
 
 export default function EventDetails({ data, setData }: any) {
   const [selectedTags, setSelectedTags] = useState<string[]>(data.tags || []);
+  const [ambassadorOptions, setAmbassadorOptions] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchAmbassadors = async () => {
+      const res = await getAmbassadors();
+      if (res?.status === 200) {
+        setAmbassadorOptions(res.data);
+      }
+    };
+
+    fetchAmbassadors();
+  }, []);
 
   useEffect(() => {
     if (Array.isArray(data?.tags)) {
@@ -47,7 +59,7 @@ export default function EventDetails({ data, setData }: any) {
       <h2 className="text-base font-bold  mb-1">Event Details</h2>
       <div>
         <label className="block text-sm font-medium text-[#818181] mb-1">
-          Event Name
+          Event Name <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -105,7 +117,7 @@ export default function EventDetails({ data, setData }: any) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-[#818181] text-sm font-medium mb-1 ">
-            Event Type
+            Event Type <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select Event Type"
@@ -124,12 +136,14 @@ export default function EventDetails({ data, setData }: any) {
 
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1 ">
-            Event Category
+            Event Category <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select Event Category"
             selectedKeys={[data.activityCategory || ""]}
-            onChange={(e) => setData({ ...data, activityCategory: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, activityCategory: e.target.value })
+            }
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -141,43 +155,38 @@ export default function EventDetails({ data, setData }: any) {
         </div>
 
         <div className="w-full">
-  <label className="block text-sm text-[#818181] font-medium mb-1">
-    Start Date
-  </label>
-  <div className="relative">
-    <input
-      type="date"
-      placeholder="dd/mm/yyyy"
-      className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      value={data.startDate || ""}
-      onChange={(e) =>
-        setData({ ...data, startDate: e.target.value })
-      }
-    />
-  </div>
-</div>
+          <label className="block text-sm text-[#818181] font-medium mb-1">
+            Start Date <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="date"
+              placeholder="dd/mm/yyyy"
+              className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={data.startDate || ""}
+              onChange={(e) => setData({ ...data, startDate: e.target.value })}
+            />
+          </div>
+        </div>
 
-<div className="w-full">
-  <label className="block text-sm text-[#818181] font-medium mb-1">
-    End Date
-  </label>
-  <div className="relative">
-    <input
-      type="date"
-      placeholder="dd/mm/yyyy"
-      className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      value={data.endDate || ""}
-      onChange={(e) =>
-        setData({ ...data, endDate: e.target.value })
-      }
-    />
-  
-  </div>
-</div>
+        <div className="w-full">
+          <label className="block text-sm text-[#818181] font-medium mb-1">
+            End Date <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="date"
+              placeholder="dd/mm/yyyy"
+              className="w-full appearance-none border border-gray-300 rounded-md px-4 py-2 text-sm text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={data.endDate || ""}
+              onChange={(e) => setData({ ...data, endDate: e.target.value })}
+            />
+          </div>
+        </div>
 
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1">
-            Location
+            Location <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select event location"
@@ -227,24 +236,26 @@ export default function EventDetails({ data, setData }: any) {
 
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1">
-            Hosted By
+            Hosted By <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select one or multiple ambassador or evangelist names"
             selectionMode="multiple"
-            selectedKeys={new Set(data.ambassadors || [])}
-            onSelectionChange={(keys) =>
-              setData({ ...data, ambassadors: Array.from(keys) })
-            }
+            selectedKeys={new Set(data.ambassadorId || [])}
+            onSelectionChange={(keys) => {
+              if (keys === "all") return;
+              const selected = Array.from(keys as Set<string>);
+              setData({ ...data, ambassadorId: selected });
+            }}
             isMultiline
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
             }}
           >
-            {ambassadors.map((name) => (
-              <SelectItem key={name} value={name}>
-                {name}
+            {ambassadorOptions.map((amb) => (
+              <SelectItem key={amb._id} value={amb._id}>
+                {amb.fullname || amb.userName}
               </SelectItem>
             ))}
           </Select>
@@ -252,7 +263,7 @@ export default function EventDetails({ data, setData }: any) {
 
         <div>
           <label className="block text-sm text-[#818181] font-medium mb-1">
-            Pricing
+            Pricing <span className="text-red-500">*</span>
           </label>
           <Select
             placeholder="Select event pricing"
@@ -268,18 +279,19 @@ export default function EventDetails({ data, setData }: any) {
           </Select>
         </div>
         {data.pricing === "paid" && (
-        <div>
-          <label className="block text-sm text-[#818181] font-medium mb-1">
-            Amount
-          </label>
-          <input
-            type="text"
-            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            placeholder="1000"
-            value={data.amount || ""}
-            onChange={(e) => setData({ ...data, amount: e.target.value })}
-          />
-        </div>)}
+          <div>
+            <label className="block text-sm text-[#818181] font-medium mb-1">
+              Amount <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+              placeholder="1000"
+              value={data.amount || ""}
+              onChange={(e) => setData({ ...data, amount: e.target.value })}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

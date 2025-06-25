@@ -1,8 +1,8 @@
 import { Switch } from "@nextui-org/react";
-import FrameIcon from '/public/banner/icons/Frame.svg'
-import CupIcon from '/public/banner/icons/cup.svg'
-import CameraIcon from '/public/banner/icons/Camera.svg'
-import GiftIcon from '/public/banner/icons/Gift.svg'
+import FrameIcon from "/public/banner/icons/Frame.svg";
+import CupIcon from "/public/banner/icons/cup.svg";
+import CameraIcon from "/public/banner/icons/Camera.svg";
+import GiftIcon from "/public/banner/icons/Gift.svg";
 
 export default function AboutEvent({ data, setData }: any) {
   const about = data.about || {
@@ -19,23 +19,23 @@ export default function AboutEvent({ data, setData }: any) {
   const whatsIncludedOptions = [
     {
       label: "Lunch + Dinner",
-      value: "lunchDinner",  
-      icon: <img src={FrameIcon} className="mr-2"/>,
+      value: "lunchDinner",
+      icon: <img src={FrameIcon} className="mr-2" />,
     },
     {
       label: "Refreshments + Beverages",
       value: "refreshmentsBeverages",
-      icon: <img src={CupIcon} className="mr-2"/>,
+      icon: <img src={CupIcon} className="mr-2" />,
     },
     {
       label: "Gear Provided",
       value: "gearProvided",
-      icon: <img src={CameraIcon} className="mr-2"/>,
+      icon: <img src={CameraIcon} className="mr-2" />,
     },
     {
       label: "Fujifilms Welcome Kit",
       value: "welcomeKit",
-      icon: <img src={GiftIcon} className="mr-2"/>,
+      icon: <img src={GiftIcon} className="mr-2" />,
     },
   ];
 
@@ -44,21 +44,21 @@ export default function AboutEvent({ data, setData }: any) {
       <h2 className="text-base font-bold  mb-1">About Event</h2>
       {/* About the Event */}
       <div>
-  <label className="block text-sm text-[#818181] font-medium mb-1 mt-[3rem]">
-    About the Event
-  </label>
-  <textarea
-    value={about.about}
-    onChange={(e) => handleChange("about", e.target.value)}
-    placeholder="Describe your event..."
-    rows={6}
-    className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
-  />
-  <p className="mt-1 text-xs text-gray-500">
-    Note: Write a compelling description of your event. Include what attendees can expect to learn or experience.
-  </p>
-</div>
-
+        <label className="block text-sm text-[#818181] font-medium mb-1 mt-[3rem]">
+          About the Event <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          value={about.about}
+          onChange={(e) => handleChange("about", e.target.value)}
+          placeholder="Describe your event..."
+          rows={6}
+          className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+        />
+        <p className="mt-1 text-xs text-gray-500">
+          Note: Write a compelling description of your event. Include what
+          attendees can expect to learn or experience.
+        </p>
+      </div>
 
       {/* What's Included */}
       <div className="w-full md:w-[420px] ">
@@ -109,17 +109,17 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* Why Should You Attend */}
       <div className="mt-4">
-  <label className="block mt-[3rem] text-sm text-[#818181] font-medium mb-1">
-    Why Should You Attend?
-  </label>
-  <textarea
-    value={about.whyShouldYouAttend}
-    onChange={(e) => handleChange("whyShouldYouAttend", e.target.value)}
-    placeholder="Enter the reasons why someone should attend..."
-    rows={5}
-    className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
-  />
-</div>
+        <label className="block mt-[3rem] text-sm text-[#818181] font-medium mb-1">
+          Why Should You Attend?
+        </label>
+        <textarea
+          value={about.whyShouldYouAttend}
+          onChange={(e) => handleChange("whyShouldYouAttend", e.target.value)}
+          placeholder="Enter the reasons why someone should attend..."
+          rows={5}
+          className="w-full border rounded-md px-3 py-2 text-sm text-gray-800 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+        />
+      </div>
 
       {/* Tips Section */}
       <div className="pt-4">
