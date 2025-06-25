@@ -8,7 +8,7 @@ import FAQs from "@/components/createEventTabs/FAQs";
 import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useActivityStore } from '@/Zustang/useActivityStore'
+import { useActivityStore } from "@/Zustang/useActivityStore";
 import MainCard from "@/components/concludedEventTabs/MainCard";
 
 const tabs = [
@@ -21,31 +21,31 @@ const tabs = [
 ];
 
 export default function CreateEventLayout({ data, setData }: any) {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(0);
   const [originalData, setOriginalData] = useState<any>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
-    const { fetchActivitiesById } =
-      useActivityStore()
+  const { fetchActivitiesById } = useActivityStore();
 
-      const { id } = useParams<{ id?: string }>(); 
-      useEffect(() => {
-        if (!id) return;
-      
-        (async () => {
-          try {
-            const res = await fetchActivitiesById(id);
-            setData(res);              // for form
-            setOriginalData(res);  
-            console.log(res) 
-            if(res)   // for comparison later
-            setActivityId(res._id);    // set activityId for update
-          } catch (error) {
-            toast.error("Failed to fetch activity");
-            console.error("Fetch error:", error);
-          }
-        })();
-      }, [id]);
+  const { id } = useParams<{ id?: string }>();
+  useEffect(() => {
+    if (!id) return;
+
+    (async () => {
+      try {
+        const res = await fetchActivitiesById(id);
+        setData(res); // for form
+        setOriginalData(res);
+        console.log(res);
+        if (res)
+          // for comparison later
+          setActivityId(res._id); // set activityId for update
+      } catch (error) {
+        toast.error("Failed to fetch activity");
+        console.error("Fetch error:", error);
+      }
+    })();
+  }, [id]);
 
   const renderCurrentTab = () => {
     switch (currentTab) {
@@ -82,31 +82,30 @@ export default function CreateEventLayout({ data, setData }: any) {
   //   }
   // };
 
-
   const deepEqual = (a: any, b: any): boolean => {
     if (a === b) return true;
-  
+
     if (typeof a !== typeof b) return false;
     if (a == null || b == null) return false;
-  
+
     if (typeof a === "object") {
       const keysA = Object.keys(a);
       const keysB = Object.keys(b);
       if (keysA.length !== keysB.length) return false;
-  
+
       for (const key of keysA) {
         if (!deepEqual(a[key], b[key])) return false;
       }
-  
+
       return true;
     }
-  
+
     return false;
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
     let updatedFAQId = data.FAQ;
-  
+
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
       const faqItems = data.FAQ || [];
@@ -114,12 +113,12 @@ export default function CreateEventLayout({ data, setData }: any) {
         name: "Custom",
         items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
       };
-  
+
       try {
         const faqRes = await createFaq(faqPayload);
         updatedFAQId = faqRes?.data?._id;
         setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
-  
+
         if (activityId) {
           await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
         }
@@ -128,37 +127,37 @@ export default function CreateEventLayout({ data, setData }: any) {
         console.error("❌ Failed to save FAQ:", err);
       }
     }
-  
+
     // 2. Prepare final payload
     const payload = {
       ...data,
       FAQ: updatedFAQId,
       ...(action && { status: action }),
     };
-  
+
     // 3. Manual deep equality check function
     const deepEqual = (a: any, b: any): boolean => {
       if (a === b) return true;
       if (typeof a !== typeof b || a == null || b == null) return false;
-  
+
       if (typeof a === "object") {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
         if (keysA.length !== keysB.length) return false;
-  
+
         for (const key of keysA) {
           if (!deepEqual(a[key], b[key])) return false;
         }
-  
+
         return true;
       }
-  
+
       return false;
     };
-  
+
     try {
       let response;
-  
+
       // 4. CREATE
       if (!activityId) {
         response = await uploadActivity(payload);
@@ -175,7 +174,7 @@ export default function CreateEventLayout({ data, setData }: any) {
           toast.success("No changes to update");
         }
       }
-  
+
       // 6. Final step navigation
       if (currentTab === tabs.length - 1) {
         if (action === "published" && response?.data?._id) {
@@ -194,16 +193,10 @@ export default function CreateEventLayout({ data, setData }: any) {
       console.error("❌ Error saving activity:", error);
     }
   };
-  
-  
-  
-  
 
   return (
     <div className=" flex flex-col">
-           {id &&   <MainCard
- data={data}
-  />}
+      {id && <MainCard data={data} />}
       {/* Card wrapper */}
       <div className="bgCard h-[83vh]">
         {/* Tab Navigation (inside card) */}
@@ -255,29 +248,28 @@ export default function CreateEventLayout({ data, setData }: any) {
           </button>
 
           {currentTab === tabs.length - 1 ? (
-  <div className="flex gap-3">
-    <button
-      className="px-6 py-2 rounded-md text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
-      onClick={() => handleNextStepOrSubmit("draft")}
-    >
-      Save as Draft
-    </button>
-    <button
-      className="px-6 py-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white hover:bg-[#0f87dc] transition"
-      onClick={() => handleNextStepOrSubmit("published")}
-    >
-      Save & Preview
-    </button>
-  </div>
-) : (
-  <button
-    className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
-    onClick={() => handleNextStepOrSubmit()}
-  >
-    Next Step
-  </button>
-)}
-
+            <div className="flex gap-3">
+              <button
+                className="px-6 py-2 rounded-md text-sm font-semibold bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
+                onClick={() => handleNextStepOrSubmit("draft")}
+              >
+                Save as Draft
+              </button>
+              <button
+                className="px-6 py-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white hover:bg-[#0f87dc] transition"
+                onClick={() => handleNextStepOrSubmit("published")}
+              >
+                Save & Preview
+              </button>
+            </div>
+          ) : (
+            <button
+              className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
+              onClick={() => handleNextStepOrSubmit()}
+            >
+              Next Step
+            </button>
+          )}
         </div>
       </div>
     </div>
