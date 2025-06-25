@@ -198,7 +198,7 @@ export default function CreateEventLayout({ data, setData }: any) {
     <div className=" flex flex-col">
       {id && <MainCard data={data} />}
       {/* Card wrapper */}
-      <div className="bgCard h-[83vh]">
+      <div className="bgCard pb-0 h-[87vh]">
         {/* Tab Navigation (inside card) */}
         <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
           {tabs.map((tab, index) => (
@@ -233,14 +233,14 @@ export default function CreateEventLayout({ data, setData }: any) {
         </div>
 
         {/* Tab Content */}
-        <div className="flex-1 overflow-y-auto p-6 max-h-[58vh]">
+        <div className="flex-1 overflow-y-auto p-6  max-h-[58vh]">
           {renderCurrentTab()}
         </div>
 
         {/* Footer Buttons */}
-        <div className="mt-2 flex justify-between">
+        <div className="mt-8  flex justify-between h-[40px]">
           <button
-            className=" px-5 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-600 disabled:opacity-50"
+            className=" px-6 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-600 disabled:opacity-50"
             disabled={currentTab === 0}
             onClick={() => setCurrentTab((prev) => prev - 1)}
           >
@@ -264,7 +264,7 @@ export default function CreateEventLayout({ data, setData }: any) {
             </div>
           ) : (
             <button
-              className="px-6 py-2 mt-2 rounded-md text-sm font-semibold bg-[#1098F7] text-white"
+              className="px-6 py-2  rounded-md text-sm font-semibold bg-[#1098F7] text-white"
               onClick={() => handleNextStepOrSubmit()}
             >
               Next Step

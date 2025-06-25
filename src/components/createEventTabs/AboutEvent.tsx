@@ -44,7 +44,7 @@ export default function AboutEvent({ data, setData }: any) {
       <h2 className="text-base font-bold  mb-1">About Event</h2>
       {/* About the Event */}
       <div>
-  <label className="block text-sm text-[#818181] font-medium mb-1 mt-[3rem]">
+  <label className="block text-sm text-[#818181] font-medium mb-1 mt-[0rem]">
     About the Event
   </label>
   <textarea
@@ -62,10 +62,10 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* What's Included */}
       <div className="w-full md:w-[420px] ">
-        <label className="block text-[#818181] text-sm font-medium mb-2 mt-[3rem]">
+        <label className="block text-[#818181] text-sm font-medium mb-2 mt-[0rem]">
           What's Included?
         </label>
-        <div className="space-y-3">
+        <div className="space-y-5">
           {whatsIncludedOptions.map((item, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-">
@@ -109,7 +109,7 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* Why Should You Attend */}
       <div className="mt-4">
-  <label className="block mt-[3rem] text-sm text-[#818181] font-medium mb-1">
+  <label className="block mt-[1rem] text-sm text-[#818181] font-medium mb-1">
     Why Should You Attend?
   </label>
   <textarea
@@ -123,7 +123,7 @@ export default function AboutEvent({ data, setData }: any) {
 
       {/* Tips Section */}
       <div className="pt-4">
-        <p className="text-sm font-semibold text-[#818181]  mb-2">
+        <p className="text-sm mt-[0rem] font-semibold text-[#818181]  mb-2">
           Tips for a great description:
         </p>
         <ul className="list-disc list-inside text-sm text-gray-500 space-y-1">
