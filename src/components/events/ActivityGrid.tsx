@@ -121,10 +121,12 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
                     >
                       {activity?.status}
                     </span>
-                    <h3 className="text-sm font-semibold">{activity?.activityName}</h3>
+                    <h3 className="text-sm font-semibold">
+                      {activity?.activityName}
+                    </h3>
                     <p className="mb-2 text-sm">
                       {formatToShortDate(activity?.startDate)} |{" "}
-                      {activity?.ambassadorId}
+                      {/* {activity?.ambassadorId} */}
                     </p>
                     <p className="mb-2 text-sm">{activity?.location}, India</p>
                   </div>
