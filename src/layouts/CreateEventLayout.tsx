@@ -21,7 +21,7 @@ const tabs = [
   "Admin Controls",
 ];
 
-export default function CreateEventLayout({ data, setData }: any) {
+export default function CreateEventLayout() {
   const [formData, setFormData] = useState<Activity>({} as Activity);
   const [originalData, setOriginalData] = useState<Activity | null>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
@@ -82,8 +82,8 @@ export default function CreateEventLayout({ data, setData }: any) {
         if (new Date(data.endDate) < new Date(data.startDate))
           return "End date cannot be before start date.";
         if (!data.location?.trim()) return "Location is required.";
-        if (!data.ambassadorId || data.ambassadorId.length === 0)
-          return "At least one host is required.";
+        // if (!data.ambassadorId || data.ambassadorId.length === 0)
+        //   return "At least one host is required.";
         if (!data.pricing) return "Pricing is required.";
         if (data.pricing === "paid" && (!data.amount || data.amount <= 0))
           return "Valid amount is required for paid events.";
@@ -203,32 +203,25 @@ export default function CreateEventLayout({ data, setData }: any) {
   const deepEqual = (a: any, b: any): boolean => {
     if (a === b) return true;
 
-
     if (typeof a !== typeof b) return false;
     if (a == null || b == null) return false;
-
 
     if (typeof a === "object") {
       const keysA = Object.keys(a);
       const keysB = Object.keys(b);
       if (keysA.length !== keysB.length) return false;
 
-
       for (const key of keysA) {
         if (!deepEqual(a[key], b[key])) return false;
       }
 
-
       return true;
     }
-
 
     return false;
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
-    console.log(formData);
-    
     const validationError = validateActivityStep(currentTab, formData);
     if (validationError) {
       toast.error(validationError);
@@ -238,46 +231,53 @@ export default function CreateEventLayout({ data, setData }: any) {
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
       const faqItems = formData.FAQ || [];
-      const faqPayload = {
-        name: "Custom",
-        items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
-      };
+      if (Array.isArray(faqItems) && faqItems.length > 0) {
+        const faqPayload = {
+          name: "Custom",
+          items: faqItems.map((f: any) => ({
+            title: f?.Q ?? "",
+            description: f?.A ?? "",
+          })),
+        };
 
+        try {
+          const faqRes = await createFaq(faqPayload);
+          const updatedFAQId = faqRes?.data?._id;
 
-      try {
-        const faqRes = await createFaq(faqPayload);
-        updatedFAQId = faqRes?.data?._id;
-        setFormData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
+          setFormData((prev: any) => ({
+            ...prev,
+            FAQ: updatedFAQId,
+          }));
 
-        if (activityId) {
-          await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
+          if (activityId) {
+            await updateActivity(activityId, {
+              ...formData,
+              FAQ: updatedFAQId,
+            });
+          }
+        } catch (err) {
+          toast.error("Failed to save FAQs");
+          console.error("❌ Failed to save FAQ:", err);
         }
-      } catch (err) {
-        toast.error("Failed to save FAQs");
-        console.error("❌ Failed to save FAQ:", err);
       }
     }
 
-
     // 2. Prepare final payload
     const payload = {
-      ...data,
+      ...formData,
       FAQ: updatedFAQId,
       ...(action && { status: action }),
     };
-
 
     // 3. Manual deep equality check function
     const deepEqual = (a: any, b: any): boolean => {
       if (a === b) return true;
       if (typeof a !== typeof b || a == null || b == null) return false;
 
-
       if (typeof a === "object") {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
         if (keysA.length !== keysB.length) return false;
-
 
         for (const key of keysA) {
           if (!deepEqual(a[key], b[key])) return false;
@@ -287,10 +287,8 @@ export default function CreateEventLayout({ data, setData }: any) {
       return false;
     };
 
-
     try {
       let response;
-
 
       // 4. CREATE
       if (!activityId) {
@@ -308,7 +306,6 @@ export default function CreateEventLayout({ data, setData }: any) {
           toast.success("No changes to update");
         }
       }
-
 
       // 6. Final step navigation
       if (currentTab === tabs.length - 1) {
