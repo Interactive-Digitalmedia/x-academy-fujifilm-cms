@@ -17,6 +17,26 @@ export type AboutSection = {
   whatsIncluded: string[];
 };
 
+type NormalizedFaqForForm = {
+  _id: string;
+  items: { Q: string; A: string }[];
+};
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+  _id?: string;
+}
+
+export interface Faq {
+  _id: string;
+  name: string;
+  items: FaqItem[];
+  faqType: "general" | "specific-event";
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export type Activity = {
   _id: string;
   activityName: string;
@@ -39,7 +59,7 @@ export type Activity = {
   eventManagerId: string[];
   duration: number; // in hours
   status: "draft" | "published";
-  FAQ: string;
+  FAQ: string | Faq | NormalizedFaqForForm;
   seatCount: number;
   pendingSeats: number;
   isFeatured: boolean;
@@ -148,11 +168,6 @@ export interface ProfileData {
     twitter?: string;
   };
   joinedAt: string;
-}
-
-export interface FaqItem {
-  title: string;
-  description: string;
 }
 
 export interface MetaData {

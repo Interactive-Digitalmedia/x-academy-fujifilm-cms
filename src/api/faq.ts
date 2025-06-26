@@ -11,6 +11,14 @@ interface CreateFaqPayload {
   items: FaqItem[];
 }
 
+interface UpdateFaqPayload {
+  name?: string;
+  items: {
+    question?: string;
+    answer?: string;
+  }[];
+}
+
 export function getTokenFromLocalStorage(): string | null {
   try {
     const state = localStorage.getItem("global-store");
@@ -65,6 +73,28 @@ export const createFaq = async (data: CreateFaqPayload) => {
     return response.data;
   } catch (error) {
     console.error("Error creating FAQ", error);
+    throw error;
+  }
+};
+
+export const updateFaq = async (id: string, data: UpdateFaqPayload) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    console.error("Token is not available.");
+    return;
+  }
+
+  try {
+    const response = await axios.put(`${baseUrl}faq/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating FAQ", error);
     throw error;
   }
 };

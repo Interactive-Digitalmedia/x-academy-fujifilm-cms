@@ -11,14 +11,14 @@ const allTags = [
   { name: "Portrait", color: "bg-pink-400" },
 ];
 
-const ambassadors = [
-  "Ritika",
-  "Tarun Khiwal",
-  "Rohit Vohra",
-  "Kanishka",
-  "Pravin Talan",
-  "Sean Paul",
-];
+// const ambassadors = [
+//   "Ritika",
+//   "Tarun Khiwal",
+//   "Rohit Vohra",
+//   "Kanishka",
+//   "Pravin Talan",
+//   "Sean Paul",
+// ];
 
 export default function EventDetails({ data, setData }: any) {
   const [selectedTags, setSelectedTags] = useState<string[]>(data.tags || []);
@@ -39,6 +39,7 @@ export default function EventDetails({ data, setData }: any) {
       setSelectedTags(data.tags);
     }
   }, [data?.tags]);
+
 
   const handleTagToggle = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
