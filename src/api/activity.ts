@@ -113,13 +113,24 @@ export const getActivitiesById = async (id: string) => {
   }
 };
 export const deleteActivity = async (id: string) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    console.error("Token is not available.");
+    return;
+  }
   try {
     const response = await axios.delete(
-      `${baseUrl}activity/${id}` // empty body
+      `${baseUrl}activity/${id}`, //imp
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching the billing address", error);
+    console.error("Error uploading the activity", error);
     throw error;
   }
 };
