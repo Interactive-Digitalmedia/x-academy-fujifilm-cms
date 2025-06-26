@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { deleteActivity } from "@/api/activity";
 import ConfirmationModal from "../ConfirmationModal";
 import ChangeStatusPopover from "../Activity/ChangeStatusPopover";
+import { useNavigate } from "react-router-dom";
 
 type MainCardProps = {
   data: Activity;
@@ -28,6 +29,7 @@ const MainCard: React.FC<MainCardProps> = ({ data, onStatusChange }) => {
     day: "numeric",
     month: "short",
   });
+  const navigate = useNavigate();
 
   // give each tag a repeat-safe colour
   const colourPool = [
@@ -45,10 +47,10 @@ const MainCard: React.FC<MainCardProps> = ({ data, onStatusChange }) => {
     });
   };
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this event?")) return;
     try {
       await deleteActivity(data._id);
       toast.success("Activity deleted");
+      navigate("/events");
     } catch (err) {
       toast.error("Failed to delete activity");
       console.error(err);
