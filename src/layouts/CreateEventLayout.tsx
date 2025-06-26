@@ -203,20 +203,25 @@ export default function CreateEventLayout({ data, setData }: any) {
   const deepEqual = (a: any, b: any): boolean => {
     if (a === b) return true;
 
+
     if (typeof a !== typeof b) return false;
     if (a == null || b == null) return false;
+
 
     if (typeof a === "object") {
       const keysA = Object.keys(a);
       const keysB = Object.keys(b);
       if (keysA.length !== keysB.length) return false;
 
+
       for (const key of keysA) {
         if (!deepEqual(a[key], b[key])) return false;
       }
 
+
       return true;
     }
+
 
     return false;
   };
@@ -236,10 +241,12 @@ export default function CreateEventLayout({ data, setData }: any) {
         items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
       };
 
+
       try {
         const faqRes = await createFaq(faqPayload);
         updatedFAQId = faqRes?.data?._id;
         setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
+
 
         if (activityId) {
           await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
@@ -250,6 +257,7 @@ export default function CreateEventLayout({ data, setData }: any) {
       }
     }
 
+
     // 2. Prepare final payload
     const payload = {
       ...data,
@@ -257,15 +265,18 @@ export default function CreateEventLayout({ data, setData }: any) {
       ...(action && { status: action }),
     };
 
+
     // 3. Manual deep equality check function
     const deepEqual = (a: any, b: any): boolean => {
       if (a === b) return true;
       if (typeof a !== typeof b || a == null || b == null) return false;
 
+
       if (typeof a === "object") {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
         if (keysA.length !== keysB.length) return false;
+
 
         for (const key of keysA) {
           if (!deepEqual(a[key], b[key])) return false;
@@ -275,8 +286,10 @@ export default function CreateEventLayout({ data, setData }: any) {
       return false;
     };
 
+
     try {
       let response;
+
 
       // 4. CREATE
       if (!activityId) {
@@ -294,6 +307,7 @@ export default function CreateEventLayout({ data, setData }: any) {
           toast.success("No changes to update");
         }
       }
+
 
       // 6. Final step navigation
       if (currentTab === tabs.length - 1) {

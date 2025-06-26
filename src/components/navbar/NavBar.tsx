@@ -67,7 +67,7 @@ export default function NavBar() {
             {
               label: "Create New",
               icon: CirclePlus,
-              action: () => navigate("/events/create-events"),
+              action: () => navigate("/events/update-events"),
             },
             {
               label: "Drafts",
