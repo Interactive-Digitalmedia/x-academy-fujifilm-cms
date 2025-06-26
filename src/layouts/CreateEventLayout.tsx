@@ -227,15 +227,17 @@ export default function CreateEventLayout({ data, setData }: any) {
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
+    console.log(formData);
+    
     const validationError = validateActivityStep(currentTab, formData);
     if (validationError) {
       toast.error(validationError);
       return;
     }
-    let updatedFAQId = data?.FAQ;
+    let updatedFAQId = formData?.FAQ;
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
-      const faqItems = data.FAQ || [];
+      const faqItems = formData.FAQ || [];
       const faqPayload = {
         name: "Custom",
         items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
@@ -245,8 +247,7 @@ export default function CreateEventLayout({ data, setData }: any) {
       try {
         const faqRes = await createFaq(faqPayload);
         updatedFAQId = faqRes?.data?._id;
-        setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
-
+        setFormData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
 
         if (activityId) {
           await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
