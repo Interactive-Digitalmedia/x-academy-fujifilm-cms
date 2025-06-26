@@ -48,7 +48,7 @@ export type Activity = {
   location: string;
   language: string;
   venue: string;
-  ambassadorId: string[];
+  ambassadorId: string[] | Ambassador[];
   pricing: string; // e.g., "paid" or "free"
   amount: number;
   about: AboutSection;
