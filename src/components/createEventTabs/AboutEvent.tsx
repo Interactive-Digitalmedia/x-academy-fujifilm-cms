@@ -1,8 +1,8 @@
 import { Switch } from "@nextui-org/react";
-import FrameIcon from '/public/banner/icons/Frame.svg'
-import CupIcon from '/public/banner/icons/cup.svg'
-import CameraIcon from '/public/banner/icons/Camera.svg'
-import GiftIcon from '/public/banner/icons/Gift.svg'
+import FrameIcon from "/public/banner/icons/Frame.svg";
+import CupIcon from "/public/banner/icons/cup.svg";
+import CameraIcon from "/public/banner/icons/Camera.svg";
+import GiftIcon from "/public/banner/icons/Gift.svg";
 
 export default function AboutEvent({ data, setData }: any) {
   const about = data.about || {
@@ -19,23 +19,23 @@ export default function AboutEvent({ data, setData }: any) {
   const whatsIncludedOptions = [
     {
       label: "Lunch + Dinner",
-      value: "lunchDinner",  
-      icon: <img src={FrameIcon} className="mr-2"/>,
+      value: "lunchDinner",
+      icon: <img src={FrameIcon} className="mr-2" />,
     },
     {
       label: "Refreshments + Beverages",
       value: "refreshmentsBeverages",
-      icon: <img src={CupIcon} className="mr-2"/>,
+      icon: <img src={CupIcon} className="mr-2" />,
     },
     {
       label: "Gear Provided",
       value: "gearProvided",
-      icon: <img src={CameraIcon} className="mr-2"/>,
+      icon: <img src={CameraIcon} className="mr-2" />,
     },
     {
       label: "Fujifilms Welcome Kit",
       value: "welcomeKit",
-      icon: <img src={GiftIcon} className="mr-2"/>,
+      icon: <img src={GiftIcon} className="mr-2" />,
     },
   ];
 
@@ -58,7 +58,6 @@ export default function AboutEvent({ data, setData }: any) {
     Note: Write a compelling description of your event. Include what attendees can expect to learn or experience.
   </p>
 </div>
-
 
       {/* What's Included */}
       <div className="w-full md:w-[420px] ">

@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useActivityStore } from "@/Zustang/useActivityStore";
 import MainCard from "@/components/concludedEventTabs/MainCard";
+import { Activity } from "@/types";
 
 const tabs = [
   "Event Details",
@@ -20,26 +21,26 @@ const tabs = [
   "Admin Controls",
 ];
 
-export default function CreateEventLayout({ data, setData }: any) {
-  const navigate = useNavigate();
-  const [currentTab, setCurrentTab] = useState(0);
-  const [originalData, setOriginalData] = useState<any>(null);
+export default function CreateEventLayout() {
+  const [formData, setFormData] = useState<Activity>({} as Activity);
+  const [originalData, setOriginalData] = useState<Activity | null>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
+  const [currentTab, setCurrentTab] = useState(0);
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const { fetchActivitiesById } = useActivityStore();
 
-  const { id } = useParams<{ id?: string }>();
   useEffect(() => {
     if (!id) return;
-
     (async () => {
       try {
         const res = await fetchActivitiesById(id);
-        setData(res); // for form
-        setOriginalData(res);
-        console.log(res);
-        if (res)
-          // for comparison later
-          setActivityId(res._id); // set activityId for update
+        if (res) {
+          setOriginalData(res);
+          setFormData(res);
+          console.log(res);
+          setActivityId(res._id);
+        }
       } catch (error) {
         toast.error("Failed to fetch activity");
         console.error("Fetch error:", error);
@@ -50,21 +51,138 @@ export default function CreateEventLayout({ data, setData }: any) {
   const renderCurrentTab = () => {
     switch (currentTab) {
       case 0:
-        return <EventDetails data={data} setData={setData} />;
+        return <EventDetails data={formData} setData={setFormData} />;
       case 1:
-        return <AboutEvent data={data} setData={setData} />;
+        return <AboutEvent data={formData} setData={setFormData} />;
       case 2:
-        return <EventSchedule data={data} setData={setData} />;
+        return <EventSchedule data={formData} setData={setFormData} />;
       case 3:
-        return <EventImage data={data} setData={setData} />;
+        return <EventImage data={formData} setData={setFormData} />;
       case 4:
-        return <FAQs data={data} setData={setData} />;
+        return <FAQs data={formData} setData={setFormData} />;
       case 5:
-        return <AdminControls data={data} setData={setData} />;
+        return <AdminControls data={formData} setData={setFormData} />;
       default:
         return null;
     }
   };
+
+  const validateActivityStep = (
+    step: number,
+    data: Partial<Activity>
+  ): string | null => {
+    switch (step) {
+      case 0: // Event Details
+        if (!data.activityName?.trim()) return "Event name is required.";
+        if (!data.activityType?.trim()) return "Event type is required.";
+        if (!data.activityCategory?.trim())
+          return "Event category is required.";
+        if (!data.startDate?.trim()) return "Start date is required.";
+        if (!data.endDate?.trim()) return "End date is required.";
+        if (new Date(data.endDate) < new Date(data.startDate))
+          return "End date cannot be before start date.";
+        if (!data.location?.trim()) return "Location is required.";
+        // if (!data.ambassadorId || data.ambassadorId.length === 0)
+        //   return "At least one host is required.";
+        if (!data.pricing) return "Pricing is required.";
+        if (data.pricing === "paid" && (!data.amount || data.amount <= 0))
+          return "Valid amount is required for paid events.";
+        return null;
+
+      case 1: // About Event
+        if (!data.about?.about?.trim())
+          return "Event about section is required.";
+        // if (!data.about?.whyShouldYouAttend?.trim())
+        //   return "Why should you attend is required.";
+        // if (!data.about?.whatsIncluded || data.about.whatsIncluded.length === 0)
+        //   return "At least one 'What's Included' item is required.";
+        return null;
+
+      case 2: // Schedule
+        if (!data.schedule || data.schedule.length === 0)
+          return "At least one schedule day is required.";
+        for (const day of data.schedule) {
+          if (!day.sessions || day.sessions.length === 0)
+            return "Each day should have at least one session.";
+          for (const session of day.sessions) {
+            if (
+              !session.title?.trim() ||
+              !session.startTime?.trim() ||
+              !session.endTime?.trim()
+            ) {
+              return "Each session must have title, start and end time.";
+            }
+          }
+        }
+        return null;
+
+      case 3: // Images
+        if (!data.heroImage) return "Hero image is required.";
+        return null;
+
+      default:
+        return null;
+    }
+  };
+
+  // const handleNextStepOrSubmit = async () => {
+  //   const validationError = validateActivityStep(currentTab, formData);
+  //   if (validationError) {
+  //     toast.error(validationError);
+  //     return;
+  //   }
+  //   try {
+  //     if (currentTab === 0 && !formData._id) {
+  //       const res = await uploadActivity(formData);
+  //       if (res.status === 201) {
+  //         toast.success("Activity created!");
+  //         setFormData((prev) => ({
+  //           ...prev,
+  //           _id: res.data._id,
+  //         }));
+  //         setCurrentTab((prev) => prev + 1);
+  //       } else {
+  //         toast.error(res.message);
+  //       }
+  //     } else if (formData._id) {
+  //       const res = await updateActivity(formData._id, formData);
+  //       if (res.status === 200 || res.success) {
+  //         toast.success("Changes saved!");
+  //         if (currentTab === tabs.length - 1) {
+  //           setTimeout(() => navigate("/partners"), 1500);
+  //         } else {
+  //           setCurrentTab((prev) => prev + 1);
+  //         }
+  //       } else {
+  //         toast.error(res.message);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error during submission:", error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
+
+  // const handleUpdateSubmit = async () => {
+  //   const validationError = validateActivityStep(currentTab, formData);
+  //   if (validationError) {
+  //     toast.error(validationError);
+  //     return;
+  //   }
+  //   if (!formData._id) return;
+  //   try {
+  //     const res = await updateActivity(formData?._id, formData);
+  //     if (res.status === 200) {
+  //       toast.success("Ambassador updated!");
+  //       // onSuccess?.();
+  //     } else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Update failed", error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
 
   // const handleNextStepOrSubmit = async () => {
   //   if (currentTab === tabs.length - 1) {
@@ -104,33 +222,49 @@ export default function CreateEventLayout({ data, setData }: any) {
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
-    let updatedFAQId = data.FAQ;
-
+    const validationError = validateActivityStep(currentTab, formData);
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+    let updatedFAQId = formData?.FAQ;
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
-      const faqItems = data.FAQ || [];
-      const faqPayload = {
-        name: "Custom",
-        items: faqItems.map((f: any) => ({ question: f.Q, answer: f.A })),
-      };
+      const faqItems = formData.FAQ || [];
+      if (Array.isArray(faqItems) && faqItems.length > 0) {
+        const faqPayload = {
+          name: "Custom",
+          items: faqItems.map((f: any) => ({
+            title: f?.Q ?? "",
+            description: f?.A ?? "",
+          })),
+        };
 
-      try {
-        const faqRes = await createFaq(faqPayload);
-        updatedFAQId = faqRes?.data?._id;
-        setData((prev: any) => ({ ...prev, FAQ: updatedFAQId }));
+        try {
+          const faqRes = await createFaq(faqPayload);
+          const updatedFAQId = faqRes?.data?._id;
 
-        if (activityId) {
-          await updateActivity(activityId, { ...data, FAQ: updatedFAQId });
+          setFormData((prev: any) => ({
+            ...prev,
+            FAQ: updatedFAQId,
+          }));
+
+          if (activityId) {
+            await updateActivity(activityId, {
+              ...formData,
+              FAQ: updatedFAQId,
+            });
+          }
+        } catch (err) {
+          toast.error("Failed to save FAQs");
+          console.error("❌ Failed to save FAQ:", err);
         }
-      } catch (err) {
-        toast.error("Failed to save FAQs");
-        console.error("❌ Failed to save FAQ:", err);
       }
     }
 
     // 2. Prepare final payload
     const payload = {
-      ...data,
+      ...formData,
       FAQ: updatedFAQId,
       ...(action && { status: action }),
     };
@@ -148,10 +282,8 @@ export default function CreateEventLayout({ data, setData }: any) {
         for (const key of keysA) {
           if (!deepEqual(a[key], b[key])) return false;
         }
-
         return true;
       }
-
       return false;
     };
 

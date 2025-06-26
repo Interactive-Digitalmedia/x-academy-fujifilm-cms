@@ -1,12 +1,6 @@
-import {
-  Bell,
-  CirclePlus,
-  Trash2,
-  Settings,
-  SquarePen,
-} from "lucide-react";
+import { Bell, CirclePlus, Trash2, Settings, SquarePen } from "lucide-react";
 import InviteAdminModal from "./InviteAdminModal";
-import {  useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 import useGlobalStore from "@/state/GlobalState";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -15,11 +9,10 @@ export default function NavBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useGlobalStore();
-  const { isOpen,  onOpenChange } = useDisclosure();
+  const { isOpen, onOpenChange } = useDisclosure();
 
-const params = useParams();
-const eventId = params.activityId || location.pathname.split("/")[2]; // fallback
-
+  const params = useParams();
+  const eventId = params.activityId || location.pathname.split("/")[2]; // fallback
 
   /* -------------------------------------------------- */
   /* 1. Helpers                                         */
@@ -67,14 +60,14 @@ const eventId = params.activityId || location.pathname.split("/")[2]; // fallbac
             {
               label: "Update",
               icon: SquarePen,
-              action: () => navigate(`/events/create-events/${eventId}`),
+              action: () => navigate(`/events/update-events/${eventId}`),
             },
           ]
         : [
             {
               label: "Create New",
               icon: CirclePlus,
-              action: () => navigate("/events/create-events"),
+              action: () => navigate("/events/update-events"),
             },
             {
               label: "Drafts",
@@ -129,9 +122,7 @@ const eventId = params.activityId || location.pathname.split("/")[2]; // fallbac
     others: { title: "Others", buttons: [] },
     profile: {
       title: "Profile",
-      buttons: [
-        { label: "Edit Profile", icon: Settings, action: () => {} },
-      ],
+      buttons: [{ label: "Edit Profile", icon: Settings, action: () => {} }],
     },
   };
 
@@ -184,7 +175,10 @@ const eventId = params.activityId || location.pathname.split("/")[2]; // fallbac
       <div className="ml-auto flex items-center gap-2">
         {renderSectionButtons()}
         {currentSection === "dashboard" && user?.userRole !== "super admin" && (
-          <button className="p-2 rounded-md hover:bg-gray-100 transition" aria-label="Notifications">
+          <button
+            className="p-2 rounded-md hover:bg-gray-100 transition"
+            aria-label="Notifications"
+          >
             <Bell size={18} className="text-gray-700" />
           </button>
         )}

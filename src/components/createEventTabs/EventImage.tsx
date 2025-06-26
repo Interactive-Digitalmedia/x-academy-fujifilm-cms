@@ -16,7 +16,7 @@ export default function EventImage({ data, setData }: any) {
     setUploading(true);
     try {
       const res = await uploadImage(file);
-      console.log("public url :", res)
+      console.log("public url :", res);
       if (res?.publicUrl) {
         setData((prev: any) => ({ ...prev, heroImage: res.publicUrl }));
       }
@@ -27,21 +27,23 @@ export default function EventImage({ data, setData }: any) {
   };
 
   // Handle gallery upload (multiple files)
-  const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = Array.from(e.target.files || []);
     setGalleryFiles((prev) => [...prev, ...files]);
 
     setUploading(true);
     try {
-      const uploadPromises = files.map(file => uploadImage(file));
+      const uploadPromises = files.map((file) => uploadImage(file));
       const results = await Promise.all(uploadPromises);
       const uploadedUrls = results
-        .filter(r => r?.publicUrl)
-        .map(r => r.publicUrl);
+        .filter((r) => r?.publicUrl)
+        .map((r) => r.publicUrl);
 
       setData((prev: any) => ({
         ...prev,
-        gallery: [...(prev.gallery || []), ...uploadedUrls]
+        gallery: [...(prev.gallery || []), ...uploadedUrls],
       }));
     } catch (err) {
       console.error("❌ Error uploading gallery images:", err);
@@ -66,7 +68,7 @@ export default function EventImage({ data, setData }: any) {
       {/* Hero Section */}
       <div>
         <label className="block text-sm font-medium text-[#818181] mb-1">
-          Hero Image
+          Hero Image <span className="text-red-500">*</span>
         </label>
 
         {data.heroImage && (
@@ -148,41 +150,37 @@ export default function EventImage({ data, setData }: any) {
       {uploading && (
         <p className="text-sm text-blue-500">Uploading image(s)...</p>
       )}
-              {/* Dropzone UI Placeholder */}
-              <div className="mt-6 border-2 border-dashed border-blue-400 rounded-lg py-12 text-center text-sm text-gray-600">
-          <div className="flex justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-blue-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v9m0-9l-3 3m3-3l3 3m0-6v-1a4 4 0 00-8 0v1"
-              />
-            </svg>
-          </div>
-          <p>
-            Drag your file(s) or{" "}
-            <span className="text-blue-500 underline cursor-pointer">
-              browse
-            </span>
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            Max 10 MB files are allowed
-          </p>
+      {/* Dropzone UI Placeholder */}
+      <div className="mt-6 border-2 border-dashed border-blue-400 rounded-lg py-12 text-center text-sm text-gray-600">
+        <div className="flex justify-center mb-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-6 h-6 text-blue-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v9m0-9l-3 3m3-3l3 3m0-6v-1a4 4 0 00-8 0v1"
+            />
+          </svg>
         </div>
-
-        <p className="text-sm text-gray-500 mt-2">
-          Note: Only support <code>.jpg</code>, <code>.png</code>,{" "}
-          <code>.svg</code> and zip files
+        <p>
+          Drag your file(s) or{" "}
+          <span className="text-blue-500 underline cursor-pointer">browse</span>
         </p>
+        <p className="text-xs text-gray-400 mt-1">
+          Max 10 MB files are allowed
+        </p>
+      </div>
 
+      <p className="text-sm text-gray-500 mt-2">
+        Note: Only support <code>.jpg</code>, <code>.png</code>,{" "}
+        <code>.svg</code> and zip files
+      </p>
     </div>
-    
   );
 }
