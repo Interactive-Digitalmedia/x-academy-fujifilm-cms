@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Select, SelectItem } from "@nextui-org/react";
+// import { Select, SelectItem } from "@nextui-org/react";
 import { Plus, Trash2 } from "lucide-react";
 
 const blankFaq = { Q: "", A: "" };
@@ -8,10 +8,13 @@ export default function FAQs({ data, setData }: any) {
   const [faqBlocks, setFaqBlocks] = useState([{ ...blankFaq }]);
 
   useEffect(() => {
-    if (data?.FAQ?.items && Array.isArray(data.FAQ.items)) {
+    if (!data?.FAQ) return;
+    if (Array.isArray(data.FAQ)) {
+      setFaqBlocks(data.FAQ);
+    } else if (Array.isArray(data.FAQ.items)) {
       const transformed = data.FAQ.items.map((item: any) => ({
-        Q: item.question,
-        A: item.answer,
+        Q: item.Q ?? item.question ?? "",
+        A: item.A ?? item.answer ?? "",
       }));
       setFaqBlocks(transformed);
     }
@@ -24,10 +27,12 @@ export default function FAQs({ data, setData }: any) {
   ) => {
     const updated = [...faqBlocks];
     updated[index][field] = value;
-    setFaqBlocks(updated);
-    setData({ ...data, FAQ: updated });
+    if (data.FAQ?._id) {
+      setData({ ...data, FAQ: { _id: data.FAQ._id, items: updated } });
+    } else {
+      setData({ ...data, FAQ: updated });
+    }
   };
-
 
   const handleAddFaq = () => {
     const updated = [...faqBlocks, { ...blankFaq }];
@@ -48,7 +53,7 @@ export default function FAQs({ data, setData }: any) {
       <h2 className="text-base font-bold mb-1">Frequently Asked Questions</h2>
 
       {/* Event Type Dropdown */}
-      <div className="w-[460px]">
+      {/* <div className="w-[460px]">
         <label className="block text-[#818181] text-sm font-medium mb-1">
           Choose from Template
         </label>
@@ -65,7 +70,7 @@ export default function FAQs({ data, setData }: any) {
           <SelectItem key="eventr">Event</SelectItem>
           <SelectItem key="exhibition">Exhibition</SelectItem>
         </Select>
-      </div>
+      </div> */}
 
       {/* FAQ Blocks */}
       {faqBlocks.map((faq, index) => (

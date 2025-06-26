@@ -5,12 +5,13 @@ import AdminControls from "@/components/createEventTabs/AdminControls";
 import EventImage from "@/components/createEventTabs/EventImage";
 import EventSchedule from "@/components/createEventTabs/EventSchedule";
 import FAQs from "@/components/createEventTabs/FAQs";
-import { createFaq, updateActivity, uploadActivity } from "@/api/activity";
+import { updateActivity, uploadActivity } from "@/api/activity";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useActivityStore } from "@/Zustang/useActivityStore";
 import MainCard from "@/components/concludedEventTabs/MainCard";
-import { Activity } from "@/types";
+import { Activity, Ambassador } from "@/types";
+import { createFaq, updateFaq } from "@/api/faq";
 
 const tabs = [
   "Event Details",
@@ -20,6 +21,26 @@ const tabs = [
   "FAQs",
   "Admin Controls",
 ];
+
+function normalizeFAQ(
+  faqObj: any
+): { _id: string; items: { Q: string; A: string }[] } | string {
+  if (!faqObj) return "";
+
+  if (typeof faqObj === "string") return faqObj;
+
+  if (Array.isArray(faqObj.items)) {
+    return {
+      _id: faqObj._id,
+      items: faqObj.items.map((item: any) => ({
+        Q: item.question,
+        A: item.answer,
+      })),
+    };
+  }
+
+  return faqObj._id;
+}
 
 export default function CreateEventLayout() {
   const [formData, setFormData] = useState<Activity>({} as Activity);
@@ -36,9 +57,17 @@ export default function CreateEventLayout() {
       try {
         const res = await fetchActivitiesById(id);
         if (res) {
-          setOriginalData(res);
-          setFormData(res);
-          console.log(res);
+          const normalizedAmbassadorIds = res.ambassadorId.map(
+            (amb: string | Ambassador) =>
+              typeof amb === "string" ? amb : amb._id
+          );
+          const normalizedData = {
+            ...res,
+            ambassadorId: normalizedAmbassadorIds,
+            FAQ: normalizeFAQ(res.FAQ),
+          };
+          setOriginalData(normalizedData);
+          setFormData(normalizedData);
           setActivityId(res._id);
         }
       } catch (error) {
@@ -82,8 +111,8 @@ export default function CreateEventLayout() {
         if (new Date(data.endDate) < new Date(data.startDate))
           return "End date cannot be before start date.";
         if (!data.location?.trim()) return "Location is required.";
-        // if (!data.ambassadorId || data.ambassadorId.length === 0)
-        //   return "At least one host is required.";
+        if (!data.ambassadorId || data.ambassadorId.length === 0)
+          return "At least one host is required.";
         if (!data.pricing) return "Pricing is required.";
         if (data.pricing === "paid" && (!data.amount || data.amount <= 0))
           return "Valid amount is required for paid events.";
@@ -230,24 +259,37 @@ export default function CreateEventLayout() {
     let updatedFAQId = formData?.FAQ;
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
-      const faqItems = formData.FAQ || [];
-      if (Array.isArray(faqItems) && faqItems.length > 0) {
+      const faqData = formData.FAQ;
+
+      let faqItems: any[] = [];
+      if (
+        typeof faqData === "object" &&
+        "items" in faqData &&
+        Array.isArray(faqData.items)
+      ) {
+        faqItems = faqData.items;
+      }
+
+      if (faqItems.length > 0) {
         const faqPayload = {
           name: "Custom",
           items: faqItems.map((f: any) => ({
-            title: f?.Q ?? "",
-            description: f?.A ?? "",
+            question: f?.Q ?? "",
+            answer: f?.A ?? "",
           })),
         };
 
         try {
-          const faqRes = await createFaq(faqPayload);
-          const updatedFAQId = faqRes?.data?._id;
-
-          setFormData((prev: any) => ({
-            ...prev,
-            FAQ: updatedFAQId,
-          }));
+          if (typeof faqData === "object" && "_id" in faqData) {
+            // Update existing FAQ
+            await updateFaq(faqData._id, faqPayload);
+            updatedFAQId = faqData._id;
+          } else {
+            // Create new FAQ
+            const faqRes = await createFaq(faqPayload);
+            updatedFAQId = faqRes?.data?._id;
+            setFormData((prev) => ({ ...prev, FAQ: updatedFAQId }));
+          }
 
           if (activityId) {
             await updateActivity(activityId, {
@@ -326,9 +368,24 @@ export default function CreateEventLayout() {
     }
   };
 
+  const handleStatusChange = async (newStatus: "draft" | "published") => {
+    if (!formData._id) {
+      toast.error("Missing activity ID");
+      return;
+    }
+    try {
+      await updateActivity(formData._id, { status: newStatus });
+      setFormData((prev) => ({ ...prev, status: newStatus }));
+      toast.success(`Status changed to ${newStatus}`);
+    } catch (err) {
+      toast.error("Failed to change status");
+      console.error("Status update error:", err);
+    }
+  };
+
   return (
     <div className=" flex flex-col">
-      {id && <MainCard data={formData} />}
+      {id && <MainCard data={formData} onStatusChange={handleStatusChange} />}
       {/* Card wrapper */}
       <div className="bgCard pb-0 h-[87vh]">
         {/* Tab Navigation (inside card) */}

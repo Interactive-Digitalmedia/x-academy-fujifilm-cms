@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   CalendarDays,
-  Clock,
+  // Clock,
   MapPin,
-  User,
+  // User,
   Copy,
   Download,
+  Trash2,
 } from "lucide-react";
 import { Activity } from "@/types";
+import toast from "react-hot-toast";
+import { deleteActivity } from "@/api/activity";
+import ConfirmationModal from "../ConfirmationModal";
+import ChangeStatusPopover from "../Activity/ChangeStatusPopover";
 
 type MainCardProps = {
-data : Activity
+  data: Activity;
+  onStatusChange?: (newStatus: "draft" | "published") => void;
+  onDeleteSuccess?: () => void;
 };
 
-const MainCard: React.FC<MainCardProps> = ({
-data
-}) => {
+const MainCard: React.FC<MainCardProps> = ({ data, onStatusChange }) => {
   /* ---------- Helpers ---------- */
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const formattedDate = new Date(data?.startDate).toLocaleDateString("en-US", {
     weekday: "short",
     day: "numeric",
@@ -32,6 +38,31 @@ data
     "bg-[#4BCFFF]",
     "bg-[#8847FF]",
   ];
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      toast.success("Link copied");
+    });
+  };
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this event?")) return;
+    try {
+      await deleteActivity(data._id);
+      toast.success("Activity deleted");
+    } catch (err) {
+      toast.error("Failed to delete activity");
+      console.error(err);
+    }
+  };
+
+  const handleToggleStatus = (newStatus: "draft" | "published") => {
+    try {
+      onStatusChange?.(newStatus);
+    } catch (err) {
+      toast.error("Failed to update status");
+      console.error(err);
+    }
+  };
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md p-4 mb-6">
@@ -77,14 +108,22 @@ data
 
         {/* Buttons */}
         <div className="flex items-center gap-2">
-          <button className="border p-2 rounded-md">
+          <button className="border p-2 rounded-md" onClick={handleCopyLink}>
             <Copy className="w-4 h-4" />
           </button>
           <button className="border p-2 rounded-md">
             <Download className="w-4 h-4" />
           </button>
-          <button className="bg-[#1098F7] text-white text-sm px-4 py-2 rounded-md">
-            Change&nbsp;Status
+          <ChangeStatusPopover
+            currentStatus={data?.status}
+            onChange={handleToggleStatus}
+          />
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="text-red-600 border border-red-600 px-3 py-2 rounded-md text-sm"
+          >
+            <Trash2 className="w-4 h-4 inline-block mr-1" />
+            Delete
           </button>
         </div>
       </div>
@@ -97,24 +136,34 @@ data
             <CalendarDays className="w-4 h-4" />
             <span>{formattedDate}</span>
           </div>
-          <div className="flex items-center gap-1">
+          {/* <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>07&nbsp;: 30&nbsp;PM&nbsp;Onwards</span>
-          </div>
+            <span>{data.schedule[0].sessions[0].startTime}</span>
+          </div> */}
         </div>
 
         {/* Host / location – adjust host later if needed */}
         <div className="flex flex-col gap-1 min-w-[200px]">
-          <div className="flex items-center gap-1">
+          {/* <div className="flex items-center gap-1">
             <User className="w-4 h-4" />
-            <span className="font-medium">Tarun Khiwal</span>
-          </div>
+            <span className="font-medium">{data.ambassadorId}</span>
+          </div> */}
           <div className="flex items-center gap-1">
             <MapPin className="w-4 h-4" />
             <span className="underline">{data?.location}</span>
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Ambassador"
+        description="Are you sure you want to delete this ambassador? This action is permanent."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+        showReasonInput={true}
+      />
     </div>
   );
 };

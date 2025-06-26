@@ -1,6 +1,5 @@
 // import { Headphones } from 'lucide-react'
-import { useNavigate, useParams } from "react-router-dom";
-import DisplayImage from "/public/banner/displayImage.png";
+import {  useParams } from "react-router-dom";
 import goldenBadge from "/public/banner/goldenBadge.webp";
 import silverBadge from "/public/banner/silverBadge.webp";
 // import { Bookmark } from 'lucide-react'
@@ -122,33 +121,47 @@ const ActivityDetails = () => {
                 {activity?.activityName}
               </h2>
               <p className="mb-4 text-sm text-gray-400">Hosted By</p>
-              <div className="mb-4 flex items-center gap-2">
-                {activity?.ambassadorId?.image && (
-                  <img
-                    src={DisplayImage}
-                    alt="host"
-                    className="h-8 w-8 rounded-full"
-                  />
-                )}
-                {activity?.ambassadorId?.name && (
-                  <span className="text-lg font-medium">
-                    {activity?.ambassadorId?.name}
-                  </span>
-                )}
-                <TooltipComponent
-                  text={`${activity?.ambassadorId?.type === "X-Ambassador" ? "X-Ambassador" : "Evangelist"} `}
-                >
-                  <img
-                    src={
-                      activity?.ambassadorId?.type === "X-Ambassador"
-                        ? goldenBadge
-                        : silverBadge
-                    }
-                    alt="badge"
-                    className="ml-1 h-6 cursor-pointer"
-                  />
-                </TooltipComponent>
-              </div>
+              {activity?.ambassadorId &&
+                activity.ambassadorId.length > 0 &&
+                (() => {
+                  const ambassador = activity.ambassadorId[0];
+
+                  if (typeof ambassador === "string") return null;
+
+                  return (
+                    <div className="mb-4 flex items-center gap-2">
+                      {ambassador.profileImage && (
+                        <img
+                          src={ambassador.profileImage}
+                          alt="host"
+                          className="h-8 w-8 rounded-full"
+                        />
+                      )}
+                      {ambassador.fullname && (
+                        <span className="text-lg font-medium">
+                          {ambassador.fullname}
+                        </span>
+                      )}
+                      <TooltipComponent
+                        text={
+                          ambassador.type === "X-Ambassador"
+                            ? "X-Ambassador"
+                            : "Evangelist"
+                        }
+                      >
+                        <img
+                          src={
+                            ambassador.type === "X-Ambassador"
+                              ? goldenBadge
+                              : silverBadge
+                          }
+                          alt="badge"
+                          className="ml-1 h-6 cursor-pointer"
+                        />
+                      </TooltipComponent>
+                    </div>
+                  );
+                })()}
 
               {/* Main Image */}
               <div className="mb-2 aspect-video overflow-hidden rounded-xl">

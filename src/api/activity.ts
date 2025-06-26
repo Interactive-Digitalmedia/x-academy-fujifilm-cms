@@ -82,33 +82,44 @@ export const uploadImage = async (file: File) => {
   }
 };
 
-export async function createFaq(payload: {
-  name: string;
-  items: { title: string; description: string }[];
-}) {
-  const res = await fetch(`${baseUrl}faq/`, {
-    //imp
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-    },
-    body: JSON.stringify(payload),
-  });
+// export async function createFaq(payload: {
+//   name: string;
+//   items: { question: string; answer: string }[];
+// }) {
+//   const res = await fetch(`${baseUrl}faq/`, {
+//     //imp
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+//     },
+//     body: JSON.stringify(payload),
+//   });
 
-  if (!res.ok) throw new Error("Failed to create FAQ");
-  return await res.json(); // Should return { _id: "...", ... }
-}
+//   if (!res.ok) throw new Error("Failed to create FAQ");
+//   return await res.json(); // Should return { _id: "...", ... }
+// }
 
 export const getActivitiesById = async (id: string) => {
   try {
     const response = await axios.get(
       `${baseUrl}activity/${id}` // empty body
-    )
+    );
 
-    return response.data
+    return response.data;
   } catch (error) {
-    console.error('Error fetching the billing address', error)
-    throw error
+    console.error("Error fetching the billing address", error);
+    throw error;
   }
-}
+};
+export const deleteActivity = async (id: string) => {
+  try {
+    const response = await axios.delete(
+      `${baseUrl}activity/${id}` // empty body
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching the billing address", error);
+    throw error;
+  }
+};
