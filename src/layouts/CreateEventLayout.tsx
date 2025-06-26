@@ -328,7 +328,7 @@ export default function CreateEventLayout() {
 
   return (
     <div className=" flex flex-col">
-      {id && <MainCard data={data} />}
+      {id && <MainCard data={formData} />}
       {/* Card wrapper */}
       <div className="bgCard pb-0 h-[87vh]">
         {/* Tab Navigation (inside card) */}
