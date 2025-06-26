@@ -368,9 +368,24 @@ export default function CreateEventLayout() {
     }
   };
 
+  const handleStatusChange = async (newStatus: "draft" | "published") => {
+    if (!formData._id) {
+      toast.error("Missing activity ID");
+      return;
+    }
+    try {
+      await updateActivity(formData._id, { status: newStatus });
+      setFormData((prev) => ({ ...prev, status: newStatus }));
+      toast.success(`Status changed to ${newStatus}`);
+    } catch (err) {
+      toast.error("Failed to change status");
+      console.error("Status update error:", err);
+    }
+  };
+
   return (
     <div className=" flex flex-col">
-      {id && <MainCard data={formData} />}
+      {id && <MainCard data={formData} onStatusChange={handleStatusChange} />}
       {/* Card wrapper */}
       <div className="bgCard pb-0 h-[87vh]">
         {/* Tab Navigation (inside card) */}

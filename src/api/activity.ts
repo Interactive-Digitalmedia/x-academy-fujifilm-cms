@@ -104,11 +104,22 @@ export const getActivitiesById = async (id: string) => {
   try {
     const response = await axios.get(
       `${baseUrl}activity/${id}` // empty body
-    )
+    );
 
-    return response.data
+    return response.data;
   } catch (error) {
-    console.error('Error fetching the billing address', error)
-    throw error
+    console.error("Error fetching the billing address", error);
+    throw error;
   }
-}
+};
+export const deleteActivity = async (id: string) => {
+  try {
+    const response = await axios.delete(
+      `${baseUrl}activity/${id}` // empty body
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching the billing address", error);
+    throw error;
+  }
+};
