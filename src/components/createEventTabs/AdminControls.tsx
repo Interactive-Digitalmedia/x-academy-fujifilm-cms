@@ -25,7 +25,7 @@ export default function AdminControls({ data, setData }: any) {
     console.log("here here", user);
   }, []);
   return (
-    <div className="space-y-2 md:w-[420px] mt-[-25px]">
+    <div className="space-y-6 md:w-[420px] mt-[-25px]">
       <h2 className="text-base font-bold  mb-1">Admin Controls</h2>
 
       {user?.userRole !== "admin" && (

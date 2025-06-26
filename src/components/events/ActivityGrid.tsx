@@ -90,7 +90,7 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
             >
               {/* Image and Badge */}
               <div className="relative w-full p-3">
-                <div className="w-58 aspect-square overflow-hidden rounded-[12px]">
+                <div className="aspect-[4/3] w-full max-h-48 overflow-hidden rounded-xl">
                   {/* <div className='aspect-square w-48'> */}
                   <img
                     src={activity?.heroImage}
@@ -105,11 +105,11 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
               </div>
 
               {/* Content */}
-              <div className="p-4 pt-1">
-                <div className="mb-1 flex items-center justify-between">
+              <div className="p-3 pb-0 pt-0">
+                <div className=" flex items-center justify-between">
                   <div>
                     <span
-                      className={`inline-block rounded-full px-3 py-1 text-xs font-medium mb-2
+                      className={`inline-block rounded-full px-2 py-1 text-xs font-medium mb-2
             ${
               activity.status === "draft"
                 ? "bg-orange-100 text-orange-600"
@@ -124,18 +124,18 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
                     <h3 className="text-sm font-semibold">
                       {activity?.activityName}
                     </h3>
-                    <p className="mb-2 text-sm">
+                    <p className=" pt-0 text-sm">
                       {formatToShortDate(activity?.startDate)} |{" "}
                       {/* {activity?.ambassadorId} */}
                     </p>
                     <p className="mb-2 text-sm">{activity?.location}, India</p>
                   </div>
                   {/* <button className='normal-btn'>Book</button> */}
-                  <EllipsisVertical />
+                  <EllipsisVertical className="w-5 h-5 -mt-2.5 " />
                 </div>
-                <p className="card-about line-clamp-2 text-xs">
+                {/* <p className="card-about line-clamp-2 text-xs">
                   {activity?.about?.about}
-                </p>
+                </p> */}
               </div>
             </div>
           );
