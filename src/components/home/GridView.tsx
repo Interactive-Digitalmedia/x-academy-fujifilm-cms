@@ -76,7 +76,7 @@ const GridView: React.FC = () => {
     <div
       style={{
         display: "flex",
-        width: "965px",
+        // width: "965px",
         padding: "16px 16px 67px 16px",
         justifyContent: "center",
         alignItems: "center",
@@ -85,9 +85,9 @@ const GridView: React.FC = () => {
         background: "#FFF",
       }}
     >
-      <div className="w-full">
+      <div className="w-full  ">
         {/* Heading + Add New */}
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center -mt-2 mb-2">
           <h2 className="text-xl font-bold">Events</h2>
           <Button
             className="bg-[#0099FF] hover:bg-[#008ae6] text-white font-medium px-3 py-2 rounded-lg flex items-center gap-2 text-sm"
@@ -100,7 +100,7 @@ const GridView: React.FC = () => {
 
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w-[840px] mr-4">
+          <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
