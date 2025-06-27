@@ -109,12 +109,12 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
                 <div className=" flex items-center justify-between">
                   <div>
                     <span
-                      className={`inline-block rounded-full px-2 py-1 text-xs font-medium mb-2
+                      className={`inline-block capitalize rounded-full px-2 py-1 text-xs font-medium mb-2
             ${
               activity.status === "draft"
-                ? "bg-orange-100 text-orange-600"
+                ? "bg-orange-100  text-orange-600"
                 : activity.status === "published"
-                  ? "bg-gray-300 text-gray-800"
+                  ? "bg-[#dcfce7] text-[#16A34A]"
                   : ""
             }
           `}
