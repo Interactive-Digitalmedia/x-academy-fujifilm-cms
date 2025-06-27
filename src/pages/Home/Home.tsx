@@ -9,6 +9,8 @@ import {
 
 const Home = () => {
   return (
+    <div className="w-full  mx-auto">
+
     <div className=" -p-1 bg-gray-100 min-h-screen">
       {/* Header */}
       <header className="flex justify-between items-center mb-6">
@@ -71,6 +73,7 @@ const Home = () => {
         </div>
         <GridView />
       </div>
+    </div>
     </div>
   );
 };
