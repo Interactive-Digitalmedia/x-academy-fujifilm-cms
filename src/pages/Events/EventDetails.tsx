@@ -103,7 +103,7 @@ const ActivityDetails = () => {
         {/* three cards  */}
         <div className="relative flex flex-col-reverse gap-6 lg:flex-row lg:items-start">
           {/* LEFT SECTION */}
-          <div className="flex-1 max-h-[calc(100vh-150px)] overflow-y-scroll pr-2  scrollbar-hide">
+          <div className="flex-1 max-h-[calc(100vh-18px)] overflow-y-scroll pr-2  scrollbar-hide">
             {/* Event Overview Card */}
 
             <div className="card relative  p-4">
