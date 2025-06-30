@@ -53,7 +53,8 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
     try {
       const result = await uploadImage(file);
       if (result?.publicUrl) {
-        handleFieldChange(index, "productImage", result.publicUrl);
+        const encodedUrl = encodeURI(result.publicUrl);
+        handleFieldChange(index, "productImage", encodedUrl);
       }
     } catch (err) {
       console.error("Image upload failed:", err);

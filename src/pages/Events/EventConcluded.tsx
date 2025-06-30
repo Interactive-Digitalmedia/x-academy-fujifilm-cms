@@ -7,7 +7,7 @@ import PromotionalImages from "@/components/concludedEventTabs/PromotionalImages
 import PostEventImages from "@/components/concludedEventTabs/PostEventImages";
 import FAQs from "@/components/concludedEventTabs/FAQs";
 import AdminControls from "@/components/concludedEventTabs/AdminControls";
-import AttendeeList from "@/components/concludedEventTabs/AttendeeList";
+import AttendeeTable from "@/components/concludedEventTabs/AttendeeTable";
 
 const TABS = [
   "Event Details",
@@ -66,7 +66,7 @@ const EventConcluded: React.FC = () => {
       case "Admin Controls":
         return <AdminControls data={data} setData={setData} />;
       case "Attendee List":
-        return <AttendeeList />;
+        return <AttendeeTable />;
       default:
         return <div className="text-sm text-gray-600">Coming soon...</div>;
     }

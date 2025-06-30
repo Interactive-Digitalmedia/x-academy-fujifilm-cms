@@ -57,7 +57,8 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
     try {
       const result = await uploadImage(file);
       if (result?.publicUrl) {
-        const newImage: GalleryImage = { url: result.publicUrl };
+        const encodedUrl = encodeURI(result.publicUrl);
+        const newImage: GalleryImage = { url: encodedUrl };
         setData({
           ...data,
           gallery: [...(data.gallery || []), newImage.url], // Store only S3 URLs

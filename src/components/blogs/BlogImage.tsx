@@ -75,9 +75,10 @@ const BlogImage: React.FunctionComponent<BlogImageProps> = ({
     try {
       const res = await uploadImage(file);
       if (res?.publicUrl) {
+        const encodedUrl = encodeURI(res.publicUrl);
         updateBlogData("heroImage", {
           file,
-          url: res.publicUrl,
+          url: encodedUrl,
           description: blogData.heroImage.description,
         });
       }

@@ -15,7 +15,7 @@ import TypeIcon from "@/components/Activity/TypeIcon";
 import DurationIcon from "@/components/Activity/DurationIcon";
 import LanguageIcon from "@/components/Activity/LanguageIcon";
 import { TooltipComponent } from "@/components/TooltipComponent";
-import ActivityDialog from "@/components/events/ActivityDialog";
+import ActivityAttendeesList from "@/components/events/ActivityAttendeesList";
 
 const ActivityDetails = () => {
   const { selectedActivity, fetchActivitiesById, fetchActivities } =
@@ -309,11 +309,9 @@ const ActivityDetails = () => {
               </div>
             </div>
             {/* second card */}
-            <div className="card space-y-4 p-4">
+            {/* <div className="card space-y-4 p-4">
               <h3 className="text-lg font-semibold">Booking Details</h3>
-
               <div className="space-y-4 text-sm">
-                {/* Type */}
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5">
                     <TypeIcon />
@@ -325,16 +323,14 @@ const ActivityDetails = () => {
                     <p>45</p>
                   </div>
                 </div>
-
-               
                 <div className="flex items-center pt-2">
-                  
                   <div className="w-full">
                     <ActivityDialog />
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
+            <ActivityAttendeesList />
           </div>
         </div>
       </section>
