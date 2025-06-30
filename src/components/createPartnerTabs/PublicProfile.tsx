@@ -71,9 +71,10 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
     try {
       const result = await uploadImage(file);
       if (result?.publicUrl) {
+        const encodedUrl = encodeURI(result.publicUrl);
         setData((prev) => ({
           ...prev,
-          [field]: result.publicUrl,
+          [field]: encodedUrl,
         }));
       }
     } catch (error) {

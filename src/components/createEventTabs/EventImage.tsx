@@ -18,7 +18,8 @@ export default function EventImage({ data, setData }: any) {
       const res = await uploadImage(file);
       console.log("public url :", res);
       if (res?.publicUrl) {
-        setData((prev: any) => ({ ...prev, heroImage: res.publicUrl }));
+        const encodedUrl = encodeURI(res.publicUrl);
+        setData((prev: any) => ({ ...prev, heroImage: encodedUrl }));
       }
     } catch (err) {
       console.error("❌ Error uploading hero image:", err);
@@ -39,7 +40,7 @@ export default function EventImage({ data, setData }: any) {
       const results = await Promise.all(uploadPromises);
       const uploadedUrls = results
         .filter((r) => r?.publicUrl)
-        .map((r) => r.publicUrl);
+        .map((r) => encodeURI(r.publicUrl));
 
       setData((prev: any) => ({
         ...prev,
