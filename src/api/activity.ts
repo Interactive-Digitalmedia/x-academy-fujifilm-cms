@@ -112,6 +112,7 @@ export const getActivitiesById = async (id: string) => {
     throw error;
   }
 };
+
 export const deleteActivity = async (id: string) => {
   const token = getTokenFromLocalStorage();
   if (!token) {
@@ -131,6 +132,29 @@ export const deleteActivity = async (id: string) => {
     return response.data;
   } catch (error) {
     console.error("Error uploading the activity", error);
+    throw error;
+  }
+};
+
+export const getAttendeesByActivity = async (activityId: string) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    console.error("Token is not available.");
+    return;
+  }
+  try {
+    const response = await axios.get(
+      `${baseUrl}activity-booking/getAttendees/${activityId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching attendees by activity", error);
     throw error;
   }
 };

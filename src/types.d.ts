@@ -210,3 +210,22 @@ export interface Booking {
   createdAt: string;
   updatedAt: string;
 }
+
+
+
+export interface Attendee {
+  _id: string;
+  userId: {
+    _id: string;
+    fullname: string;
+    email: string;
+  };
+  activityId: string;
+  numberOfSeats: number;
+  status: string;
+  paymentStatus: string;
+  bookingDate: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
