@@ -150,7 +150,7 @@ const EventView: React.FC = () => {
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w- mr-4">
+          <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
