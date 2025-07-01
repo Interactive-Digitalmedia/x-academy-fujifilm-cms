@@ -20,7 +20,7 @@ const GridView: React.FC = () => {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
 
-  const types = ["All", "Event", "Workshop", "Exhibition", "Drafts"];
+  const types = ["All", "Event", "Workshop", "Exhibition"];
 
   useEffect(() => {
     const fetchActivities = async () => {
