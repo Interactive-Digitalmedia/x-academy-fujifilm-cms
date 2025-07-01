@@ -65,14 +65,14 @@ const ActivityGrid: React.FC<Props> = ({ demoActivities, activeTab }) => {
     return date.toLocaleDateString("en-US", options);
   }
 
-  const slugify = (title: string) =>
-    title
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^\w-]+/g, "");
+  // const slugify = (title: string) =>
+  //   title
+  //     .toLowerCase()
+  //     .replace(/ /g, "-")
+  //     .replace(/[^\w-]+/g, "");
 
   const handleActivityClick = (activity: Activity) => {
-    const slug = slugify(activity?.activityName);
+    // const slug = slugify(activity?.activityName);
     navigate(`/events/${activity?._id}`, { state: { activity } });
   };
 

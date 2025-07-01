@@ -3,8 +3,8 @@ import { Search, Grid3X3, List, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import PartnerCard from "./PartnerCard";
-import { PartnersList } from "@/assets/PartnersList";
+// import PartnerCard from "./PartnerCard";
+// import { PartnersList } from "@/assets/PartnersList";
 
 const Partners: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All"); // track selected toggle
@@ -12,18 +12,18 @@ const Partners: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredPartners = PartnersList.filter((partner) => {
-    const matchesType =
-      activeType === "All" ||
-      partner.role.toLowerCase() === activeType.toLowerCase().slice(0, -1);
+  // const filteredPartners = PartnersList.filter((partner) => {
+  //   const matchesType =
+  //     activeType === "All" ||
+  //     partner.role.toLowerCase() === activeType.toLowerCase().slice(0, -1);
 
-    const matchesSearch =
-      partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      partner.city.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesSearch =
+  //     partner.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     partner.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     partner.city.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesType && matchesSearch;
-  });
+  //   return matchesType && matchesSearch;
+  // });
 
   return (
     <div className="bg-white h-max rounded-xl p-4">
@@ -95,11 +95,11 @@ const Partners: React.FC = () => {
             ))}
           </div>
           {/* Partner Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPartners.map((partner) => (
               <PartnerCard key={partner.name} partner={partner} />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

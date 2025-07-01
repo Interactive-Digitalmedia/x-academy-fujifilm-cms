@@ -17,45 +17,45 @@ const EventView: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
-  const [filteredResults, setFilteredResults] = useState(dummyEvents);
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
-    {}
-  );
+  // const [filteredResults, setFilteredResults] = useState(dummyEvents);
+  // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+  //   {}
+  // );
   const [showFilters, setShowFilters] = useState(false);
 
   const types = ["All", "Event", "Workshop", "Exhibition"];
 
-  const parseDMY = (dmy: string): Date => {
-    const [day, month, year] = dmy.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  };
+  // const parseDMY = (dmy: string): Date => {
+  //   const [day, month, year] = dmy.split("-").map(Number);
+  //   return new Date(year, month - 1, day);
+  // };
 
-  useEffect(() => {
-    const lowerSearch = searchText.toLowerCase();
+  // useEffect(() => {
+  //   const lowerSearch = searchText.toLowerCase();
 
-    const filtered = dummyEvents.filter((event) => {
-      const matchesType = activeType === "All" || event.type === activeType;
-      const from = selectedRange?.from;
-      const to = selectedRange?.to;
-      const eventDate = parseDMY(event.date);
-      const matchesDate =
-        !from || !to || (eventDate >= from && eventDate <= to);
+  //   const filtered = dummyEvents.filter((event) => {
+  //     const matchesType = activeType === "All" || event.type === activeType;
+  //     const from = selectedRange?.from;
+  //     const to = selectedRange?.to;
+  //     const eventDate = parseDMY(event.date);
+  //     const matchesDate =
+  //       !from || !to || (eventDate >= from && eventDate <= to);
 
-      return (
-        matchesType &&
-        (!activeFilters.type || event.type === activeFilters.type) &&
-        (!activeFilters.organizer ||
-          event.organizer === activeFilters.organizer) &&
-        (searchText.length < 3 ||
-          event.name.toLowerCase().includes(lowerSearch) ||
-          event.location.toLowerCase().includes(lowerSearch) ||
-          event.organizer.toLowerCase().includes(lowerSearch)) &&
-        matchesDate
-      );
-    });
+  //     return (
+  //       matchesType &&
+  //       (!activeFilters.type || event.type === activeFilters.type) &&
+  //       (!activeFilters.organizer ||
+  //         event.organizer === activeFilters.organizer) &&
+  //       (searchText.length < 3 ||
+  //         event.name.toLowerCase().includes(lowerSearch) ||
+  //         event.location.toLowerCase().includes(lowerSearch) ||
+  //         event.organizer.toLowerCase().includes(lowerSearch)) &&
+  //       matchesDate
+  //     );
+  //   });
 
-    setFilteredResults(filtered);
-  }, [activeType, searchText, selectedRange, activeFilters]);
+  //   // setFilteredResults(filtered);
+  // }, [activeType, searchText, selectedRange, activeFilters]);
 
 
 
@@ -175,9 +175,9 @@ const EventView: React.FC = () => {
                         ),
                       },
                     ]}
-                    onFiltered={(filtered, active) => {
-                      setActiveFilters(active);
-                      setFilteredResults(filtered);
+                    onFiltered={() => {
+                      // setActiveFilters(active);
+                      // setFilteredResults(filtered);
                     }}
                   />
                 </div>
