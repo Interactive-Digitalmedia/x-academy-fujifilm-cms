@@ -29,7 +29,7 @@ const PartnerCard: React.FC<Props> = ({ partner }) => {
   return (
     <div
       onClick={() => navigate(`/partners/${partner?.userName}`)}
-      className="card w-full max-w-[220px] cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-lg transition"
+      className="card w-full  cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-lg transition"
     >
       {/* Image */}
       <div className="relative w-full p-3">

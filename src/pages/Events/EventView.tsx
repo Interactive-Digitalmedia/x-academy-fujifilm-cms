@@ -146,7 +146,7 @@ const EventView: React.FC = () => {
   ]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
+    <div className="w-full  mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
