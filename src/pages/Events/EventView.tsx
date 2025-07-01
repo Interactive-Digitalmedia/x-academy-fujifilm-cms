@@ -1,78 +1,110 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EventTable } from "@/components/events/EventTable";
 import ActivityGrid from "@/components/events/ActivityGrid";
-import { dummyEvents } from "@/assets/dummyEvents";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import FilterCard from "@/components/ui/filtercard";
-import { getActivities} from "@/api/activity"
+import { getActivities } from "@/api/activity";
 import { Activity } from "@/types";
 
 const EventView: React.FC = () => {
-  const [activeType, setActiveType] = useState<string>("All");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFirstLoad = useRef(true);
+
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [searchText, setSearchText] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
-  const [filteredResults, setFilteredResults] = useState(dummyEvents);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [searchText, setSearchText] = useState("");
+  const [activeType, setActiveType] = useState<string>("All");
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [filteredResults, setFilteredResults] = useState<Activity[]>([]);
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
     {}
   );
-  const [showFilters, setShowFilters] = useState(false);
 
   const types = ["All", "Event", "Workshop", "Exhibition"];
 
-  const parseDMY = (dmy: string): Date => {
-    const [day, month, year] = dmy.split("-").map(Number);
-    return new Date(year, month - 1, day);
+  // Get data from API on mount
+  useEffect(() => {
+    const load = async () => {
+      const response = await getActivities();
+      setActivities(response.data);
+      setFilteredResults(response.data); // default
+    };
+    load();
+  }, []);
+
+  // Hydrate filters from URL on first load
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      const params = Object.fromEntries([...searchParams.entries()]);
+
+      if (params.type) {
+        const matched = types.find(
+          (t) => t.toLowerCase() === params.type?.toLowerCase()
+        );
+        if (matched) setActiveType(matched);
+      }
+
+      if (params.q) setSearchText(params.q);
+
+      isFirstLoad.current = false;
+    }
+  }, []);
+
+  // Build URL query string from current filters
+  const buildQueryParams = () => {
+    const params: Record<string, string> = {};
+    if (searchText.length >= 3) params.q = searchText;
+    if (activeType !== "All") params.type = activeType.toLowerCase();
+    
+    return params;
   };
 
+  // Update URL when filters change
+  useEffect(() => {
+    if (isFirstLoad.current) return;
+
+    const params = buildQueryParams();
+    const query = new URLSearchParams(params).toString();
+    navigate(`?${query}`, { replace: true });
+  }, [searchText, activeType]);
+
+  // Filter results when activities or filters change
   useEffect(() => {
     const lowerSearch = searchText.toLowerCase();
 
-    const filtered = dummyEvents.filter((event) => {
-      const matchesType = activeType === "All" || event.type === activeType;
+    const filtered = activities.filter((event) => {
+      const matchesType =
+        activeType === "All" ||
+        event.activityType.toLowerCase() === activeType.toLowerCase();
+
       const from = selectedRange?.from;
       const to = selectedRange?.to;
-      const eventDate = parseDMY(event.date);
+      const eventDate = new Date(event.startDate);
       const matchesDate =
         !from || !to || (eventDate >= from && eventDate <= to);
 
-      return (
-        matchesType &&
-        (!activeFilters.type || event.type === activeFilters.type) &&
-        (!activeFilters.organizer ||
-          event.organizer === activeFilters.organizer) &&
-        (searchText.length < 3 ||
-          event.name.toLowerCase().includes(lowerSearch) ||
-          event.location.toLowerCase().includes(lowerSearch) ||
-          event.organizer.toLowerCase().includes(lowerSearch)) &&
-        matchesDate
-      );
+      const matchesSearch =
+        searchText.length < 3 ||
+        event.activityName.toLowerCase().includes(lowerSearch) ||
+        event.location.toLowerCase().includes(lowerSearch);
+
+      return matchesType && matchesSearch && matchesDate;
     });
 
     setFilteredResults(filtered);
-  }, [activeType, searchText, selectedRange, activeFilters]);
-
-
-
-    const [activities, setActivities] = useState<Activity[]>([])
-
-  
-    useEffect(() => {
-      const load = async () => {
-        const response = await getActivities()
-        setActivities(response.data)
-      }
-      load()
-    }, [])
-    
+  }, [activities, activeType, searchText, selectedRange, activeFilters]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200"  >
+    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
@@ -149,7 +181,7 @@ const EventView: React.FC = () => {
               {showFilters && (
                 <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
                   <FilterCard
-                    data={dummyEvents}
+                    data={activities}
                     sections={[
                       {
                         heading: "Type",
@@ -166,14 +198,14 @@ const EventView: React.FC = () => {
                           "Others",
                         ],
                       },
-                      {
-                        heading: "Conducted By",
-                        key: "organizer",
-                        type: "dropdown",
-                        options: Array.from(
-                          new Set(dummyEvents.map((e) => e.organizer))
-                        ),
-                      },
+                      // {
+                      //   heading: "Conducted By",
+                      //   key: "organizer",
+                      //   type: "dropdown",
+                      //   options: Array.from(
+                      //     new Set(dummyEvents.map((e) => e.organizer))
+                      //   ),
+                      // },
                     ]}
                     onFiltered={(filtered, active) => {
                       setActiveFilters(active);
@@ -215,9 +247,9 @@ const EventView: React.FC = () => {
 
         {/* Grid or Table */}
         {viewMode === "grid" ? (
-          <ActivityGrid demoActivities={activities} />
+          <ActivityGrid demoActivities={filteredResults} />
         ) : (
-          <EventTable demoActivities={activities} />
+          <EventTable demoActivities={filteredResults} />
         )}
       </div>
     </div>
