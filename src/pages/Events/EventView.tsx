@@ -103,7 +103,8 @@ const EventView: React.FC = () => {
         event.activityType.toLowerCase() === activeType.toLowerCase();
 
       const matchesType =
-        selectedTypes.length === 0 || selectedTypes.includes(event.activityType);
+        selectedTypes.length === 0 ||
+        selectedTypes.includes(event.activityType);
 
       const matchesAmbassadors =
         selectedConductedBy.length === 0 ||
@@ -134,14 +135,22 @@ const EventView: React.FC = () => {
     });
 
     setFilteredResults(filtered);
-  }, [activities, activeType, selectedTypes, selectedConductedBy, searchText, selectedRange, activeFilters]);
+  }, [
+    activities,
+    activeType,
+    selectedTypes,
+    selectedConductedBy,
+    searchText,
+    selectedRange,
+    activeFilters,
+  ]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w-full mr-4">
+          <div className="relative w- mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -176,13 +185,16 @@ const EventView: React.FC = () => {
             {/* Calendar */}
             <div className="relative">
               <Button
-                variant="outline"
                 size="sm"
-                className="h-[40px] border-2 px-3 gap-2"
+                className={`h-[40px] px-3 gap-2 text-sm ${
+                  showCalendar
+                    ? "bg-[#cdeafd] border border-[#1098f7] text-black hover:bg-[#cdeafd]"
+                    : "bg-white border-2 border-gray-200 text-black hover:bg-white"
+                }`}
                 onClick={() => setShowCalendar((prev) => !prev)}
               >
                 <Calendar className="h-4 w-4" />
-                <span className="text-sm">Dates</span>
+                <span>Dates</span>
               </Button>
 
               {showCalendar && (
