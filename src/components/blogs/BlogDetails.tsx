@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import {
   useLocation,
-  useNavigate,
   useParams,
   Navigate,
 } from "react-router-dom";
-import { Bookmark, ChevronLeft, Upload } from "lucide-react";
 import { dummyBlogs } from "@/pages/Blogs/Blogs";
-import { Button } from "@nextui-org/react";
 
 interface BlogDetailsProps {}
 
 const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { blogSlug } = useParams();
-  const pathSegments = location.pathname.split("/").filter(Boolean);
+  // const pathSegments = location.pathname.split("/").filter(Boolean);
   const blog = location.state?.blog; // Fixed: now correctly accessing blog object
 
   const [currentBlog, setCurrentBlog] = useState<any>(null);

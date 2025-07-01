@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useMemo } from "react";
-import { Search, Grid3X3, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import {

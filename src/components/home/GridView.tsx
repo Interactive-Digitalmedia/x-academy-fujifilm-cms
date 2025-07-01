@@ -12,9 +12,9 @@ const GridView: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState("");
   const [activeType, setActiveType] = useState<string>("All");
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
-    {}
-  );
+  // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+  //   {}
+  // );
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const GridView: React.FC = () => {
     fetchActivities();
   }, []);
 
-  const lowerSearch = searchText.toLowerCase();
+  // const lowerSearch = searchText.toLowerCase();
 
   const demoActivities = activities.map((a) => ({
     id: a._id,
@@ -57,20 +57,20 @@ const GridView: React.FC = () => {
     tags: a.tags,
   }));
 
-  const filteredResults = demoActivities.filter((event) => {
-    const matchesType = activeType === "All" || event.type === activeType;
+  // const filteredResults = demoActivities.filter((event) => {
+  //   const matchesType = activeType === "All" || event.type === activeType;
 
-    return (
-      matchesType &&
-      (!activeFilters.type || event.type === activeFilters.type) &&
-      (!activeFilters.organizer ||
-        event.ambassadorName === activeFilters.organizer) &&
-      (searchText.length < 3 ||
-        event.title.toLowerCase().includes(lowerSearch) ||
-        event.location.toLowerCase().includes(lowerSearch) ||
-        event.ambassadorName.toLowerCase().includes(lowerSearch))
-    );
-  });
+  //   return (
+  //     matchesType &&
+  //     (!activeFilters.type || event.type === activeFilters.type) &&
+  //     (!activeFilters.organizer ||
+  //       event.ambassadorName === activeFilters.organizer) &&
+  //     (searchText.length < 3 ||
+  //       event.title.toLowerCase().includes(lowerSearch) ||
+  //       event.location.toLowerCase().includes(lowerSearch) ||
+  //       event.ambassadorName.toLowerCase().includes(lowerSearch))
+  //   );
+  // });
 
   return (
     <div
@@ -146,8 +146,8 @@ const GridView: React.FC = () => {
                         ),
                       },
                     ]}
-                    onFiltered={(filtered, active) => {
-                      setActiveFilters(active);
+                    onFiltered={() => {
+                      // setActiveFilters(active);
                     }}
                   />
                 </div>

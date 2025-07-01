@@ -1,6 +1,5 @@
-import { XStory } from "@/components/community/XStoriesTable";
 
-export const dummyXStories: XStory[] = [
+export const dummyXStories = [
   {
     sno: 1,
     title: "A Guide To Wildlife Photography",
