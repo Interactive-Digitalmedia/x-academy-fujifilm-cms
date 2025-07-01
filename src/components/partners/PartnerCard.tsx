@@ -29,7 +29,7 @@ const PartnerCard: React.FC<Props> = ({ partner }) => {
   return (
     <div
       onClick={() => navigate(`/partners/${partner?.userName}`)}
-      className="card cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-lg transition"
+      className="card w-full max-w-[220px] cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-lg transition"
     >
       {/* Image */}
       <div className="relative w-full p-3">
@@ -45,7 +45,7 @@ const PartnerCard: React.FC<Props> = ({ partner }) => {
       {/* Content */}
       <div className="flex items-center justify-between px-4 pb-4 pt-1">
         <div>
-          <h3 className="text-sm font-semibold flex items-center gap-1">
+          <h3 className="text-sm capitalize font-semibold flex items-center gap-1">
             {partner?.fullname} {/* {partner?.countryCode && ( */}
             <span className="text-lg font-emoji">{getEmojiFlag("IN")}</span>
             {/* )} */}

@@ -9,7 +9,7 @@ interface PartnersGridViewProps {
 
 const PartnersGridView: React.FC<PartnersGridViewProps> = ({ partners }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-4">
       {partners.map((partner) => (
         <PartnerCard key={partner.fullname} partner={partner} />
       ))}
