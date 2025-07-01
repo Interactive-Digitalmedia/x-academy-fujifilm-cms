@@ -41,8 +41,6 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
     );
   };
 
-
-
   // close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -71,7 +69,6 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
       >
         <Filter size={18} strokeWidth={2.2} />
         Filters
-        
       </button>
 
       {open && (
@@ -101,7 +98,7 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
                     onClick={() =>
                       toggleFilter(type, selectedTypes, setSelectedTypes)
                     }
-                    className={`filter-chip w-auto px-3 py-2.5 justify-center ${
+                    className={`filter-chip w-auto px-4 py-2 justify-center ${
                       isActive
                         ? "filter-chip-active"
                         : "bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200"
@@ -127,7 +124,11 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
               className="rounded-xl w-full border placeholder:text-black"
             >
               {ambassadors.map((amb) => (
-                <SelectItem key={amb.fullname} value={amb.fullname}>
+                <SelectItem
+                  key={amb.fullname}
+                  value={amb.fullname}
+                  className="capitalize"
+                >
                   {amb.fullname}
                 </SelectItem>
               ))}
