@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { SubmissionTable } from "./submissiontable";
 import { dummySubmissions } from "@/assets/dummySubmissions";
 
@@ -16,7 +16,6 @@ export default function Container() {
     <div
       style={{
         display: "flex",
-        width: "954px",
         padding: "16px 16px 67px 16px",
         justifyContent: "center",
         alignItems: "center",

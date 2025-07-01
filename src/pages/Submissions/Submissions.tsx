@@ -13,9 +13,9 @@ const Submissions: React.FunctionComponent = () => {
     bg-gray-100 min-h-screen"
     >
       {/* Dashboard Cards */}
-      <div className="flex flex-wrap gap-[12px] mb-8">
+      <div className="flex w-full gap-[12px] mb-8">
         {/* Card 1 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">
               Total Submissions
@@ -32,7 +32,7 @@ const Submissions: React.FunctionComponent = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">
               Submissions This Month
@@ -49,7 +49,7 @@ const Submissions: React.FunctionComponent = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">Featured</h2>
             <p className="text-2xl font-bold text-black">120</p>

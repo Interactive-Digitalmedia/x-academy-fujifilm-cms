@@ -9,11 +9,11 @@ import CommunityOptions from "@/components/community/CommunityOptions";
 
 const Community = () => {
   return (
-    <div className="p-2 bg-gray-100 min-h-screen">
+    <div className="p-2  bg-gray-100 min-h-screen">
       {/* Dashboard Cards */}
-      <div className="flex flex-wrap gap-[12px] mb-8">
+      <div className="flex w-full gap-[14px] mb-8">
         {/* Card 1 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">
               Total Tickets Received
@@ -30,7 +30,7 @@ const Community = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">
               Total Resolved Tickets
@@ -47,7 +47,7 @@ const Community = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+        <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
           <div>
             <h2 className="text-sm font-medium text-gray-600 mb-1">
               Total Active Tickets

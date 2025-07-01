@@ -63,7 +63,6 @@ const SupportTickets: React.FC = () => {
     <div
       style={{
         display: "flex",
-        width: "954px",
         padding: "16px 16px 67px 16px",
         justifyContent: "center",
         alignItems: "center",
