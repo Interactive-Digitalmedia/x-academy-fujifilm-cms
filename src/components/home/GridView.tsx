@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Filter, PlusCircle } from "lucide-react";
+import { Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ActivityGrid from "@/components/events/ActivityGrid";
-import FilterCard from "@/components/ui/filtercard";
 import { getActivities } from "@/api/activity";
 import { Activity } from "@/types";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import FiltersPopover from "@/components/ui/FiltersPopover";
 
 const GridView: React.FC = () => {
   const navigate = useNavigate();
@@ -16,10 +16,9 @@ const GridView: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState("");
   const [activeType, setActiveType] = useState<string>("All");
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
-    {}
-  );
-  const [showFilters, setShowFilters] = useState(false);
+
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
 
   const types = ["All", "Event", "Workshop", "Exhibition", "Drafts"];
 
@@ -31,7 +30,6 @@ const GridView: React.FC = () => {
     fetchActivities();
   }, []);
 
-  // Sync URL filters on first load
   useEffect(() => {
     if (isFirstLoad.current) {
       const params = Object.fromEntries([...searchParams.entries()]);
@@ -41,12 +39,11 @@ const GridView: React.FC = () => {
         );
         if (matched) setActiveType(matched);
       }
-      if (params.q) setSearchText(params.q); //first load
+      if (params.q) setSearchText(params.q);
       isFirstLoad.current = false;
     }
   }, []);
 
-  // Update URL when filters change
   useEffect(() => {
     if (isFirstLoad.current) return;
     const params: Record<string, string> = {};
@@ -57,22 +54,40 @@ const GridView: React.FC = () => {
 
   const lowerSearch = searchText.toLowerCase();
 
+  const ambassadors = Array.from(
+    new Map(
+      activities
+        .flatMap((e) =>
+          Array.isArray(e.ambassadorId)
+            ? e.ambassadorId.map((a) =>
+                typeof a === "string"
+                  ? { _id: a, fullname: a }
+                  : { _id: a._id, fullname: a.fullname }
+              )
+            : []
+        )
+        .map((a) => [a.fullname, a])
+    ).values()
+  );
+
   const filteredResults = activities.filter((event) => {
     const matchesType =
-      activeType === "All" ||
-      event.activityType.toLowerCase() === activeType.toLowerCase();
+      selectedTypes.length === 0 || selectedTypes.includes(event.activityType);
+
+    const matchesAmbassadors =
+      selectedConductedBy.length === 0 ||
+      (Array.isArray(event.ambassadorId) &&
+        event.ambassadorId.some((a) => {
+          const name = typeof a === "string" ? a : a.fullname;
+          return selectedConductedBy.includes(name);
+        }));
+
     const matchesSearch =
       searchText.length < 3 ||
       event.activityName.toLowerCase().includes(lowerSearch) ||
       event.location.toLowerCase().includes(lowerSearch);
-    const matchesFilter =
-      (!activeFilters.type || event.activityType === activeFilters.type) &&
-      (!activeFilters.organizer ||
-        (Array.isArray(event.ambassadorId) &&
-          event.ambassadorId
-            .map((a) => (typeof a === "string" ? a : ((a as any).name ?? "")))
-            .includes(activeFilters.organizer)));
-    return matchesType && matchesSearch && matchesFilter;
+
+    return matchesSearch && matchesType && matchesAmbassadors;
   });
 
   return (
@@ -112,54 +127,27 @@ const GridView: React.FC = () => {
             />
           </div>
 
-          <div className="relative">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-[41px] px-3 gap-2"
-              onClick={() => setShowFilters((prev) => !prev)}
-            >
-              <Filter className="h-4 w-4" />
-              <span className="text-sm">Filters</span>
-            </Button>
-
-            {showFilters && (
-              <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
-                <FilterCard
-                  data={activities}
-                  sections={[
-                    {
-                      heading: "Type",
-                      key: "type",
-                      type: "button-group",
-                      options: Array.from(
-                        new Set(activities.map((e) => e.activityType))
-                      ),
-                    },
-                    {
-                      heading: "Conducted By",
-                      key: "organizer",
-                      type: "dropdown",
-                      options: Array.from(
-                        new Set(
-                          activities.flatMap((e) =>
-                            Array.isArray(e.ambassadorId)
-                              ? e.ambassadorId.map((a) =>
-                                  typeof a === "string" ? a : (a as any).name
-                                )
-                              : []
-                          )
-                        )
-                      ),
-                    },
-                  ]}
-                  onFiltered={(filtered, active) => {
-                    setActiveFilters(active);
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <FiltersPopover
+            types={[
+              "Event",
+              "Workshop",
+              "Exhibition",
+              "Online Seminars",
+              "Phototours",
+              "Photowalks",
+              "Service Camps",
+              "Others",
+            ]}
+            selectedTypes={selectedTypes}
+            setSelectedTypes={setSelectedTypes}
+            selectedConductedBy={selectedConductedBy}
+            setSelectedConductedBy={setSelectedConductedBy}
+            ambassadors={ambassadors}
+            onReset={() => {
+              setSelectedTypes([]);
+              setSelectedConductedBy([]);
+            }}
+          />
         </div>
 
         {/* Quick type filter */}
