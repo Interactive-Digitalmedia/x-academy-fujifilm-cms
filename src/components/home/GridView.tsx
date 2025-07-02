@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Search, Filter, PlusCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ActivityGrid from "@/components/events/ActivityGrid";
-import FilterCard from "@/components/ui/filtercard";
 import { getActivities } from "@/api/activity";
 import { Activity } from "@/types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import FiltersPopover from "@/components/ui/FiltersPopover";
 
 const GridView: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFirstLoad = useRef(true);
+
   const [activities, setActivities] = useState<Activity[]>([]);
   const [searchText, setSearchText] = useState("");
   const [activeType, setActiveType] = useState<string>("All");
+
   // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
   //   {}
   // );
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
-  const types = ["All", "Event", "Workshop", "Exhibition", "Drafts"];
+
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
+
+  const types = ["All", "Event", "Workshop", "Exhibition"];
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -28,55 +37,71 @@ const GridView: React.FC = () => {
     fetchActivities();
   }, []);
 
-  // const lowerSearch = searchText.toLowerCase();
 
-  const demoActivities = activities.map((a) => ({
-    id: a._id,
-    title: a.activityName,
-    type: a.activityType,
-    status: a.status,
-    bannerImage: a.heroImage,
-    location: a.location,
-    startDateTime: `${a.startDate}T10:00:00`,
-    ambassadorName:
-      Array.isArray(a.ambassadorId) && a.ambassadorId.length > 0
-        ? typeof a.ambassadorId[0] === "string"
-          ? a.ambassadorId[0]
-          : ((a.ambassadorId[0] as any).name ?? "Ambassador")
-        : "Ambassador",
-    time: "10:00 AM",
-    duration: a.duration,
-    language: a.language,
-    about: a.about,
-    gallery: a.gallery,
-    ambassador: a.ambassadorId,
-    FAQ: a.FAQ,
-    seatCount: a.seatCount,
-    pendingSeats: a.pendingSeats,
-    isFeatured: a.isFeatured,
-    tags: a.tags,
-  }));
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      const params = Object.fromEntries([...searchParams.entries()]);
+      if (params.type) {
+        const matched = types.find(
+          (t) => t.toLowerCase() === params.type?.toLowerCase()
+        );
+        if (matched) setActiveType(matched);
+      }
+      if (params.q) setSearchText(params.q);
+      isFirstLoad.current = false;
+    }
+  }, []);
 
-  // const filteredResults = demoActivities.filter((event) => {
-  //   const matchesType = activeType === "All" || event.type === activeType;
+  useEffect(() => {
+    if (isFirstLoad.current) return;
+    const params: Record<string, string> = {};
+    if (searchText.length >= 3) params.q = searchText;
+    if (activeType !== "All") params.type = activeType.toLowerCase();
+    navigate(`?${new URLSearchParams(params).toString()}`, { replace: true });
+  }, [searchText, activeType]);
 
-  //   return (
-  //     matchesType &&
-  //     (!activeFilters.type || event.type === activeFilters.type) &&
-  //     (!activeFilters.organizer ||
-  //       event.ambassadorName === activeFilters.organizer) &&
-  //     (searchText.length < 3 ||
-  //       event.title.toLowerCase().includes(lowerSearch) ||
-  //       event.location.toLowerCase().includes(lowerSearch) ||
-  //       event.ambassadorName.toLowerCase().includes(lowerSearch))
-  //   );
-  // });
+  const lowerSearch = searchText.toLowerCase();
+
+  const ambassadors = Array.from(
+    new Map(
+      activities
+        .flatMap((e) =>
+          Array.isArray(e.ambassadorId)
+            ? e.ambassadorId.map((a) =>
+                typeof a === "string"
+                  ? { _id: a, fullname: a }
+                  : { _id: a._id, fullname: a.fullname }
+              )
+            : []
+        )
+        .map((a) => [a.fullname, a])
+    ).values()
+  );
+
+  const filteredResults = activities.filter((event) => {
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(event.activityType);
+
+    const matchesAmbassadors =
+      selectedConductedBy.length === 0 ||
+      (Array.isArray(event.ambassadorId) &&
+        event.ambassadorId.some((a) => {
+          const name = typeof a === "string" ? a : a.fullname;
+          return selectedConductedBy.includes(name);
+        }));
+
+    const matchesSearch =
+      searchText.length < 3 ||
+      event.activityName.toLowerCase().includes(lowerSearch) ||
+      event.location.toLowerCase().includes(lowerSearch);
+
+    return matchesSearch && matchesType && matchesAmbassadors;
+  });
+
 
   return (
     <div
       style={{
-        display: "flex",
-        // width: "965px",
         padding: "16px 16px 67px 16px",
         justifyContent: "center",
         alignItems: "center",
@@ -85,7 +110,7 @@ const GridView: React.FC = () => {
         background: "#FFF",
       }}
     >
-      <div className="w-full  ">
+      <div className="w-full">
         {/* Heading + Add New */}
         <div className="flex justify-between items-center -mt-2 mb-2">
           <h2 className="text-xl font-bold">Events</h2>
@@ -98,7 +123,7 @@ const GridView: React.FC = () => {
           </Button>
         </div>
 
-        {/* Search + Controls */}
+        {/* Search + Filters */}
         <div className="flex justify-between items-center mb-6 w-full">
           <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -111,49 +136,29 @@ const GridView: React.FC = () => {
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Filters */}
-            <div className="relative">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-[41px] px-3 gap-2"
-                onClick={() => setShowFilters((prev) => !prev)}
-              >
-                <Filter className="h-4 w-4" />
-                <span className="text-sm">Filters</span>
-              </Button>
 
-              {showFilters && (
-                <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
-                  <FilterCard
-                    data={demoActivities}
-                    sections={[
-                      {
-                        heading: "Type",
-                        key: "type",
-                        type: "button-group",
-                        options: Array.from(
-                          new Set(demoActivities.map((e) => e.type))
-                        ),
-                      },
-                      {
-                        heading: "Conducted By",
-                        key: "organizer",
-                        type: "dropdown",
-                        options: Array.from(
-                          new Set(demoActivities.map((e) => e.ambassadorName))
-                        ),
-                      },
-                    ]}
-                    onFiltered={() => {
-                      // setActiveFilters(active);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          <FiltersPopover
+            types={[
+              "Event",
+              "Workshop",
+              "Exhibition",
+              "Online Seminars",
+              "Phototours",
+              "Photowalks",
+              "Service Camps",
+              "Others",
+            ]}
+            selectedTypes={selectedTypes}
+            setSelectedTypes={setSelectedTypes}
+            selectedConductedBy={selectedConductedBy}
+            setSelectedConductedBy={setSelectedConductedBy}
+            ambassadors={ambassadors}
+            onReset={() => {
+              setSelectedTypes([]);
+              setSelectedConductedBy([]);
+            }}
+          />
+
         </div>
 
         {/* Quick type filter */}
@@ -183,8 +188,8 @@ const GridView: React.FC = () => {
           ))}
         </div>
 
-        {/* Render grid only */}
-        <ActivityGrid demoActivities={activities} />
+        {/* Grid View */}
+        <ActivityGrid demoActivities={filteredResults} />
       </div>
     </div>
   );

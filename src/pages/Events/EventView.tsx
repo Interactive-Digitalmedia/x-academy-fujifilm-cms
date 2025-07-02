@@ -1,82 +1,158 @@
-import React, { useState, useEffect } from "react";
-import { Search, Grid3X3, List, Calendar, Filter } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { Search, Grid3X3, List, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EventTable } from "@/components/events/EventTable";
 import ActivityGrid from "@/components/events/ActivityGrid";
-import { dummyEvents } from "@/assets/dummyEvents";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
-import FilterCard from "@/components/ui/filtercard";
-import { getActivities} from "@/api/activity"
+import FiltersPopover from "@/components/ui/FiltersPopover";
+import { getActivities } from "@/api/activity";
 import { Activity } from "@/types";
 
 const EventView: React.FC = () => {
-  const [activeType, setActiveType] = useState<string>("All");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFirstLoad = useRef(true);
+
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [searchText, setSearchText] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
-  // const [filteredResults, setFilteredResults] = useState(dummyEvents);
-  // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
-  //   {}
-  // );
-  const [showFilters, setShowFilters] = useState(false);
+
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
+
+  const [searchText, setSearchText] = useState("");
+  const [activeType, setActiveType] = useState<string>("All");
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [filteredResults, setFilteredResults] = useState<Activity[]>([]);
+  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+    {}
+  );
 
   const types = ["All", "Event", "Workshop", "Exhibition"];
 
-  // const parseDMY = (dmy: string): Date => {
-  //   const [day, month, year] = dmy.split("-").map(Number);
-  //   return new Date(year, month - 1, day);
-  // };
+  const ambassadors = Array.from(
+    new Map(
+      activities
+        .flatMap((e) =>
+          Array.isArray(e.ambassadorId)
+            ? e.ambassadorId.map((a) =>
+                typeof a === "string"
+                  ? { _id: a, fullname: a }
+                  : { _id: a._id, fullname: a.fullname }
+              )
+            : []
+        )
+        .map((a) => [a.fullname, a])
+    ).values()
+  );
 
-  // useEffect(() => {
-  //   const lowerSearch = searchText.toLowerCase();
+  // Get data from API on mount
+  useEffect(() => {
+    const load = async () => {
+      const response = await getActivities();
+      setActivities(response.data);
+      setFilteredResults(response.data); // default
+    };
+    load();
+  }, []);
 
-  //   const filtered = dummyEvents.filter((event) => {
-  //     const matchesType = activeType === "All" || event.type === activeType;
-  //     const from = selectedRange?.from;
-  //     const to = selectedRange?.to;
-  //     const eventDate = parseDMY(event.date);
-  //     const matchesDate =
-  //       !from || !to || (eventDate >= from && eventDate <= to);
+  // Hydrate filters from URL on first load
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      const params = Object.fromEntries([...searchParams.entries()]);
 
-  //     return (
-  //       matchesType &&
-  //       (!activeFilters.type || event.type === activeFilters.type) &&
-  //       (!activeFilters.organizer ||
-  //         event.organizer === activeFilters.organizer) &&
-  //       (searchText.length < 3 ||
-  //         event.name.toLowerCase().includes(lowerSearch) ||
-  //         event.location.toLowerCase().includes(lowerSearch) ||
-  //         event.organizer.toLowerCase().includes(lowerSearch)) &&
-  //       matchesDate
-  //     );
-  //   });
-
-  //   // setFilteredResults(filtered);
-  // }, [activeType, searchText, selectedRange, activeFilters]);
-
-
-
-    const [activities, setActivities] = useState<Activity[]>([])
-
-  
-    useEffect(() => {
-      const load = async () => {
-        const response = await getActivities()
-        setActivities(response.data)
+      if (params.type) {
+        const matched = types.find(
+          (t) => t.toLowerCase() === params.type?.toLowerCase()
+        );
+        if (matched) setActiveType(matched);
       }
-      load()
-    }, [])
-    
+
+      if (params.q) setSearchText(params.q);
+
+      isFirstLoad.current = false;
+    }
+  }, []);
+
+  // Build URL query string from current filters
+  const buildQueryParams = () => {
+    const params: Record<string, string> = {};
+    if (searchText.length >= 3) params.q = searchText;
+    if (activeType !== "All") params.type = activeType.toLowerCase();
+    return params;
+  };
+
+  // Update URL when filters change
+  useEffect(() => {
+    if (isFirstLoad.current) return;
+
+    const params = buildQueryParams();
+    const query = new URLSearchParams(params).toString();
+    navigate(`?${query}`, { replace: true });
+  }, [searchText, activeType]);
+
+  // Filter results when activities or filters change
+  useEffect(() => {
+    const lowerSearch = searchText.toLowerCase();
+
+    const filtered = activities.filter((event) => {
+      const matchesQuickType =
+        activeType === "All" ||
+        event.activityType.toLowerCase() === activeType.toLowerCase();
+
+      const matchesType =
+        selectedTypes.length === 0 ||
+        selectedTypes.includes(event.activityType);
+
+      const matchesAmbassadors =
+        selectedConductedBy.length === 0 ||
+        (Array.isArray(event.ambassadorId) &&
+          event.ambassadorId.some((a) => {
+            const name = typeof a === "string" ? a : a.fullname;
+            return selectedConductedBy.includes(name);
+          }));
+
+      const from = selectedRange?.from;
+      const to = selectedRange?.to;
+      const eventDate = new Date(event.startDate);
+      const matchesDate =
+        !from || !to || (eventDate >= from && eventDate <= to);
+
+      const matchesSearch =
+        searchText.length < 3 ||
+        event.activityName.toLowerCase().includes(lowerSearch) ||
+        event.location.toLowerCase().includes(lowerSearch);
+
+      return (
+        matchesQuickType &&
+        matchesType &&
+        matchesAmbassadors &&
+        matchesSearch &&
+        matchesDate
+      );
+    });
+
+    setFilteredResults(filtered);
+  }, [
+    activities,
+    activeType,
+    selectedTypes,
+    selectedConductedBy,
+    searchText,
+    selectedRange,
+    activeFilters,
+  ]);
+
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200"  >
+    <div className="w-full  mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
       <div className="w-full">
         {/* Search + Controls */}
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w-[680px] mr-4">
+          <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -111,13 +187,16 @@ const EventView: React.FC = () => {
             {/* Calendar */}
             <div className="relative">
               <Button
-                variant="outline"
                 size="sm"
-                className="h-[41px] px-3 gap-2"
+                className={`h-[40px] px-3 gap-2 text-sm ${
+                  showCalendar
+                    ? "bg-[#cdeafd] border border-[#1098f7] text-black hover:bg-[#cdeafd]"
+                    : "bg-white border-2 border-gray-200 text-black hover:bg-white"
+                }`}
                 onClick={() => setShowCalendar((prev) => !prev)}
               >
                 <Calendar className="h-4 w-4" />
-                <span className="text-sm">Dates</span>
+                <span>Dates</span>
               </Button>
 
               {showCalendar && (
@@ -134,55 +213,30 @@ const EventView: React.FC = () => {
               )}
             </div>
 
-            {/* Filters */}
-            <div className="relative">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-[41px] px-3 gap-2"
-                onClick={() => setShowFilters((prev) => !prev)}
-              >
-                <Filter className="h-4 w-4" />
-                <span className="text-sm">Filters</span>
-              </Button>
 
-              {showFilters && (
-                <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
-                  <FilterCard
-                    data={dummyEvents}
-                    sections={[
-                      {
-                        heading: "Type",
-                        key: "type",
-                        type: "button-group",
-                        options: [
-                          "Workshops",
-                          "Exhibitions",
-                          "Events",
-                          "Online Seminars",
-                          "Phototours",
-                          "Photowalks",
-                          "Service Camps",
-                          "Others",
-                        ],
-                      },
-                      {
-                        heading: "Conducted By",
-                        key: "organizer",
-                        type: "dropdown",
-                        options: Array.from(
-                          new Set(dummyEvents.map((e) => e.organizer))
-                        ),
-                      },
-                    ]}
-                    onFiltered={() => {
-                      // setActiveFilters(active);
-                      // setFilteredResults(filtered);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            {/* FiltersPopover (replaces old Filter button + FilterCard) */}
+            <FiltersPopover
+              types={[
+                "Event",
+                "Workshop",
+                "Exhibition",
+                "Online Seminars",
+                "Phototours",
+                "Photowalks",
+                "Service Camps",
+                "Others",
+              ]}
+              selectedTypes={selectedTypes}
+              setSelectedTypes={setSelectedTypes}
+              selectedConductedBy={selectedConductedBy}
+              setSelectedConductedBy={setSelectedConductedBy}
+              ambassadors={ambassadors}
+              onReset={() => {
+                setSelectedTypes([]);
+                setSelectedConductedBy([]);
+              }}
+            />
+
           </div>
         </div>
 
@@ -215,9 +269,9 @@ const EventView: React.FC = () => {
 
         {/* Grid or Table */}
         {viewMode === "grid" ? (
-          <ActivityGrid demoActivities={activities} />
+          <ActivityGrid demoActivities={filteredResults} />
         ) : (
-          <EventTable demoActivities={activities} />
+          <EventTable demoActivities={filteredResults} />
         )}
       </div>
     </div>

@@ -9,9 +9,9 @@ import {
 
 export default function AnalyticsCards() {
   return (
-    <div className="flex flex-wrap gap-[13px]">
+    <div className="flex gap-[13px]">
       {/* Card 1 */}
-      <div className="bg-white rounded-xl shadow w-[300px] h-[100px] flex items-center justify-between px-4 py-3">
+      <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
         <div>
           <h2 className="text-sm font-medium text-gray-600 mb-1">
             Total Events Hosted
@@ -28,7 +28,7 @@ export default function AnalyticsCards() {
       </div>
 
       {/* Card 2 */}
-      <div className="bg-white rounded-xl shadow w-[300px] h-[100px] flex items-center justify-between px-4 py-3">
+      <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
         <div>
           <h2 className="text-sm font-medium text-gray-600 mb-1">
             Total Users Registered
@@ -45,7 +45,7 @@ export default function AnalyticsCards() {
       </div>
 
       {/* Card 3 */}
-      <div className="bg-white rounded-xl shadow w-[300px] h-[100px] flex items-center justify-between px-4 py-3">
+      <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
         <div>
           <h2 className="text-sm font-medium text-gray-600 mb-1">
             Total Revenue Generated

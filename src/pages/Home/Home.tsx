@@ -19,9 +19,9 @@ const Home = () => {
 
       <div className="-mt-4 bg-gray-100 min-h-screen">
         {/* Dashboard Cards */}
-        <div className="flex flex-wrap gap-[16px] mb-8">
+        <div className="flex  gap-[16px] mb-8">
           {/* Card 1 */}
-          <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+          <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
             <div>
               <h2 className="text-sm font-medium text-gray-600 mb-1">
                 Total Events Hosted
@@ -38,7 +38,7 @@ const Home = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+          <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
             <div>
               <h2 className="text-sm font-medium text-gray-600 mb-1">
                 Total Users Registered
@@ -55,7 +55,7 @@ const Home = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white rounded-xl shadow w-[310px] h-[100px] flex items-center justify-between px-4 py-3">
+          <div className="bg-white rounded-xl shadow w-full h-[100px] flex items-center justify-between px-4 py-3">
             <div>
               <h2 className="text-sm font-medium text-gray-600 mb-1">
                 Total Revenue Generated
