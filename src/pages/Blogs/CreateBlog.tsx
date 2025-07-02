@@ -1,188 +1,164 @@
-import * as React from "react";
-
-import StepIndicator from "@/components/blogs/StepIndicator";
 import PublishingDetails from "@/components/blogs/PublishingDetails";
 import BlogImage from "@/components/blogs/BlogImage";
 import BlogContent from "@/components/blogs/BlogContent";
 import CTAButton from "@/components/blogs/CTAButton";
 import MetaDescription from "@/components/blogs/MetaDesctiption";
-import { updateBlog, uploadBlog } from "@/api/blogApi";
-interface Tag {
-  name: string;
-  color: string;
+import { uploadBlog, updateBlog, getBlogById } from "@/api/blogApi";
+import { Blog } from "@/types";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import BlogEditMainCard from "@/components/blogs/BlogEditMainCard";
+import { useEffect, useState } from "react";
+
+const steps = [
+  "Publishing Details",
+  "Blog Image",
+  "Blog Content",
+  "CTA Button",
+  "Meta Description",
+];
+
+interface CreateBlogLayoutProps {
+  data?: Partial<Blog>;
+  mode?: "create" | "update";
+  onSuccess?: () => void;
 }
 
-interface BlogData {
-  title: string;
-  author: string;
-  status: "draft" | "publish";
-  publishingDate: any;
-  tags: Tag[];
-  heroImage: {
-    file: any;
-    url: string;
-    description: string;
+export default function CreateBlogLayout({
+  data,
+  mode = "create",
+  onSuccess,
+}: CreateBlogLayoutProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
+  const [blogData, setBlogData] = useState<Partial<Blog>>(data || {});
+  const [initialData] = useState<Partial<Blog>>(data || {});
+  const isDataChanged =
+    JSON.stringify(blogData) !== JSON.stringify(initialData);
+  const { id } = useParams<{ id?: string }>();
+  const updateBlogData = (field: keyof Blog, value: any) => {
+    setBlogData((prev) => ({ ...prev, [field]: value }));
   };
-  content: string;
-  cta: {
-    text: string;
-    link: string;
-    isEnabled: boolean;
-    style: {
-      color: string;
-      size: string;
-      variant: string;
-    };
+
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      try {
+        const res = await getBlogById(id);
+        if (res) {
+          setBlogData(res.data);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch activity");
+        console.error("Fetch error:", error);
+      }
+    })();
+  }, [id]);
+
+  const validateStep = (step: number, data: Partial<Blog>) => {
+    switch (step) {
+      case 0:
+        if (!data.title?.trim()) return "Title is required";
+        if (!data.author?.trim()) return "Author is required";
+        if (!data.publishedDate?.trim()) return "Publishing date is required";
+        return null;
+      case 1:
+        if (!data.blogImage) return "Blog hero image required";
+        return null;
+      case 2:
+        if (!data.content?.trim()) return "Blog content is required";
+        return null;
+      case 3:
+        if (!data.cta || !data.cta[0]?.text || !data.cta[0]?.link)
+          return "CTA text and link are required";
+        return null;
+      case 4:
+        if (!data.metaData?.metaTitle?.trim()) return "Meta title is required";
+        if (!data.metaData?.metaDescription?.trim())
+          return "Meta description is required";
+        return null;
+      default:
+        return null;
+    }
   };
-  slug: string;
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-}
 
-interface BlogsProps {}
-
-const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
-  const [currentStep, setCurrentStep] = React.useState(0);
-
-  // Main blog data state
-  const [blogData, setBlogData] = React.useState<BlogData>({
-    title: "",
-    author: "",
-    publishingDate: "",
-    tags: [],
-    heroImage: { file: null, url: "", description: "" },
-    content: "",
-    cta: {
-      text: "",
-      link: "",
-      isEnabled: true,
-      style: {
-        color: "blue",
-        size: "md",
-        variant: "solid",
-      },
-    },
-    slug: "",
-    metaTitle: "",
-    metaDescription: "",
-    keywords: [],
-    status: "draft", // ← add this line
+  const transformToPayload = (data: Partial<Blog>) => ({
+    title: data.title,
+    author: data.author,
+    publishedDate: data.publishedDate,
+    tags: data.tags || [],
+    blogImages: data.blogImage,
+    content: data.content,
+    cta: data.cta || [],
+    metaData: data.metaData || {},
+    status: data.status || "draft",
   });
-  
 
-  // Helper function to update blog data
-  const updateBlogData = (field: keyof BlogData, value: any) => {
-    setBlogData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // TODO: Add state for other steps when needed
-  // const [selectedImage, setSelectedImage] = React.useState(null);
-  // const [blogContent, setBlogContent] = React.useState("");
-  // const [ctaButtonText, setCtaButtonText] = React.useState("");
-  // const [ctaButtonLink, setCtaButtonLink] = React.useState("");
-  // const [metaTitle, setMetaTitle] = React.useState("");
-  // const [metaDescription, setMetaDescription] = React.useState("");
-
-  const [blogId, setBlogId] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const savedStep = localStorage.getItem("createBlogCurrentStep");
-    if (savedStep) {
-      setCurrentStep(Number(savedStep));
+  const handleNextOrSubmit = async () => {
+    const error = validateStep(currentStep, blogData);
+    if (error) {
+      toast.error(error);
+      return;
     }
-  }, []);
-  
-  React.useEffect(() => {
-    localStorage.setItem("createBlogCurrentStep", String(currentStep));
-  }, [currentStep]);
 
-  const steps = [
-    { number: 1, title: "Publishing Details" },
-    { number: 2, title: "Blog Image" },
-    { number: 3, title: "Blog Content" },
-    { number: 4, title: "CTA Button" },
-    { number: 5, title: "Meta Description" },
-  ];
-
-
-
-  const handlePreviousStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-
-  const transformToPayload = (blogData: BlogData) => {
-    return {
-      title: blogData.title,
-      author: blogData.author,
-      publishedDate: blogData.publishingDate,
-      tags: blogData.tags.map(tag => tag.name),
-      blogImages: [
-        {
-          url: blogData.heroImage.url,
-          description: blogData.heroImage.description,
-        },
-      ],
-      content: blogData.content,
-      cta: [
-        {
-          text: blogData.cta.text,
-          link: blogData.cta.link,
-        },
-      ],
-      metaData: {
-        slug: blogData.slug,
-        metaTitle: blogData.metaTitle,
-        metaDescription: blogData.metaDescription,
-        keywords: blogData.keywords ,
-      },
-      status: blogData.status || "draft", // ← fallback default
-    };
-  };
-  
-  
-
-  const handleNextStep = async () => {
     const payload = transformToPayload(blogData);
-    try {
-      if (!blogId) {
-        const res = await uploadBlog(payload);
-        setBlogId(res.data._id);
-      } else {
-        await updateBlog(blogId, payload);
-      }
-      setCurrentStep((prev) => prev + 1);
-    } catch (error) {
-      console.error("Failed to save blog step:", error);
-    }
-  };
-  
-  const handlePublishBlog = async () => {
-    const payload = transformToPayload({
-      ...blogData,
-      status: "publish", // not "published"
-    });
 
     try {
-      if (blogId) {
-        await updateBlog(blogId, payload);
-      } else {
+      if (currentStep === 0 && !blogData._id) {
         const res = await uploadBlog(payload);
-        setBlogId(res.data._id);
+        if (res.status === 201) {
+          toast.success("Blog created!");
+          setBlogData((prev) => ({
+            ...prev,
+            _id: res.data._id,
+          }));
+          setCurrentStep((prev) => prev + 1);
+        } else {
+          toast.error(res.message);
+        }
+      } else if (blogData._id) {
+        const res = await updateBlog(blogData._id, payload);
+        if (res.status === 200) {
+          toast.success("Changes saved!");
+          if (currentStep === steps.length - 1) {
+            setTimeout(() => navigate("/blogs"), 1500);
+          } else {
+            setCurrentStep((prev) => prev + 1);
+          }
+        } else {
+          toast.error(res.message);
+        }
       }
-      console.log("✅ Blog published");
     } catch (error) {
-      console.error("❌ Failed to publish blog:", error);
+      console.error("❌ Blog save error:", error);
+      toast.error("Something went wrong!");
     }
   };
 
-  const renderStepContent = () => {
+  const handleUpdateSubmit = async () => {
+    const error = validateStep(currentStep, blogData);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
+    if (!blogData._id) return;
+
+    try {
+      const res = await updateBlog(blogData._id, transformToPayload(blogData));
+      if (res.status === 200) {
+        toast.success("Blog updated!");
+        onSuccess?.();
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error("Update failed", error);
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
         return (
@@ -211,55 +187,87 @@ const CreateBlog: React.FunctionComponent<BlogsProps> = () => {
           />
         );
       default:
-        return (
-          <PublishingDetails
-            blogData={blogData}
-            updateBlogData={updateBlogData}
-          />
-        );
+        return null;
     }
   };
 
   return (
-    <div className="bg-white h-max rounded-xl p-4">
-      {/* Step Indicator */}
-      <StepIndicator
-        steps={steps}
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
-      />
+    <div className="flex flex-col">
+      {id && <BlogEditMainCard data={blogData} />}
+      <div className="bgCard h-[89vh] flex flex-col">
+        {/* Step Indicator */}
+        <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
+          {steps.map((step, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentStep(index)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition 
+                  ${
+                    currentStep === index
+                      ? "text-black font-semibold"
+                      : "text-gray-400 hover:bg-gray-100"
+                  }`}
+              >
+                <span
+                  className={`flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full border ${
+                    currentStep === index
+                      ? " text-white bg-[#1098F7]"
+                      : "border-gray-300 text-gray-600"
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span className="whitespace-nowrap">{step}</span>
+              </button>
+              {index < steps.length - 1 && (
+                <div className="min-w-[30px] h-px bg-gray-300"></div>
+              )}
+            </div>
+          ))}
+        </div>
 
-      {/* Step Content */}
-      <div className="mb-8">{renderStepContent()}</div>
+        {/* Step Content */}
+        <div className="flex-1 overflow-y-auto pt-2 px-6 pb-6">
+          {renderCurrentStep()}
+        </div>
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-        <button
-          onClick={handlePreviousStep}
-          disabled={currentStep === 0}
-          className={`px-6 py-2 rounded-lg font-medium ${
-            currentStep === 0
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          Previous
-        </button>
+        {/* Footer Navigation */}
+        <div className="mt-auto -mb-2 flex justify-between items-center pt-2.5 border-t border-gray-200 px-6 -py-1 bg-white">
+          <button
+            onClick={() => setCurrentStep((prev) => prev - 1)}
+            disabled={currentStep === 0}
+            className={`px-6 py-2 rounded-lg font-medium ${
+              currentStep === 0
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Previous
+          </button>
 
-        <button
-          onClick={
-            currentStep === steps.length - 1
-              ? handlePublishBlog
-              : handleNextStep
-          }
-          disabled={currentStep === steps.length - 1 ? false : false}
-          className="bg-[#1098F7] text-white hover:bg-[#1098F7] px-6 py-2 rounded-lg font-medium"
-        >
-          {currentStep === steps.length - 1 ? "Publish Blog" : "Next Step"}
-        </button>
+          <div className="flex gap-4">
+            {mode === "update" && (
+              <button
+                onClick={handleUpdateSubmit}
+                disabled={!isDataChanged}
+                className={`px-6 py-2 rounded-lg font-medium ${
+                  isDataChanged
+                    ? "bg-[#1098F7] text-white"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                Save
+              </button>
+            )}
+            <button
+              onClick={handleNextOrSubmit}
+              className="bg-[#1098F7] text-white  px-6 py-2 rounded-lg font-medium"
+            >
+              {currentStep === steps.length - 1 ? "Publish Blog" : "Next Step"}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default CreateBlog;
+}

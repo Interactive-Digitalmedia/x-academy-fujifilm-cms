@@ -1,82 +1,41 @@
-import * as React from "react";
-
-interface Tag {
-  name: string;
-  color: string;
-}
-
-interface BlogData {
-  title: string;
-  author: string;
-  publishingDate: any;
-  tags: Tag[];
-  heroImage: {
-    file: any;
-    url: string;
-    description: string;
-  };
-  content: string;
-  cta: {
-    text: string;
-    link: string;
-  };
-  slug: string;
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-}
+import { Blog } from "@/types";
+import { useEffect, useState } from "react";
 
 interface PublishingDetailsProps {
-  blogData: BlogData;
-  updateBlogData: (field: keyof BlogData, value: any) => void;
+  blogData: Partial<Blog>;
+  updateBlogData: (field: keyof Blog, value: any) => void;
 }
 
 const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  const availableTags: Tag[] = [
-    { name: "Event", color: "purple" },
-    { name: "Fashion", color: "orange" },
-    { name: "Street", color: "blue" },
-    { name: "Wildlife", color: "green" },
-    { name: "Portrait", color: "pink" },
-    { name: "Travel", color: "indigo" },
+  
+  const tagsList = [
+    { name: "Event", color: "bg-purple-600" },
+    { name: "Fashion", color: "bg-amber-500" },
+    { name: "Street", color: "bg-blue-600" },
+    { name: "Wildlife", color: "bg-emerald-700" },
+    { name: "Portrait", color: "bg-pink-400" },
   ];
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    blogData.tags || []
+  );
 
+  useEffect(() => {
+    updateBlogData("tags", selectedTags);
+  }, [selectedTags]);
 
-  const removeTag = (index: number) => {
-    const newTags = blogData.tags.filter((_, i) => i !== index);
-    updateBlogData("tags", newTags);
+  const toggleTag = (tag: string) => {
+    const updatedTags = selectedTags.includes(tag)
+      ? selectedTags.filter((t) => t !== tag)
+      : [...selectedTags, tag];
+    setSelectedTags(updatedTags);
   };
 
-  const addTag = (tag: Tag) => {
-    if (!blogData.tags.find((t) => t.name === tag.name)) {
-      updateBlogData("tags", [...blogData.tags, tag]);
-    }
-  };
-
-  //   const handleSaveAndPreview = () => {
-  //     console.log("Publishing Details Data:", {
-  //       title: blogData.title,
-  //       author: blogData.author,
-  //       publishingDate: blogData.publishingDate,
-  //       tags: blogData.tags,
-  //     });
-  //   };
-
-  const getTagColorClasses = (color: string) => {
-    const colorMap: { [key: string]: string } = {
-      purple: "bg-purple-500 text-white",
-      orange: "bg-orange-500 text-white",
-      blue: "bg-blue-500 text-white",
-      green: "bg-green-600 text-white",
-      pink: "bg-pink-500 text-white",
-      indigo: "bg-indigo-500 text-white",
-      yellow: "bg-yellow-500 text-black",
-      gray: "bg-gray-500 text-white",
-    };
-    return colorMap[color] || "bg-gray-500 text-white";
+  const removeTag = (tag: string) => {
+    const updatedTags = selectedTags.filter((t) => t !== tag);
+    setSelectedTags(updatedTags);
   };
 
   return (
@@ -126,8 +85,8 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
           <input
             type="date"
             className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={blogData.publishingDate}
-            onChange={(e) => updateBlogData("publishingDate", e.target.value)}
+            value={blogData.publishedDate}
+            onChange={(e) => updateBlogData("publishedDate", e.target.value)}
           />
         </div>
       </div>
@@ -137,30 +96,19 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
         <label className="block text-sm font-medium text-[#818181] mb-2">
           Blog Tags
         </label>
-
-        {/* Selected Tags Box */}
-        <div className="flex gap-2 flex-wrap px-2 py-1 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
-          {blogData.tags.map((tag, index) => {
-            const tagColorMap: Record<string, string> = {
-              purple: "bg-purple-600",
-              orange: "bg-amber-500",
-              blue: "bg-blue-600",
-              green: "bg-emerald-700",
-              pink: "bg-pink-400",
-              indigo: "bg-indigo-500",
-              gray: "bg-gray-400",
-            };
-            const tagColor = tagColorMap[tag.color] || "bg-gray-400";
-
+        <div className="flex gap-2 flex-wrap px-2 py-1 h-10 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
+          {selectedTags.map((tag) => {
+            const tagColor =
+              tagsList.find((t) => t.name === tag)?.color || "bg-gray-400";
             return (
               <span
-                key={index}
+                key={tag}
                 className={`flex items-center gap-1 text-white text-sm px-3 py-1 rounded-md ${tagColor}`}
               >
-                {tag.name}
+                {tag}
                 <button
                   type="button"
-                  onClick={() => removeTag(index)}
+                  onClick={() => removeTag(tag)}
                   className="ml-1 text-white hover:text-red-200"
                 >
                   ×
@@ -170,22 +118,16 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
           })}
         </div>
 
-        {/* Available Tags */}
-        <div className="flex flex-wrap gap-2">
-          {availableTags.map((tag, index) => (
+        <div className="flex gap-2 flex-wrap">
+          {tagsList?.map((tag) => (
             <button
-              key={index}
-              onClick={() => addTag(tag)}
-              disabled={
-                blogData.tags.find((t) => t.name === tag.name) !== undefined
-              }
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-opacity ${getTagColorClasses(tag.color)} ${
-                blogData.tags.find((t) => t.name === tag.name)
-                  ? "opacity-40 cursor-not-allowed"
-                  : "hover:opacity-80 cursor-pointer"
-              }`}
+              key={tag?.name}
+              type="button"
+              onClick={() => toggleTag(tag?.name)}
+              disabled={selectedTags.includes(tag?.name)}
+              className={`px-3 py-1 rounded-md text-white text-sm font-medium ${tag?.color} disabled:opacity-40`}
             >
-              {tag.name}
+              {tag?.name}
             </button>
           ))}
         </div>
