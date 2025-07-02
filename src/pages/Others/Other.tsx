@@ -1,7 +1,5 @@
 import * as React from "react";
 import {
-  Tabs,
-  Tab,
   Input,
   Button,
   Accordion,
@@ -53,15 +51,15 @@ const Others: React.FunctionComponent<OthersProps> = () => {
   const [defaultWebsiteFAQ, setDefaultWebsiteFAQ] = React.useState(false);
   const [defaultEventFAQ, setDefaultEventFAQ] = React.useState(false);
 
-  const addNewTemplate = () => {
-    const newTemplate: Template = {
-      id: Date.now().toString(),
-      name: `Template ${templates.length + 1}`,
-      questions: [],
-      isExpanded: true,
-    };
-    setTemplates([...templates, newTemplate]);
-  };
+  // const addNewTemplate = () => {
+  //   const newTemplate: Template = {
+  //     id: Date.now().toString(),
+  //     name: `Template ${templates.length + 1}`,
+  //     questions: [],
+  //     isExpanded: true,
+  //   };
+  //   setTemplates([...templates, newTemplate]);
+  // };
 
   const deleteTemplate = (templateId: string) => {
     setTemplates(templates.filter((t) => t.id !== templateId));

@@ -19,6 +19,7 @@ const EventView: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
 
@@ -145,6 +146,7 @@ const EventView: React.FC = () => {
     activeFilters,
   ]);
 
+
   return (
     <div className="w-full  mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
       <div className="w-full">
@@ -211,6 +213,7 @@ const EventView: React.FC = () => {
               )}
             </div>
 
+
             {/* FiltersPopover (replaces old Filter button + FilterCard) */}
             <FiltersPopover
               types={[
@@ -233,6 +236,7 @@ const EventView: React.FC = () => {
                 setSelectedConductedBy([]);
               }}
             />
+
           </div>
         </div>
 
