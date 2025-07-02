@@ -27,9 +27,9 @@ const EventView: React.FC = () => {
   const [activeType, setActiveType] = useState<string>("All");
   const [activities, setActivities] = useState<Activity[]>([]);
   const [filteredResults, setFilteredResults] = useState<Activity[]>([]);
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
-    {}
-  );
+  // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
+  //   {}
+  // );
 
   const types = ["All", "Event", "Workshop", "Exhibition"];
 
@@ -143,7 +143,7 @@ const EventView: React.FC = () => {
     selectedConductedBy,
     searchText,
     selectedRange,
-    activeFilters,
+    // activeFilters,
   ]);
 
 

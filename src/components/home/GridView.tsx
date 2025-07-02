@@ -20,9 +20,6 @@ const GridView: React.FC = () => {
   // const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
   //   {}
   // );
-  const [showFilters, setShowFilters] = useState(false);
-  const navigate = useNavigate();
-
 
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedConductedBy, setSelectedConductedBy] = useState<string[]>([]);
@@ -36,7 +33,6 @@ const GridView: React.FC = () => {
     };
     fetchActivities();
   }, []);
-
 
   useEffect(() => {
     if (isFirstLoad.current) {
@@ -98,7 +94,6 @@ const GridView: React.FC = () => {
     return matchesSearch && matchesType && matchesAmbassadors;
   });
 
-
   return (
     <div
       style={{
@@ -136,7 +131,6 @@ const GridView: React.FC = () => {
             />
           </div>
 
-
           <FiltersPopover
             types={[
               "Event",
@@ -158,7 +152,6 @@ const GridView: React.FC = () => {
               setSelectedConductedBy([]);
             }}
           />
-
         </div>
 
         {/* Quick type filter */}
