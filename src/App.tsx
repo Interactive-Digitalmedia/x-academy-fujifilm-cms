@@ -18,6 +18,7 @@ import CreateEvent from "./pages/Activity/CreateEvent";
 import CommunityDetails from "./pages/Community/CommunityDetails";
 import Analytics from "./pages/Analytics/Analytics";
 import EventAnalytics from "./pages/Analytics/EventAnalytics";
+import NewTemplate from "./components/community/NewTemplate";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
 import Events from "./pages/Activity/Events";
@@ -94,6 +95,7 @@ function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
             <Route path="/community/create-xstory" element={<CreateXStory />} />
+            <Route path="/community/new-template" element={<NewTemplate />} />
 
             <Route path="/others" element={<Others />} />
             <Route path="/profile" element={<Profile />} />

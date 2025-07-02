@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Search, Calendar, Filter } from "lucide-react";
+import { Search, Calendar, Filter, CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
@@ -12,6 +12,9 @@ import { XStoriesTable } from "./XStoriesTable";
 
 import XStoryDialog from "./XStoryDialog";
 import { getAllXStories } from "@/api/XStory";
+import TipsAndTricks from "./TipsAndTricks";
+
+import { useNavigate } from "react-router-dom";
 
 export interface XStory {
   _id: string;
@@ -36,7 +39,7 @@ const CommunityOptions: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Ask the Expert");
   const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
   const [xStories, setXStories] = useState<XStory[]>([]);
-
+  const navigate = useNavigate();
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
     return new Date(year, month - 1, day);
@@ -95,9 +98,12 @@ const CommunityOptions: React.FC = () => {
     setDialogOpen(true);
   };
 
-  const handleAddClick = () => {
+  const handleAddXStoryClick = () => {
     setSelectedStory(null);
     setDialogOpen(true);
+  };
+  const handleNewTemplateClick = () => {
+    navigate("/community/new-template");
   };
 
   const handleCloseDialog = () => {
@@ -126,15 +132,25 @@ const CommunityOptions: React.FC = () => {
             <Button
               size="sm"
               className="h-[32px] px-4 text-sm bg-[#2196F3] text-white hover:bg-[#1976D2]"
-              onClick={handleAddClick}
+              onClick={handleAddXStoryClick}
             >
               Add X-Story
+            </Button>
+          )}
+          {activeTab === "Tips & Tricks" && (
+            <Button
+              size="sm"
+              className="h-[32px] px-2 gap-1 text-sm bg-[#2196F3] text-white hover:bg-[#1976D2]"
+              onClick={handleNewTemplateClick}
+            >
+              <CirclePlus className="h-4 w-4" />
+              New Template
             </Button>
           )}
         </div>
 
         <div className="flex justify-between items-center mb-6 w-full">
-          <div className="relative w-[738px] mr-4">
+          <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -230,11 +246,7 @@ const CommunityOptions: React.FC = () => {
           <CommunityTable data={filteredCommunity} />
         )}
 
-        {activeTab === "Tips & Tricks" && (
-          <div className="text-center text-gray-600 py-8 text-lg font-medium">
-            Tips & Tricks coming soon...
-          </div>
-        )}
+        {activeTab === "Tips & Tricks" && <TipsAndTricks />}
 
         {activeTab === "X-Stories" && (
           <XStoriesTable stories={xStories} onRowClick={handleRowClick} />
