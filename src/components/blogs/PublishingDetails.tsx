@@ -1,5 +1,4 @@
 import { Blog } from "@/types";
-import { useEffect, useState } from "react";
 
 interface PublishingDetailsProps {
   blogData: Partial<Blog>;
@@ -17,28 +16,28 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Wildlife", color: "bg-emerald-700" },
     { name: "Portrait", color: "bg-pink-400" },
   ];
-  console.log(blogData.tags);
 
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    blogData.tags || []
-  );
-  console.log(selectedTags);
-  useEffect(() => {
-    if (blogData.tags && blogData.tags.length > 0) {
-      setSelectedTags(blogData.tags);
-    }
-  }, [blogData.tags]);
-
+  // const [selectedTags, setSelectedTags] = useState<string[]>(
+  //   blogData.tags || []
+  // );
+  // useEffect(() => {
+  //   if (blogData.tags && blogData.tags.length > 0) {
+  //     setSelectedTags(blogData.tags);
+  //   }
+  // }, [blogData.tags]);
+  const selectedTags = blogData.tags || [];
   const toggleTag = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
       : [...selectedTags, tag];
-    setSelectedTags(updatedTags);
+
+    updateBlogData("tags", updatedTags);
   };
 
   const removeTag = (tag: string) => {
     const updatedTags = selectedTags.filter((t) => t !== tag);
-    setSelectedTags(updatedTags);
+
+    updateBlogData("tags", updatedTags);
   };
 
   return (
