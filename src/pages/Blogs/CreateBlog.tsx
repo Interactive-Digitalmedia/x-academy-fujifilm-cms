@@ -87,7 +87,7 @@ export default function CreateBlogLayout({
     author: data.author,
     publishedDate: data.publishedDate,
     tags: data.tags || [],
-    blogImages: data.blogImage,
+    blogImage: data.blogImage,
     content: data.content,
     cta: data.cta || [],
     metaData: data.metaData || {},
