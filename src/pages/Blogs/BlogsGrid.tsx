@@ -21,11 +21,11 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
         >
           {/* Blog Image */}
           <div className="relative overflow-hidden">
-            <div className="rounded-lg p-2">
+            <div className="rounded-lg relative aspect-[16/10] p-2">
               <img
                 src={blog?.blogImage?.heroImage}
                 alt={blog?.blogImage?.description || "Blog image"}
-                className="h-48 w-full rounded-lg object-cover"
+                className="h-full w-full  rounded-lg object-cover"
               />
             </div>
 
