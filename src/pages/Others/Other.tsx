@@ -9,8 +9,9 @@ import {
 } from "@nextui-org/react";
 import { Search, Calendar, Filter, Plus, Trash2 } from "lucide-react";
 import Newsletter from "@/components/others/Newsletter";
-// import AboutUs from "@/components/others/Aboutus";
 import AboutUs from "@/components/others/AboutUs";
+import HelpandSupport from "@/components/others/HelpandSupport";
+import { useNavigate } from "react-router-dom";
 
 interface Question {
   id: string;
@@ -50,16 +51,7 @@ const Others: React.FunctionComponent<OthersProps> = () => {
 
   const [defaultWebsiteFAQ, setDefaultWebsiteFAQ] = React.useState(false);
   const [defaultEventFAQ, setDefaultEventFAQ] = React.useState(false);
-
-  // const addNewTemplate = () => {
-  //   const newTemplate: Template = {
-  //     id: Date.now().toString(),
-  //     name: `Template ${templates.length + 1}`,
-  //     questions: [],
-  //     isExpanded: true,
-  //   };
-  //   setTemplates([...templates, newTemplate]);
-  // };
+  const navigate = useNavigate();
 
   const deleteTemplate = (templateId: string) => {
     setTemplates(templates.filter((t) => t.id !== templateId));
@@ -94,6 +86,10 @@ const Others: React.FunctionComponent<OthersProps> = () => {
     );
   };
 
+  const handleNewTemplateClick = () => {
+    navigate("/others/new-template");
+  };
+
   const updateQuestion = (
     templateId: string,
     questionId: string,
@@ -118,21 +114,6 @@ const Others: React.FunctionComponent<OthersProps> = () => {
 
   const renderFAQContent = () => (
     <div className="space-y-4">
-      {/* Header with New Template Button */}
-      {/* <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Frequently Asked Questions
-        </h1>
-        <Button
-          color="primary"
-          startContent={<Plus className="w-4 h-4" />}
-          onPress={addNewTemplate}
-        >
-          New Template
-        </Button>
-      </div> */}
-
-      {/* Templates Accordion */}
       <div className="">
         {templates.map((template) => (
           <Accordion
@@ -168,9 +149,8 @@ const Others: React.FunctionComponent<OthersProps> = () => {
               }
             >
               <div className="-space-y-4 -mt-12 p-4">
-                {/* Questions */}
                 {template.questions.map((question, index) => (
-                  <div key={question.id} className="space-y-3 p-4  rounded-lg">
+                  <div key={question.id} className="space-y-3 p-4 rounded-lg">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-700">
                         {index + 1}. Question
@@ -233,7 +213,6 @@ const Others: React.FunctionComponent<OthersProps> = () => {
                   </div>
                 ))}
 
-                {/* Add Item Button */}
                 <Button
                   color="primary"
                   variant="bordered"
@@ -249,7 +228,6 @@ const Others: React.FunctionComponent<OthersProps> = () => {
         ))}
       </div>
 
-      {/* Additional Controls */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg font-medium text-gray-800 mb-4">
           Additional Controls
@@ -278,11 +256,23 @@ const Others: React.FunctionComponent<OthersProps> = () => {
 
   return (
     <div className="bg-white h-max rounded-xl p-4">
-      <div className="text-l font-bold text-gray-800 mb-4">
-        {" "}
-        {activeTab === "FAQ" ? "Frequently Asked Questions" : activeTab}
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-lg font-bold text-gray-800">
+          {activeTab === "FAQ" ? "Frequently Asked Questions" : activeTab}
+        </div>
+
+        {activeTab === "Help & Support" && (
+          <Button
+            size="sm"
+            className="h-[32px] px-2 gap-1 text-sm bg-[#2196F3] text-white hover:bg-[#1976D2]"
+            onClick={handleNewTemplateClick}
+          >
+            <Plus className="h-4 w-4" />
+            New Template
+          </Button>
+        )}
       </div>
-      {/* Search and Filter Header */}
+
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1 ">
           <Input
@@ -312,43 +302,42 @@ const Others: React.FunctionComponent<OthersProps> = () => {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-
-      {/* Custom Tab Buttons */}
       <div className="mb-6 flex flex-wrap gap-3">
-        {["FAQ", "Newsletter Subscriptions", "About Us"].map((tab) => (
-          <button
-            key={tab}
-            className={`btn-toggle ${
-              activeTab === tab ? "btn-toggle-active" : "btn-toggle-inactive"
-            }`}
-            style={{
-              display: "flex",
-              width: "auto",
-              padding: "6px 12px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
-              borderRadius: "8px",
-              border: "1.5px solid",
-              borderColor: activeTab === tab ? "#0070f3" : "#d1d5db",
-              backgroundColor: activeTab === tab ? "#0070f3" : "#ffffff",
-              color: activeTab === tab ? "#000000" : "#000000",
-              fontWeight: 500,
-            }}
-            onClick={() => setActiveTab(tab)}
-            type="button"
-          >
-            {tab}
-          </button>
-        ))}
+        {["FAQ", "Newsletter Subscriptions", "About Us", "Help & Support"].map(
+          (tab) => (
+            <button
+              key={tab}
+              className={`btn-toggle ${
+                activeTab === tab ? "btn-toggle-active" : "btn-toggle-inactive"
+              }`}
+              style={{
+                display: "flex",
+                width: "auto",
+                padding: "6px 12px",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+                borderRadius: "8px",
+                border: "1.5px solid",
+                borderColor: activeTab === tab ? "#0070f3" : "#d1d5db",
+                backgroundColor: activeTab === tab ? "#0070f3" : "#ffffff",
+                color: activeTab === tab ? "#000000" : "#000000",
+                fontWeight: 500,
+              }}
+              onClick={() => setActiveTab(tab)}
+              type="button"
+            >
+              {tab}
+            </button>
+          )
+        )}
       </div>
 
-      {/* Tab Content */}
       <div>
         {activeTab === "FAQ" && renderFAQContent()}
         {activeTab === "Newsletter Subscriptions" && <Newsletter />}
         {activeTab === "About Us" && <AboutUs />}
+        {activeTab === "Help & Support" && <HelpandSupport />}
       </div>
     </div>
   );
