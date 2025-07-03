@@ -6,6 +6,7 @@ import ChangeStatusPopover from "../Activity/ChangeStatusPopover";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../ConfirmationModal";
+import { deletelog } from "@/api/blogApi";
 
 type BlogEditMainCardProps = {
   data: Partial<Blog>;
@@ -27,9 +28,7 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
   };
   const handleToggleStatus = (newStatus: "draft" | "published") => {
     try {
-      // Add your status change logic here (e.g., API call)
       toast.success(`Status changed to ${newStatus}`);
-      // Optional: refetch blog or call a prop like `onStatusChange?.(newStatus)`
     } catch (err) {
       toast.error("Failed to update status");
       console.error(err);
@@ -38,8 +37,12 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
 
   const handleDelete = async () => {
     try {
-      // Add your delete API logic here, e.g.:
-      // await deleteBlog(data._id);
+      if (!data._id) {
+        toast.error("Invalid blog ID.");
+        return;
+      }
+
+      await deletelog(data._id); // api call
       toast.success("Blog deleted");
       navigate("/blogs");
     } catch (err) {
