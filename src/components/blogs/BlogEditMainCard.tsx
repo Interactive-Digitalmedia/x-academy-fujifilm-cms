@@ -19,15 +19,14 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
     });
   };
 
-  const formattedDate = new Date(data?.publishedDate).toLocaleDateString(
-    "en-GB",
-    {
-      weekday: "long",
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }
-  );
+  const formattedDate = data.publishedDate
+    ? new Date(data.publishedDate).toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "Date not set";
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md p-4 mb-6">
@@ -91,12 +90,22 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
           <CalendarDays className="w-4 h-4" />
           <span>{formattedDate}</span>
         </div>
-        {/* {data?.cta?.length > 0 && (
-          <div className="flex items-center gap-1 min-w-[200px]">
-            <MapPin className="w-4 h-4" />
-            <span className="underline">{data.cta}</span>
+        {Array.isArray(data?.cta) && data.cta.length > 0 && (
+          <div className="flex flex-wrap gap-2 min-w-[200px]">
+            {data.cta.map((item, index) => (
+              <a
+                key={index}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+              >
+                <MapPin className="w-4 h-4" />
+                {item.text}
+              </a>
+            ))}
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

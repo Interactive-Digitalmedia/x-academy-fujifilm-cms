@@ -1,7 +1,8 @@
-import * as React from "react";
 // import StaticEditor from "../ui/basiceditor";
 import { Blog } from "@/types";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
+import { useEffect, useState } from "react";
+import { uploadImage } from "@/api/uploadImageApi";
 
 interface BlogContentProps {
   blogData: Partial<Blog>;
@@ -12,11 +13,11 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  const [, setWordCount] = React.useState(0);
-  const [, setCharCount] = React.useState(0);
+  const [, setWordCount] = useState(0);
+  const [, setCharCount] = useState(0);
 
   // Calculate word and character count
-  React.useEffect(() => {
+  useEffect(() => {
     const text = blogData.content || "";
     const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
     setWordCount(words);
@@ -25,6 +26,27 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
 
   const handleContentChange = (value: string) => {
     updateBlogData("content", value);
+  };
+
+  const handleFileSelectForEditor = async (file: File): Promise<string> => {
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("File size must be under 10MB.");
+    }
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/svg+xml",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error("Only .jpg, .png, .svg formats are supported.");
+    }
+
+    const res = await uploadImage(file);
+    if (!res?.publicUrl) {
+      throw new Error("Upload failed");
+    }
+    return encodeURI(res.publicUrl); // returned URL inserted into editor
   };
 
   // const estimatedReadingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words/minute
@@ -52,6 +74,10 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       <RichTextEditor
         value={blogData.content || ""}
         onChange={handleContentChange}
+        onImageUpload={async (file) => {
+          const res = await handleFileSelectForEditor(file);
+          return res;
+        }}
       />
       {/* Content Guidelines */}
 

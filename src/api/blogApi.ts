@@ -74,3 +74,24 @@ export const getBlogById = async (id: string) => {
     throw error;
   }
 };
+
+export const deletelog = async (id: string) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    console.error("Token is not available.");
+    return;
+  }
+
+  try {
+    const response = await axios.delete(`${baseUrl}blogs/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; // Should contain saved blog and _id
+  } catch (error) {
+    console.error("Error uploading blog:", error);
+    throw error;
+  }
+};

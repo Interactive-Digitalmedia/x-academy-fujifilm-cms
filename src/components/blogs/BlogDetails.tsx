@@ -75,8 +75,8 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
           {/* gallery image */}
           <div className="-mb-2 max-h-[384px] overflow-hidden rounded-lg">
             <img
-              src={currentBlog.blogImage.heroImage}
-              alt={currentBlog.blogImage.description || "Blog image"}
+              src={currentBlog?.blogImage?.heroImage}
+              alt={currentBlog?.blogImage?.description || "Blog image"}
               className="h-full w-full cursor-pointer object-cover md:h-96 lg:h-[500px]"
               // onClick={() => {
               //   // Cycle through gallery images on click
@@ -91,13 +91,13 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
             {/* Published Date */}
             <div className="mb-2 mt-4 flex items-center justify-between space-x-2">
               <div className="text-sm font-medium">
-                {currentBlog.publishedDate}
+                {currentBlog?.publishedDate}
               </div>
             </div>
 
             {/* Category Tags - Fixed to use tag objects */}
             <div className="mb-2 flex flex-wrap gap-2">
-              {currentBlog.tags?.map((tag: any, index: number) => (
+              {currentBlog?.tags?.map((tag: any, index: number) => (
                 <span
                   key={index}
                   className={`inline-block rounded-md px-3 py-1 text-xs font-medium text-white ${
@@ -112,19 +112,19 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
                             : "bg-gray-500"
                   }`}
                 >
-                  {tag.name}
+                  {tag?.name}
                 </span>
               ))}
             </div>
 
             {/* Title */}
             <h1 className="mb-2 text-3xl font-bold leading-tight">
-              {currentBlog.title}
+              {currentBlog?.title}
             </h1>
 
             {/* Author Info */}
             <div className="card mb-4 flex w-fit items-center gap-1 rounded-full p-1.5">
-              <span className="font-medium">{currentBlog.author}</span>
+              <span className="font-medium">{currentBlog?.author}</span>
             </div>
           </header>
 
@@ -134,7 +134,7 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
           </div> */}
           <div
             className=" max-w-none text-gray-800 dark:text-gray-200"
-            dangerouslySetInnerHTML={{ __html: currentBlog.content }}
+            dangerouslySetInnerHTML={{ __html: currentBlog?.content }}
           />
         </article>
       </div>

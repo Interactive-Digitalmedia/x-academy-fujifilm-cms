@@ -1,5 +1,4 @@
 import { Blog } from "@/types";
-import { useEffect, useState } from "react";
 
 interface PublishingDetailsProps {
   blogData: Partial<Blog>;
@@ -10,7 +9,6 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
   blogData,
   updateBlogData,
 }) => {
-  
   const tagsList = [
     { name: "Event", color: "bg-purple-600" },
     { name: "Fashion", color: "bg-amber-500" },
@@ -18,24 +16,28 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Wildlife", color: "bg-emerald-700" },
     { name: "Portrait", color: "bg-pink-400" },
   ];
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    blogData.tags || []
-  );
 
-  useEffect(() => {
-    updateBlogData("tags", selectedTags);
-  }, [selectedTags]);
-
+  // const [selectedTags, setSelectedTags] = useState<string[]>(
+  //   blogData.tags || []
+  // );
+  // useEffect(() => {
+  //   if (blogData.tags && blogData.tags.length > 0) {
+  //     setSelectedTags(blogData.tags);
+  //   }
+  // }, [blogData.tags]);
+  const selectedTags = blogData.tags || [];
   const toggleTag = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
       : [...selectedTags, tag];
-    setSelectedTags(updatedTags);
+
+    updateBlogData("tags", updatedTags);
   };
 
   const removeTag = (tag: string) => {
     const updatedTags = selectedTags.filter((t) => t !== tag);
-    setSelectedTags(updatedTags);
+
+    updateBlogData("tags", updatedTags);
   };
 
   return (
@@ -97,7 +99,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
           Blog Tags
         </label>
         <div className="flex gap-2 flex-wrap px-2 py-1 h-10 rounded-md border border-gray-300 bg-white shadow-sm mb-3">
-          {selectedTags.map((tag) => {
+          {selectedTags?.map((tag) => {
             const tagColor =
               tagsList.find((t) => t.name === tag)?.color || "bg-gray-400";
             return (
@@ -124,7 +126,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
               key={tag?.name}
               type="button"
               onClick={() => toggleTag(tag?.name)}
-              disabled={selectedTags.includes(tag?.name)}
+              disabled={selectedTags?.includes(tag?.name)}
               className={`px-3 py-1 rounded-md text-white text-sm font-medium ${tag?.color} disabled:opacity-40`}
             >
               {tag?.name}
