@@ -1,29 +1,11 @@
 import * as React from "react";
-import StaticEditor from "../ui/basiceditor";
-interface BlogData {
-  title: string;
-  author: string;
-  publishingDate: any;
-  tags: any[];
-  heroImage: {
-    file: any;
-    url: string;
-    description: string;
-  };
-  content: string;
-  cta: {
-    text: string;
-    link: string;
-  };
-  slug: string;
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-}
+// import StaticEditor from "../ui/basiceditor";
+import { Blog } from "@/types";
+import RichTextEditor from "../RichTextEditor/RichTextEditor";
 
 interface BlogContentProps {
-  blogData: BlogData;
-  updateBlogData: (field: keyof BlogData, value: any) => void;
+  blogData: Partial<Blog>;
+  updateBlogData: (field: keyof Blog, value: any) => void;
 }
 
 const BlogContent: React.FunctionComponent<BlogContentProps> = ({
@@ -66,13 +48,15 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
       </div> */}
 
       {/* Content Textarea */}
-      <StaticEditor  value={blogData.content}
-  onChange={handleContentChange}/>
+      {/* <StaticEditor value={blogData?.content} onChange={handleContentChange} /> */}
+      <RichTextEditor
+        value={blogData.content || ""}
+        onChange={handleContentChange}
+      />
       {/* Content Guidelines */}
-    
 
       {/* Preview Section */}
-      {blogData.content && (
+      {/* {blogData.content && (
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-600">
             Content Preview
@@ -91,7 +75,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

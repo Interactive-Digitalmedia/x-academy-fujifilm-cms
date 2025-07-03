@@ -18,7 +18,7 @@ import { TooltipComponent } from "@/components/TooltipComponent";
 import ActivityAttendeesList from "@/components/events/ActivityAttendeesList";
 
 const ActivityDetails = () => {
-  const { selectedActivity, fetchActivitiesById, fetchActivities } =
+  const { selectedActivity, fetchActivitiesById } =
     useActivityStore();
   // const pathSegments = location.pathname.split('/').filter(Boolean)
   const { activityId } = useParams<{ activityId: string }>();
@@ -42,9 +42,9 @@ const ActivityDetails = () => {
     tabs.push("Gallery");
   }
 
-  useEffect(() => {
-    fetchActivities();
-  }, []);
+  // useEffect(() => {
+  //   fetchActivities();
+  // }, []);
 
   useEffect(() => {
     if (!activityId) return;

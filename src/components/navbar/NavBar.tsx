@@ -37,6 +37,7 @@ export default function NavBar() {
 
   // Are we on an event-detail page?  /events/<24-char id>
   const isEventDetail = /^\/events\/[0-9a-fA-F]{24}$/.test(location.pathname);
+  const isBlogDetail = /^\/blogs\/[0-9a-fA-F]{24}$/.test(location.pathname);
 
   /* -------------------------------------------------- */
   /* 2. Section-specific configs                        */
@@ -95,18 +96,26 @@ export default function NavBar() {
 
     blogs: {
       title: "Blogs",
-      buttons: [
-        {
-          label: "Create New",
-          icon: CirclePlus,
-          action: () => navigate("/blogs/createblogs"),
-        },
-        {
-          label: "Drafts",
-          icon: "",
-          action: () => console.log("View drafts"),
-        },
-      ],
+      buttons: isBlogDetail
+        ? [
+            {
+              label: "Update",
+              icon: SquarePen,
+              action: () => navigate(`/blog/update-blog/${eventId}`),
+            },
+          ]
+        : [
+            {
+              label: "Create New",
+              icon: CirclePlus,
+              action: () => navigate("/blog/createblogs"),
+            }
+            // {
+            //   label: "Drafts",
+            //   icon: "",
+            //   action: () => console.log("View drafts"),
+            // },
+          ],
     },
 
     community: { title: "Community", buttons: [] },

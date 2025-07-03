@@ -178,28 +178,30 @@ export interface MetaData {
 }
 
 export interface CTA {
-  text?: string;
-  link?: string;
+  text: string;
+  link: string;
 }
 
 export interface BlogImage {
-  url?: string;
+  heroImage: string;
   description?: string;
 }
 
 export interface Blog {
   _id: string;
   title: string;
+  status: "draft" | "publish";
   author: string;
   publishedDate: string;
   tags: string[];
-  blogImages: BlogImage[];
+  blogImage: BlogImage;
   content: string;
   metaData?: MetaData;
-  cta?: CTA[];
+  cta: CTA[];
   createdAt: string;
   updatedAt: string;
 }
+
 
 export interface Booking {
   _id: string;
