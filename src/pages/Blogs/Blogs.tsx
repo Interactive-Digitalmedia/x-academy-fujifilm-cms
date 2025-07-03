@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import {
-  DateFilterPopover,
-  FiltersPopover,
-} from "@/components/blogs/BlogsFilterDate";
 import { Blog } from "@/types";
 import BlogsGrid from "./BlogsGrid";
 import { getBlogs } from "@/api/blogApi";
+import { Calendar } from "lucide-react";
+import { Calendar as CustomCalendar } from "@/components/ui/calendar";
+import FiltersPopover from "@/components/ui/FiltersPopover";
+import { DateRange } from "react-day-picker";
 
 // export const dummyBlogs: any = [
 //   {
@@ -141,8 +141,8 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
+  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -220,23 +220,6 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   //   endDate,
   // ]);
 
-  // Reset functions
-  const resetFilters = () => {
-    setSelectedTags([]);
-    setSelectedAuthors([]);
-    setSelectedStatus([]);
-  };
-
-  const resetDateFilter = () => {
-    setStartDate(null);
-    setEndDate(null);
-  };
-
-  const handleDateRangeChange = (start: string | null, end: string | null) => {
-    setStartDate(start);
-    setEndDate(end);
-  };
-
   return (
     <>
       <div className="bg-white h-max rounded-xl p-4">
@@ -246,7 +229,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
-              placeholder="Search blogs..."
+              placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-muted/50"
@@ -265,21 +248,50 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
               </Button>
             </div> */}
 
-            {/* Date Filter */}
-            <DateFilterPopover
-              onDateRangeChange={handleDateRangeChange}
-              onReset={resetDateFilter}
-            />
+            {/* Calendar Button + Popover */}
+            <div className="relative">
+              <button
+                className={`h-[40px] px-3 gap-2 text-sm font-semibold flex items-center rounded-md ${
+                  showCalendar
+                    ? "bg-[#cdeafd] border border-[#1098f7] text-black"
+                    : "bg-white border-2 border-gray-200 text-black"
+                }`}
+                onClick={() => setShowCalendar((prev) => !prev)}
+              >
+                <Calendar className="h-4 w-4" />
+                <span>Dates</span>
+              </button>
 
-            {/* Filters */}
+              {showCalendar && (
+                <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-200 shadow-lg rounded-md p-2">
+                  <CustomCalendar
+                    mode="range"
+                    selected={selectedRange}
+                    onSelect={(range) => {
+                      setSelectedRange(range);
+                      if (range?.from && range?.to) setShowCalendar(false);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* FiltersPopover like in EventView */}
             <FiltersPopover
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-              selectedAuthors={selectedAuthors}
-              setSelectedAuthors={setSelectedAuthors}
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
-              onReset={resetFilters}
+              types={["Draft", "Published"]} // or your blog statuses
+              selectedTypes={selectedStatus}
+              setSelectedTypes={setSelectedStatus}
+              selectedConductedBy={selectedAuthors}
+              setSelectedConductedBy={setSelectedAuthors}
+              ambassadors={blogs.map((b) => ({
+                fullname: b.author,
+                _id: b.author,
+              }))} // adapted for authors
+              onReset={() => {
+                setSelectedStatus([]);
+                setSelectedAuthors([]);
+                setSelectedTags([]); // optional, if you want tags too
+              }}
             />
           </div>
         </div>
