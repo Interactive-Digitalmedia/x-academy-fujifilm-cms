@@ -15,6 +15,7 @@ type FiltersPopoverProps = {
   setSelectedConductedBy: (names: string[]) => void;
   ambassadors: Ambassador[];
   onReset: () => void;
+   isBlogPage?: boolean;
 };
 
 const FiltersPopover: React.FC<FiltersPopoverProps> = ({
@@ -25,6 +26,7 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
   setSelectedConductedBy,
   ambassadors,
   onReset,
+  isBlogPage
 }) => {
   const [open, setOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -88,7 +90,10 @@ const FiltersPopover: React.FC<FiltersPopoverProps> = ({
 
           {/* Type Filters */}
           <div className="mb-4 w-full">
-            <h5 className="filter-title mb-2 items-center">Type</h5>
+            <h5 className="filter-title mb-2 items-center">
+  {isBlogPage ? "Tags" : "Type"}
+</h5>
+
             <div className="flex flex-wrap gap-2">
               {types.map((type) => {
                 const isActive = selectedTypes.includes(type);

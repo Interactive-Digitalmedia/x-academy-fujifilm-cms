@@ -68,16 +68,16 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
 
   return (
     <>
-      {/* <SearchBar /> */}
-      <div className="bg-white h-max rounded-xl p-4">
+
+      <div className="bg-white h-max rounded-xl p-4 px-0">
         {/* Main Content */}
         <article className="px-10">
           {/* gallery image */}
-          <div className="-mb-2 max-h-[384px] overflow-hidden rounded-lg">
+          <div className="-mb-2 aspect-[16/5] overflow-hidden rounded-lg">
             <img
               src={currentBlog?.blogImage?.heroImage}
               alt={currentBlog?.blogImage?.description || "Blog image"}
-              className="h-full w-full cursor-pointer object-cover md:h-96 lg:h-[500px]"
+              className="w-full h-full cursor-pointer object-cover"
               // onClick={() => {
               //   // Cycle through gallery images on click
               //   setCurrentImageIndex((prev) =>
@@ -90,40 +90,48 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
           <header className="">
             {/* Published Date */}
             <div className="mb-2 mt-4 flex items-center justify-between space-x-2">
-              <div className="text-sm font-medium">
-                {currentBlog?.publishedDate}
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                <span className="h-2 w-2 rounded-full bg-red-500"></span>
+                {currentBlog?.publishedDate &&
+                  new Date(currentBlog.publishedDate).toLocaleDateString(
+                    "en-GB",
+                    {
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )}
               </div>
             </div>
 
             {/* Category Tags - Fixed to use tag objects */}
             <div className="mb-2 flex flex-wrap gap-2">
-              {currentBlog?.tags?.map((tag: any, index: number) => (
-                <span
-                  key={index}
-                  className={`inline-block rounded-md px-3 py-1 text-xs font-medium text-white ${
-                    tag.color === "blue"
-                      ? "bg-blue-500"
-                      : tag.color === "green"
-                        ? "bg-green-500"
-                        : tag.color === "purple"
-                          ? "bg-purple-500"
-                          : tag.color === "orange"
-                            ? "bg-orange-500"
-                            : "bg-gray-500"
-                  }`}
-                >
-                  {tag?.name}
-                </span>
-              ))}
+              {currentBlog?.tags?.map((tag: any, index: number) => {
+                const tagName = typeof tag === "string" ? tag : tag?.name;
+
+                typeof tag === "object" && tag?.color ? tag.color : "gray";
+
+                let bgClass = "bg-blue-500";
+
+                return (
+                  <span
+                    key={index}
+                    className={`inline-block rounded-xl px-3 py-1 text-xs font-medium text-white ${bgClass}`}
+                  >
+                    {tagName}
+                  </span>
+                );
+              })}
             </div>
 
             {/* Title */}
-            <h1 className="mb-2 text-3xl font-bold leading-tight">
+            <h1 className="mb-3 text-3xl font-bold leading-tight">
               {currentBlog?.title}
             </h1>
 
             {/* Author Info */}
-            <div className="card mb-4 flex w-fit items-center gap-1 rounded-full p-1.5">
+            <div className=" bg-gray-200 mb-4 flex w-fit capitalize items-center gap-1 rounded-full p-1.5 px-4">
               <span className="font-medium">{currentBlog?.author}</span>
             </div>
           </header>

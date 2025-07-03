@@ -87,7 +87,7 @@ const MetaDescription: React.FC<MetaDescriptionProps> = ({
       <div className="space-y-1">
         <div className="flex justify-between items-center">
           <label className="block text-sm font-medium text-[#818181]">
-            Meta Title
+            Meta Title<span className="text-red-500">*</span>
           </label>
           <span className="text-xs text-gray-500">{metaTitleLength}/60</span>
         </div>
@@ -104,7 +104,7 @@ const MetaDescription: React.FC<MetaDescriptionProps> = ({
       <div className="space-y-1">
         <div className="flex justify-between items-center">
           <label className="block text-sm font-medium text-[#818181]">
-            Meta Description
+            Meta Description<span className="text-red-500">*</span>
           </label>
           <span className="text-xs text-gray-500">{metaDescLength}/160</span>
         </div>

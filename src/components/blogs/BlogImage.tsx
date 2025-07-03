@@ -75,7 +75,7 @@ const BlogImage: React.FC<BlogImageProps> = ({ blogData, updateBlogData }) => {
 
   return (
     <div className="space-y-4 ml-6 mr-6 mt-[-8px]">
-      <h2 className="text-base font-bold mb-1">Blog Image</h2>
+      <h2 className="text-base font-bold mb-1">Blog Image<span className="text-red-500">*</span></h2>
 
       {/* Image Upload */}
       <div className="flex items-end gap-4">

@@ -51,7 +51,7 @@ const CTAButton: React.FC<CTAButtonProps> = ({ blogData, updateBlogData }) => {
 
           <div>
             <label className="block text-sm font-medium text-[#818181] mb-1">
-              Button Text
+              Button Text<span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -64,7 +64,7 @@ const CTAButton: React.FC<CTAButtonProps> = ({ blogData, updateBlogData }) => {
 
           <div>
             <label className="block text-sm font-medium text-[#818181] mb-1">
-              Button Link
+              Button Link<span className="text-red-500">*</span>
             </label>
             <input
               type="url"
