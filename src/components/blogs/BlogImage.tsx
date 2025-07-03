@@ -16,7 +16,6 @@ const BlogImage: React.FC<BlogImageProps> = ({ blogData, updateBlogData }) => {
     if (file.size > 10 * 1024 * 1024) {
       return alert("File size must be under 10MB.");
     }
-
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -80,7 +79,7 @@ const BlogImage: React.FC<BlogImageProps> = ({ blogData, updateBlogData }) => {
 
       {/* Image Upload */}
       <div className="flex items-end gap-4">
-        <input
+        {/* <input
           type="text"
           placeholder="Image URL"
           value={blogData.blogImage?.heroImage || ""}
@@ -91,7 +90,7 @@ const BlogImage: React.FC<BlogImageProps> = ({ blogData, updateBlogData }) => {
             })
           }
           className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-        />
+        /> */}
         <Button
           onPress={() => fileInputRef.current?.click()}
           variant="bordered"
