@@ -43,6 +43,7 @@ import AmbassadorProfile from "./pages/Ambassadors/AmbassadorProfile";
 
 import Submissions from "./pages/Submissions/Submissions";
 import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
+import NewTemplateOthers from "./components/others/NewTemplate";
 // import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
@@ -99,6 +100,7 @@ function App() {
             <Route path="/community/new-template" element={<NewTemplate />} />
 
             <Route path="/others" element={<Others />} />
+              <Route path="/others/new-template" element={<NewTemplateOthers />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="logout" element={<Logout />} />
