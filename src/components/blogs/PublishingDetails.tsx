@@ -48,7 +48,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
       <div className="space-y-2">
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Blog Title
+            Blog Title<span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -64,7 +64,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Original Author
+            Original Author<span className="text-red-500">*</span>
           </label>
           <select
             className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
@@ -82,7 +82,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
 
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
-            Publishing Date
+            Publishing Date<span className="text-red-500">*</span>
           </label>
           <input
             type="date"

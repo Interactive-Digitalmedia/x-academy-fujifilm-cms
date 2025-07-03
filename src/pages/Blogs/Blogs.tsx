@@ -278,14 +278,16 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
 
             {/* FiltersPopover like in EventView */}
             <FiltersPopover
-              types={["Draft", "Published"]} // or your blog statuses
+              types={["Event", "Fashion", "Street", "Portrait", "Wildlife"]} // or your blog statuses
               selectedTypes={selectedStatus}
               setSelectedTypes={setSelectedStatus}
               selectedConductedBy={selectedAuthors}
               setSelectedConductedBy={setSelectedAuthors}
+               isBlogPage={true}
               ambassadors={blogs.map((b) => ({
                 fullname: b.author,
                 _id: b.author,
+
               }))} // adapted for authors
               onReset={() => {
                 setSelectedStatus([]);

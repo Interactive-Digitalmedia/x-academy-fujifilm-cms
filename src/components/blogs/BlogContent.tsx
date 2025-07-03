@@ -53,7 +53,7 @@ const BlogContent: React.FunctionComponent<BlogContentProps> = ({
 
   return (
     <div className="space-y-3 ml-6 mr-6 mt-[-8px]">
-      <h2 className="text-base font-bold mb-1">Blog Content</h2>
+      <h2 className="text-base font-bold mb-1">Blog Content<span className="text-red-500">*</span></h2>
 
       {/* Content Statistics */}
       {/* <div className="flex gap-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
