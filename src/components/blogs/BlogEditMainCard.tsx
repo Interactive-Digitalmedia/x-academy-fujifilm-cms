@@ -1,7 +1,11 @@
 import React from "react";
-import { CalendarDays, MapPin, Copy, Trash2 } from "lucide-react";
+import { CalendarDays, MapPin, Copy, Trash2, Download } from "lucide-react";
 import { Blog } from "@/types";
 import toast from "react-hot-toast";
+import ChangeStatusPopover from "../Activity/ChangeStatusPopover";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ConfirmationModal from "../ConfirmationModal";
 
 type BlogEditMainCardProps = {
   data: Partial<Blog>;
@@ -12,11 +16,36 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
   data,
   onDelete,
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const navigate = useNavigate();
+
   const handleCopyLink = () => {
     const link = `${window.location.origin}/blogs/${data._id}`;
     navigator.clipboard.writeText(link).then(() => {
       toast.success("Blog link copied!");
     });
+  };
+  const handleToggleStatus = (newStatus: "draft" | "published") => {
+    try {
+      // Add your status change logic here (e.g., API call)
+      toast.success(`Status changed to ${newStatus}`);
+      // Optional: refetch blog or call a prop like `onStatusChange?.(newStatus)`
+    } catch (err) {
+      toast.error("Failed to update status");
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      // Add your delete API logic here, e.g.:
+      // await deleteBlog(data._id);
+      toast.success("Blog deleted");
+      navigate("/blogs");
+    } catch (err) {
+      toast.error("Failed to delete blog");
+      console.error(err);
+    }
   };
 
   const formattedDate = data.publishedDate
@@ -72,15 +101,22 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
           <button className="border p-2 rounded-md" onClick={handleCopyLink}>
             <Copy className="w-4 h-4" />
           </button>
-          {onDelete && (
-            <button
-              onClick={onDelete}
-              className="text-red-600 border border-red-600 px-3 py-2 rounded-md text-sm"
-            >
-              <Trash2 className="w-4 h-4 inline-block mr-1" />
-              Delete
-            </button>
-          )}
+
+          <button className="border p-2 rounded-md">
+            <Download className="w-4 h-4" />
+          </button>
+
+          <ChangeStatusPopover
+            currentStatus={(data?.status as "draft" | "published") ?? "draft"}
+            onChange={handleToggleStatus}
+          />
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="text-red-600 border border-red-600 px-3 py-[5px] rounded-md text-sm"
+          >
+            <Trash2 className="w-4 h-4 inline-block mr-1" />
+            Delete
+          </button>
         </div>
       </div>
 
@@ -107,6 +143,16 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Blog"
+        description="Are you sure you want to delete this blog? This action is permanent."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+        showReasonInput={true}
+      />
     </div>
   );
 };
