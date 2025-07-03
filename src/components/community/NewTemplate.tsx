@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import {
-  Camera,
-  CameraIcon,
   Sun,
   Layers,
-  Cloud,
   ChevronDown,
+  Camera,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -17,12 +15,30 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+// SVG Icon Wrapper
+const SvgIcon: React.FC<{ src: string; size?: number }> = ({ src, size = 24 }) => (
+  <img src={src} alt="icon" width={size} height={size} />
+);
+
+// Icon Options
 const icons = [
-  { label: "Camera", value: "camera", icon: Camera },
-  { label: "Star Camera", value: "star-camera", icon: CameraIcon },
-  { label: "Sun", value: "sun", icon: Sun },
-  { label: "Layers", value: "layers", icon: Layers },
-  { label: "Cloud", value: "cloud", icon: Cloud },
+  {
+    label: "Camera 1",
+    value: "camera1",
+    icon: () => <SvgIcon src="/banner/icons/camera1.svg" />,
+  },
+  {
+    label: "Camera 2",
+    value: "camera2",
+    icon: () => <SvgIcon src="/banner/icons/camera2.svg" />,
+  },
+  { label: "Sun", value: "sun", icon: () => <Sun size={24} /> },
+  { label: "Layers", value: "layers", icon: () => <Layers size={24} /> },
+  {
+    label: "Cloud",
+    value: "cloud",
+    icon: () => <SvgIcon src="/banner/icons/cloud.svg" />,
+  },
 ];
 
 const IconPicker: React.FC<{
@@ -43,7 +59,7 @@ const IconPicker: React.FC<{
           >
             <div className="flex items-center gap-2">
               {selected ? (
-                <selected.icon size={20} />
+                <selected.icon />
               ) : (
                 <DefaultIcon size={20} />
               )}
@@ -64,7 +80,7 @@ const IconPicker: React.FC<{
                     : ""
                 }`}
               >
-                <item.icon size={24} />
+                <item.icon />
               </button>
             ))}
           </div>

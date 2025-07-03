@@ -4,7 +4,6 @@ import {
   CameraIcon,
   Sun,
   Layers,
-  Cloud,
   ChevronDown,
   Pencil,
   Trash2,
@@ -17,12 +16,25 @@ import {
 } from "@/components/ui/accordion";
 import { Switch } from "@nextui-org/react";
 
+// SVG Icon Renderer
+const SvgIcon: React.FC<{ src: string; size?: number }> = ({
+  src,
+  size = 16,
+}) => <img src={src} alt="icon" width={size} height={size} />;
+
+// Lucide icon mapping
 const iconMap: Record<string, any> = {
   camera: Camera,
   "star-camera": CameraIcon,
   sun: Sun,
   layers: Layers,
-  cloud: Cloud,
+};
+
+// Custom SVG icon mapping
+const customIconMap: Record<string, string> = {
+  camera1: "/banner/icons/camera1.svg",
+  camera2: "/banner/icons/camera2.svg",
+  cloud: "/banner/icons/cloud.svg",
 };
 
 const TipsAndTricks: React.FC = () => {
@@ -62,10 +74,8 @@ const TipsAndTricks: React.FC = () => {
                   </label>
                   <Switch
                     isSelected={template.default || false}
-                    onChange={() => console.log("toggled")} 
-                  >
-                  
-                  </Switch>
+                    onChange={() => console.log("toggled")}
+                  />
                 </div>
 
                 <div className="flex gap-3">
@@ -101,16 +111,23 @@ const TipsAndTricks: React.FC = () => {
                       <label className="text-sm text-gray-500">Icon</label>
                       <div className="relative w-full">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-gray-900">
-                          {React.createElement(iconMap[sec.icon] || Camera, {
-                            size: 16,
-                          })}
+                          {customIconMap[sec.icon] ? (
+                            <SvgIcon src={customIconMap[sec.icon]} size={20} />
+                          ) : (
+                            React.createElement(iconMap[sec.icon] || Camera, {
+                              size: 20,
+                            })
+                          )}
                         </div>
                         <select
                           disabled
                           value={sec.icon}
                           className="appearance-none pl-8 pr-6 py-2 w-full text-sm rounded-md bg-white text-gray-800 border"
                         >
-                          {Object.keys(iconMap).map((iconKey) => (
+                          {[
+                            ...Object.keys(iconMap),
+                            ...Object.keys(customIconMap),
+                          ].map((iconKey) => (
                             <option key={iconKey} value={iconKey}></option>
                           ))}
                         </select>
