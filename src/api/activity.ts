@@ -55,7 +55,12 @@ export const getActivities = async () => {
     return;
   }
   try {
-    const response = await axios.get(`${baseUrl}activity/`);
+    const response = await axios.get(`${baseUrl}activity/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching the activities", error);
@@ -63,24 +68,24 @@ export const getActivities = async () => {
   }
 };
 
-export const uploadImage = async (file: File) => {
-  const token = getTokenFromLocalStorage();
-  if (!token) {
-    console.error("Token is not available.");
-    return null;
-  }
+// export const uploadImage = async (file: File) => {
+//   const token = getTokenFromLocalStorage();
+//   if (!token) {
+//     console.error("Token is not available.");
+//     return null;
+//   }
 
-  const formData = new FormData();
-  formData.append("file", file);
+//   const formData = new FormData();
+//   formData.append("file", file);
 
-  try {
-    const response = await axios.post(`${baseUrl}upload-image`, formData);
-    return response.data; // returns { message, fileKey, publicUrl }
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    throw error;
-  }
-};
+//   try {
+//     const response = await axios.post(`${baseUrl}upload-image`, formData);
+//     return response.data; // returns { message, fileKey, publicUrl }
+//   } catch (error) {
+//     console.error("Error uploading image:", error);
+//     throw error;
+//   }
+// };
 
 // export async function createFaq(payload: {
 //   name: string;

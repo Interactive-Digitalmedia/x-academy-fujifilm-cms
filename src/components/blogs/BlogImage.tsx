@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@nextui-org/react";
-import { uploadImage } from "@/api/activity";
 import { Blog } from "@/types";
+import { uploadImage } from "@/api/uploadImageApi";
 
 interface BlogImageProps {
   blogData: Partial<Blog>;

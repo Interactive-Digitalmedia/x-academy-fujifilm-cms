@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { uploadImage } from "@/api/activity";
+import { uploadImage } from "@/api/uploadImageApi";
 
 export default function EventImage({ data, setData }: any) {
   const [, setHeroFile] = useState<File | null>(null);
