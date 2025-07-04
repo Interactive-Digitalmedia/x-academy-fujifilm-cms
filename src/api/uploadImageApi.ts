@@ -1,5 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../utils/config";
+import { compressImage } from "@/utils/ImageCompression";
 
 export function getTokenFromLocalStorage(): string | null {
     try {
@@ -16,9 +17,9 @@ export function getTokenFromLocalStorage(): string | null {
 export const uploadImage = async (file: File): Promise<{ publicUrl: string }> => {
   const token = getTokenFromLocalStorage();
   if (!token) throw new Error("No auth token found");
-
+  const compressedFile = await compressImage(file)
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", compressedFile);
 
   const response = await axios.post(`${baseUrl}upload-image`, formData, {
     headers: {
