@@ -1,0 +1,6 @@
+.multiple-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)),
+    url('/images/dashboard-black-new.png');
+  background-size: cover, cover; /* Adjust as needed */
+  background-position: center, center; /* Adjust as needed */
+}

@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  user-select: none;
+}
+@layer base {
+  :root {
+    /* Base light theme variables */
+    --framebackground: #ededed;
+    --background: #ffffff;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: #e0e0e0;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --disable: #d7d7d7;
+    --radius: 0.5rem;
+    /* Custom app colors */
+    --note-bg: #ffffff;
+    --note-hover: #f3f1f1;
+    --calendar-hours-hover: #eff6ff;
+    --sidebar-bg: 0 0% 98%;
+    --header-bg: 0 0% 100%;
+    --banner-overlay: 0 0% 100% / 0.1;
+    --task-bg: 0 0% 100%;
+    --priority-bg: 48 96% 89%;
+    --priority-text: 38 92% 50%;
+    --save-button-text: 0 0% 100%;
+    --checkbox-border: 221.2 83.2% 53.3%;
+  }
+  /* Blue theme - light variant (default) */
+  .theme-blue-light {
+    --primary: 214 89% 52%;
+    --primary-foreground: 210 40% 98%;
+    --save-button-bg: 221.2 83.2% 53.3%;
+    --checkbox-bg: 221.2 83.2% 53.3%;
+  }
+  /* Blue theme - dark variant */
+  .dark {
+    --framebackground: #060606;
+    --background: #080808;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: #656565;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    /* Custom app colors - dark mode */
+    --note-bg: #2b2b2b;
+    --note-hover: #464646;
+    --calendar-hours-hover: #464646;
+    --sidebar-bg: 222.2 84% 4.9%;
+    --header-bg: 222.2 47.4% 11.2%;
+    --banner-overlay: 0 0% 0% / 0.5;
+    --task-bg: 222.2 47.4% 11.2%;
+    --priority-bg: 36 100% 15%;
+    --priority-text: 38 92% 50%;
+    --save-button-bg: 217.2 91.2% 59.8%;
+    --save-button-text: 222.2 47.4% 11.2%;
+    --checkbox-bg: 217.2 91.2% 59.8%;
+    --checkbox-border: 217.2 91.2% 59.8%;
+  }
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  .btn-toggle {
+    @apply inline-flex h-[40px] items-center justify-center gap-[10px] !rounded-[8px] px-[12px] py-[6px] text-sm font-medium transition-colors duration-200;
+  }
+  .btn-toggle-inactive {
+    @apply !bg-[#0000001A] text-black dark:!bg-[#FFFFFF1A] dark:text-white;
+  }
+  .btn-toggle-active {
+    @apply border border-blue-500 !bg-[#1597FF4D] text-black dark:bg-[#003E73] dark:text-white;
+  }
+  /* Optional hover effect */
+  .btn-toggle-inactive:hover {
+    @apply bg-gray-300 dark:bg-[#3A3A3A];
+  }
+  .btn-toggle-active:hover {
+    @apply bg-blue-400 dark:bg-[#004B88];
+  }
+  .card {
+    @apply overflow-hidden rounded-2xl border border-white/10 !bg-[#F4F4F4] shadow-md dark:!bg-[#1A1A1A];
+  }
+  .card-wide {
+    @apply overflow-hidden rounded-2xl border border-white/10 !bg-[#F4F4F4] shadow-md dark:!bg-[#1A1A1A];
+  }
+  .card-about {
+    @apply text-[#22222299] dark:text-[#FFFFFF99];
+  }
+  .divider {
+    @apply mb-4 mt-2 border-b border-[#0000001A] dark:border-[#454545];
+  }
+  .normal-btn {
+    @apply h-[36px] !rounded-[8px] !bg-[#1098F7] px-4 py-1 text-sm !text-white hover:bg-[#1098F7];
+  }
+  .section {
+    @apply mx-[120px] mt-[80px];
+  }
+
+  .icon-button {
+    @apply rounded-full !border !border-[#D2D2D2] !bg-[#EAEAEA] p-2 dark:!border-[#3C3C3C] dark:!bg-[#1F1F1F];
+  }
+
+  .nav-pill {
+    @apply rounded-[8px] px-4 py-2 text-sm font-medium shadow-sm transition;
+    @apply bg-[#EAEAEA] text-black dark:bg-[#3C3C3C] dark:text-white;
+  }
+
+  .corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid black;
+    z-index: 10;
+  }
+
+  .dark .corner {
+    border-color: white;
+  }
+
+  /* Offsets the corners OUTSIDE the image, not on the edge */
+  .top-left {
+    top: -8px;
+    left: -8px;
+    border-right: none;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+  }
+
+  .top-right {
+    top: -8px;
+    right: -8px;
+    border-left: none;
+    border-bottom: none;
+    border-top-right-radius: 4px;
+  }
+
+  .bottom-left {
+    bottom: -8px;
+    left: -8px;
+    border-right: none;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+  }
+
+  .bottom-right {
+    bottom: -8px;
+    right: -8px;
+    border-left: none;
+    border-top: none;
+    border-bottom-right-radius: 4px;
+  }
+
+  .filter-card {
+    @apply w-[280px] rounded-xl !p-3 shadow-xl backdrop-blur-md backdrop-saturate-150;
+    @apply !bg-white/70 dark:!bg-black/70;
+    @apply text-black dark:text-white;
+  }
+
+  .notification-card {
+    @apply w-[280px] rounded-xl !p-3 shadow-xl backdrop-blur-md;
+    @apply !bg-white/80 dark:!bg-black/80;
+    @apply text-black dark:text-white;
+  }
+
+  .filter-chip {
+    @apply flex items-center gap-1 rounded-full border px-3 py-1 text-sm transition;
+  }
+
+  .filter-chip-active {
+    @apply border-[#1098F7] !bg-[#1098F733] text-[#1098F7];
+  }
+
+  .filter-chip-inactive {
+    @apply border-black/20 text-black/70 dark:border-white/20 dark:text-white/70;
+  }
+
+  .filter-title {
+    @apply text-sm font-medium text-black dark:text-white;
+  }
+
+  .filter-reset {
+    @apply text-sm text-black/60 underline hover:text-black dark:text-white/60 dark:hover:text-white;
+  }
+
+  .tag {
+    @apply inline-block rounded-[8px] px-3 py-1 text-sm font-medium capitalize text-white;
+  }
+
+  .bgCard {
+   @apply rounded-xl border border-gray-200 bg-white p-5 shadow-sm
+  }
+}
+
+@layer utilities {
+  .text-muted-light {
+    color: #0000008c;
+  }
+
+  .dark .text-muted-light {
+    color: #ffffff66;
+  }
+}
+/* custom scrollbar for webkit browsers (chromium based) */
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: hsl(0, 0%, 58%);
+  border-radius: 2rem;
+  margin: 2rem;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0, 0%, 38%);
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

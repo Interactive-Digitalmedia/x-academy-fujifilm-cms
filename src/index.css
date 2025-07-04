@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  user-select: none;
+}
+@layer utilities {
+  .input-custom {
+    @apply border-none bg-transparent ring-1 ring-border placeholder:!text-foreground-muted/30 focus-within:ring-accent focus-within:!ring-offset-1 focus-visible:!ring-accent focus-visible:!ring-offset-1;
+  }
+  .button-custom {
+    @apply rounded-sm bg-card font-semibold text-inherit !outline-none ring-1 ring-transparent focus-within:!ring-offset-1 focus-visible:ring-accent focus-visible:!ring-offset-1;
+  }
+
+  /* .button-standard {
+    @apply bg-transparent hover:!bg-[#181818];
+  } */
+  .button-standard {
+    @apply hover:!bg-card-muted hover:!text-foreground dark:bg-transparent;
+  }
+}
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+
+  /* .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  } */
+
+  /* 
+    base: for background
+    base-foreground: for text on that background
+  */
+  .dark {
+    --background: 0 0% 2%; /* #050505 */
+    --foreground: 0 0% 90%; /* #e6e6e6 */
+    --foreground-muted: 0 0% 60%; /* #999999 */
+
+    --card: 0 3% 6%; /* #100f0f */
+    --card-muted: 0 0% 10%; /* #191919 */
+
+    --border: 0 0% 15%; /* #272727 */
+    --popover: 0 0% 7%; /* #131313*/
+    --popover-muted: 0 0% 8%; /* #141414 */
+
+    --input: var(--foreground-muted);
+
+    --accent: var(--foreground);
+    --accent-foreground: var(--background);
+
+    /* ------------- */
+    /* not altered/ not used ⬇️ */
+
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* --muted: hsl(217.2 32.6% 17.5%);
+    --muted-foreground: hsl(215 20.2% 65.1%);*/
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 2%;
+    --foreground-muted: 0 0% 60%;
+
+    --card: 0 0% 94%;
+    --card-muted: 0 0% 90%;
+
+    --border: 0 0% 85%;
+    --popover: 0 0% 93%;
+    --popover-muted: 0 0% 92%;
+
+    --input: 0 0% 60%; /*--foreground-muted*/
+
+    --accent: 0 0 2%; /* --foreground */
+    --accent-foreground: 0 0% 98%; /* --background */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background !text-foreground;
+  }
+}
+
+/* custom scrollbar for webkit browsers (chromium based) */
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: hsl(0, 0%, 58%);
+  border-radius: 2rem;
+  margin: 2rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0, 0%, 38%);
+}
+
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&:wght@0,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --font: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  --font-text: 'Inter', sans-serif;
+  --font-serif: 'PT Serif', serif;
+  --bg-100: #1c1e22;
+  --bg-200: #282c34;
+  --bg-300: #23272e;
+}
+
+* {
+  box-sizing: border-box;
+
+  .light {
+    --focus-visible-outline: 4px solid var(--accent-200);
+
+    --bg-100: #ffffff;
+    --bg-200: #f4f6f6;
+    --bg-300: #d8dee9;
+    --bg-alt: #1c1e22;
+
+    --selection-bg: var(--accent-300);
+    --selection-text: var(--text);
+
+    --scrollthumb: #cdcdcd;
+    --scrollthumb-hover: #aeaeae;
+
+    --red: #e9686a;
+    --green: #38ae48;
+    --orange: #ffae00;
+
+    --url: #1a6eb2;
+
+    --accent: var(--accent-500);
+    --accent-100: #849193;
+    --accent-200: #98dbff;
+    --accent-300: #7ec2ff;
+    --accent-400: #65a2d4;
+    --accent-500: #4185f4;
+
+    --mono: var(--mono-base);
+    --mono-light: hsl(217, 12%, 87%);
+    --mono-soft: color-mix(in srgb, var(--mono-light), 50% var(--mono-base));
+    --mono-base: hsl(214, 5%, 60%);
+    --mono-mid: hsl(215, 9%, 53%);
+    --mono-dark: hsl(214, 12%, 35%);
+
+    --border-light: #e0e0e0;
+    --border-base: #dfe0e2;
+
+    --input-disabled: #ededed;
+    --input-light: var(--bg-200);
+    --input-base: color-mix(in srgb, var(--bg-200) 50%, var(--bg-100));
+
+    --text: var(--text-base);
+    --text-alt: #f9fbff;
+    --text-disabled: var(--mono-base);
+    --text-light: #91969e;
+    --text-soft: color-mix(in srgb, var(--text-light), 50% var(--text-base));
+    --text-base: #344856;
+    --text-dark: #37393b;
+
+    input {
+      color-scheme: light;
+    }
+  }
+  .dark {
+    --focus-visible-outline: 4px solid var(--accent-200);
+
+    --bg-100: #1c1e22;
+    --bg-200: #282c34;
+    --bg-300: #23272e;
+    --bg-alt: #fff;
+
+    --selection-bg: #435880;
+    --selection-text: #fff;
+
+    --scrollthumb: #3b414f;
+    --scrollthumb-hover: #2e343d;
+
+    --red: #ff5b5b;
+    --green: #7adf55;
+    --orange: #d27d06;
+
+    --url: #3792dc;
+
+    --accent: var(--accent-500);
+    --accent-100: #849193;
+    --accent-200: #98dbff;
+    --accent-300: #7ec2ff;
+    --accent-400: #65a2d4;
+    --accent-500: #4692d1;
+
+    --mono: var(--mono-base);
+    --mono-light: hsl(217, 12%, 17%);
+    --mono-soft: #485158;
+    --mono-base: #6a777f;
+    --mono-mid: hsl(215, 9%, 53%);
+    --mono-dark: hsl(214, 12%, 35%);
+
+    --border-light: #23272e;
+    --border-base: #3b3b3b;
+
+    --input-disabled: rgb(33, 39, 44);
+
+    --input-light: var(--bg-200);
+    --input-base: color-mix(in srgb, var(--bg-200) 50%, var(--bg-100));
+
+    --text: var(--text-base);
+    --text-alt: #fff;
+    --text-disabled: var(-- -base);
+    --text-light: #545b5f;
+    --text-soft: color-mix(in srgb, var(--text-light), 50% var(--text-base));
+    --text-base: #c9d7e0;
+    --text-dark: #a0a2a3;
+    input {
+      color-scheme: dark;
+    }
+  }
+}
+
+html {
+  &.bg-dark {
+    background-color: #23272e;
+  }
+  &.bg-light {
+    background-color: #e9ecee;
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: var(--bg-100);
+  color: var(--text-base);
+  font-family: var(--font);
+}
+
+.button {
+  background-color: var(--accent-500);
+} */
+
