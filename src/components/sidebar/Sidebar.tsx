@@ -21,11 +21,16 @@ export default function Sidebar() {
     { name: "Events", path: "/events", icon: Calendar },
     { name: "Partners", path: "/partners", icon: Users },
     { name: "Blogs", path: "/blogs", icon: BookOpen },
-    { name: "Community", path: "/community", icon: BookOpen },
-    { name: "Submissions", path: "/submissions", icon: BookOpen },
-    { name: "Analytics", path: "/analytics", icon: BarChart },
-    { name: "Support", path: "/support", icon: HelpCircle },
-    { name: "Others", path: "/others", icon: CircleEllipsis },
+    { name: "Community", path: "/community", icon: BookOpen, disabled: true },
+    {
+      name: "Submissions",
+      path: "/submissions",
+      icon: BookOpen,
+      disabled: true,
+    },
+    { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
+    { name: "Support", path: "/support", icon: HelpCircle, disabled: true },
+    { name: "Others", path: "/others", icon: CircleEllipsis, disabled: true },
   ];
 
   const isActive = (itemPath: string) => {
@@ -47,21 +52,26 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1 px-2">
-          {navItems.map(({ name, path, icon: Icon }) => {
+          {navItems.map(({ name, path, icon: Icon, disabled }) => {
             const active = isActive(path);
             return (
-              <Link
+              <div
                 key={name}
-                to={path}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                  active
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-                }`}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200
+        ${disabled ? "cursor-not-allowed text-gray-400" : active ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`}
               >
-                <Icon size={18} />
-                {name}
-              </Link>
+                {disabled ? (
+                  <>
+                    <Icon size={18} />
+                    {name}
+                  </>
+                ) : (
+                  <Link to={path} className="flex items-center gap-3 w-full">
+                    <Icon size={18} />
+                    {name}
+                  </Link>
+                )}
+              </div>
             );
           })}
         </nav>

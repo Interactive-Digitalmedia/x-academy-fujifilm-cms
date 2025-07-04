@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button";
 import MyInformation from "@/components/profile/MyInformation";
 import AdminControls from "@/components/profile/AdminControls";
 import { MemberTable } from "@/components/profile/MemberTable";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileProps {}
 
 const tabs = ["My Information", "Admin Controls", "Members"];
 
 const Profile: React.FunctionComponent<ProfileProps> = () => {
-  const [activeTab, setActiveTab] = React.useState("My Information");
+  const [activeTab] = React.useState("My Information");
+  const navigate = useNavigate();
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6">
@@ -18,17 +20,21 @@ const Profile: React.FunctionComponent<ProfileProps> = () => {
       <div className="bg-white rounded-lg shadow p-6 flex items-center justify-between w-full">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl font-medium text-gray-600">
-            H
+            S
           </div>
           <div>
             <div className="text-lg font-semibold text-gray-900">
-              Hazel Nutt
+              Super Admin
             </div>
             <div className="text-sm text-gray-500">Admin</div>
           </div>
         </div>
 
-        <Button variant="outline" className="text-sm flex items-center gap-2">
+        <Button
+          variant="outline"
+          className="text-sm flex items-center gap-2"
+          onClick={() => navigate("/logout")}
+        >
           <LogOut className="w-4 h-4" />
           Log out
         </Button>
@@ -44,7 +50,7 @@ const Profile: React.FunctionComponent<ProfileProps> = () => {
               className={`btn-toggle capitalize ${
                 activeTab === tab ? "btn-toggle-active" : "btn-toggle-inactive"
               }`}
-              onClick={() => setActiveTab(tab)}
+              // onClick={() => setActiveTab(tab)}
             >
               {tab}
             </button>
