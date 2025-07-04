@@ -59,7 +59,7 @@ export type Activity = {
   eventManagerId: string[];
   duration: number; // in hours
   status: "draft" | "published";
-  FAQ: string | Faq | NormalizedFaqForForm;
+  FAQ?: string | Faq | NormalizedFaqForForm;
   seatCount: number;
   pendingSeats: number;
   isFeatured: boolean;

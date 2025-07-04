@@ -203,7 +203,7 @@ export default function AdminControls({ data, setData }: any) {
       {/* Max Participants (schema: seatCount) */}
       <div>
         <label className="block text-sm font-medium  mb-1">
-          Maximum Number of Participants
+          Total Number of Seats <span className="text-red-500">*</span>
         </label>
         <input
           type="number"

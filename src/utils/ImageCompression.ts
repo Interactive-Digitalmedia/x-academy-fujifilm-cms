@@ -34,7 +34,7 @@ export const compressImage = async (
 
   try {
     const compressedFile = await imageCompression(file, options)
-    console.error("image compressed successfully", compressedFile);
+    console.log("image compressed successfully", compressedFile);
     return compressedFile
   } catch (error) {
     console.error('❌ Image compression failed:', error)

@@ -148,6 +148,9 @@ export default function CreateEventLayout() {
       case 3: // Images
         if (!data.heroImage) return "Hero image is required.";
         return null;
+      case 5:
+        if (!data.seatCount) return "Total Seat Count is required.";
+        return null;
 
       default:
         return null;
@@ -260,16 +263,10 @@ export default function CreateEventLayout() {
     // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
       const faqData = formData.FAQ;
-
       let faqItems: any[] = [];
-      if (
-        typeof faqData === "object" &&
-        "items" in faqData &&
-        Array.isArray(faqData.items)
-      ) {
-        faqItems = faqData.items;
+      if (Array.isArray(faqData)) {
+        faqItems = faqData;
       }
-
       if (faqItems.length > 0) {
         const faqPayload = {
           name: "Custom",
@@ -278,14 +275,15 @@ export default function CreateEventLayout() {
             answer: f?.A ?? "",
           })),
         };
-
         try {
           if (typeof faqData === "object" && "_id" in faqData) {
             // Update existing FAQ
+            console.log("Updating FAQ with ID:", faqData._id);
             await updateFaq(faqData._id, faqPayload);
             updatedFAQId = faqData._id;
           } else {
             // Create new FAQ
+            console.log("Creating new FAQ");
             const faqRes = await createFaq(faqPayload);
             updatedFAQId = faqRes?.data?._id;
             setFormData((prev) => ({ ...prev, FAQ: updatedFAQId }));
@@ -303,13 +301,17 @@ export default function CreateEventLayout() {
         }
       }
     }
-
+    // console.log(formData);
+    // const { FAQ: _, ...restFormData } = formData;
     // 2. Prepare final payload
     const payload = {
       ...formData,
-      FAQ: updatedFAQId,
+      ...(typeof updatedFAQId === "string" && updatedFAQId.trim() !== ""
+        ? { FAQ: updatedFAQId }
+        : {}),
       ...(action && { status: action }),
     };
+    // console.log(payload);
 
     // 3. Manual deep equality check function
     const deepEqual = (a: any, b: any): boolean => {
