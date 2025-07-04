@@ -15,7 +15,7 @@ type BlogEditMainCardProps = {
 
 const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
   data,
-  onDelete,
+  // onDelete,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
