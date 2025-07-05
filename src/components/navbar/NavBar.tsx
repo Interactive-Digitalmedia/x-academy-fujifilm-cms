@@ -70,11 +70,11 @@ export default function NavBar() {
               icon: CirclePlus,
               action: () => navigate("/events/create-events"),
             },
-            {
-              label: "Drafts",
-              icon: "",
-              action: () => console.log("View drafts"),
-            },
+            // {
+            //   label: "Drafts",
+            //   icon: "",
+            //   action: () => console.log("View drafts"),
+            // },
           ],
     },
 
