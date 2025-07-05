@@ -18,20 +18,20 @@ const AmbassadorProfile = () => {
   const [loading, setLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const tabs = ["About", "Gallery", "Gear Details"];
+  const [activeTab, setActiveTab] = useState("About");
 
   useEffect(() => {
     const fetchAmbassador = async () => {
       if (!username) return;
       setLoading(true);
       const res = await getAmbassadorsByUsername(username);
-
-      if (res.status === 200) {
-        setAmbassador(res.data);
-        setFormData(res.data); // populate form for edit
+      if (res) {
+        setAmbassador(res.data.ambassador);
+        setFormData(res.data.ambassador); // populate form for edit
       } else {
         setAmbassador(null);
       }
-
       setLoading(false);
     };
 
@@ -54,8 +54,6 @@ const AmbassadorProfile = () => {
     }
   };
 
-  const tabs = ["About", "Gallery", "Gear Details"];
-  const [activeTab, setActiveTab] = useState("About");
 
   if (loading) {
     return (
@@ -64,6 +62,7 @@ const AmbassadorProfile = () => {
       </div>
     );
   }
+console.log(ambassador);
 
   if (!ambassador) {
     return (
