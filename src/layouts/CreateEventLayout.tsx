@@ -157,6 +157,17 @@ export default function CreateEventLayout() {
     }
   };
 
+  const validateAllRequiredSteps = (
+    data: Activity,
+    upToStep: number
+  ): string | null => {
+    for (let step = 0; step <= upToStep; step++) {
+      const error = validateActivityStep(step, data);
+      if (error) return `Step ${step + 1}: ${error}`;
+    }
+    return null;
+  };
+
   // const handleNextStepOrSubmit = async () => {
   //   const validationError = validateActivityStep(currentTab, formData);
   //   if (validationError) {
@@ -254,19 +265,26 @@ export default function CreateEventLayout() {
   };
 
   const handleNextStepOrSubmit = async (action?: "draft" | "published") => {
-    const validationError = validateActivityStep(currentTab, formData);
+    const validationError = validateAllRequiredSteps(formData, currentTab);
     if (validationError) {
       toast.error(validationError);
       return;
     }
     let updatedFAQId = formData?.FAQ;
-    // 1. Update FAQ if on FAQ step
     if (currentTab === 4) {
       const faqData = formData.FAQ;
       let faqItems: any[] = [];
-      if (Array.isArray(faqData)) {
-        faqItems = faqData;
+
+      if (Array.isArray(formData.FAQ)) {
+        faqItems = formData.FAQ;
+      } else if (
+        typeof formData.FAQ === "object" &&
+        formData.FAQ !== null &&
+        "items" in formData.FAQ
+      ) {
+        faqItems = formData.FAQ.items;
       }
+      
       if (faqItems.length > 0) {
         const faqPayload = {
           name: "Custom",
@@ -282,18 +300,19 @@ export default function CreateEventLayout() {
             await updateFaq(faqData._id, faqPayload);
             updatedFAQId = faqData._id;
           } else {
-            // Create new FAQ
+            // ✅ CREATE new FAQ
             console.log("Creating new FAQ");
             const faqRes = await createFaq(faqPayload);
-            updatedFAQId = faqRes?.data?._id;
-            setFormData((prev) => ({ ...prev, FAQ: updatedFAQId }));
-          }
-
-          if (activityId) {
-            await updateActivity(activityId, {
-              ...formData,
-              FAQ: updatedFAQId,
-            });
+            const newFaqId = faqRes?.data?._id;
+            if (newFaqId) {
+              setFormData((prev) => ({ ...prev, FAQ: newFaqId }));
+              if (activityId) {
+                await updateActivity(activityId, {
+                  ...formData,
+                  FAQ: newFaqId,
+                });
+              }
+            }
           }
         } catch (err) {
           toast.error("Failed to save FAQs");
