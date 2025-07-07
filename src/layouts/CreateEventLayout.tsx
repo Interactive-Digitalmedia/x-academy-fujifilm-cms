@@ -43,7 +43,7 @@ function normalizeFAQ(
 }
 
 export default function CreateEventLayout() {
-  const [formData, setFormData] = useState<Activity>({} as Activity);
+  const [formData, setFormData] = useState<Activity>({isEventVisibleToPublic: true} as Activity);
   const [originalData, setOriginalData] = useState<Activity | null>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
