@@ -65,6 +65,7 @@ export type Activity = {
   isFeatured: boolean;
   stopRegistration: boolean;
   enableWaitlist: boolean;
+  isEventVisibleToPublic: boolean;
   createdAt?: string;
   updatedAt?: string;
 };

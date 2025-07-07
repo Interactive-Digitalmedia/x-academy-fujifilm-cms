@@ -33,9 +33,9 @@ export default function AdminControls({ data, setData }: any) {
           <span className="text-sm font-medium">Event Visibility</span>
           <Switch
             size="sm"
-            isSelected={data.status === "publish"}
+            isSelected={data.isEventVisibleToPublic || true}
             onValueChange={(val) =>
-              setData({ ...data, status: val ? "publish" : "draft" })
+              setData({ ...data, isEventVisibleToPublic: val })
             }
             classNames={{
               base: [
