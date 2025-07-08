@@ -174,13 +174,21 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
         blog.author.toLowerCase().includes(lowerSearch) ||
         blog.content.toLowerCase().includes(lowerSearch);
 
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) =>
+          blog.tags?.some(
+            (blogTag) => blogTag.toLowerCase() === tag.toLowerCase()
+          )
+        );
+
       const matchesAuthor =
         selectedAuthors.length === 0 || selectedAuthors.includes(blog.author);
 
       const matchesStatus =
         selectedStatus.length === 0 || selectedStatus.includes(blog.status);
 
-      return matchesSearch && matchesAuthor && matchesStatus;
+      return matchesSearch && matchesAuthor && matchesStatus && matchesTags;
     });
 
     setFilteredBlogs(filtered);
@@ -310,8 +318,8 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
             {/* FiltersPopover like in EventView */}
             <FiltersPopover
               types={["Event", "Fashion", "Street", "Portrait", "Wildlife"]} // or your blog statuses
-              selectedTypes={selectedStatus}
-              setSelectedTypes={setSelectedStatus}
+              selectedTypes={selectedTags}
+              setSelectedTypes={setSelectedTags}
               selectedConductedBy={selectedAuthors}
               setSelectedConductedBy={setSelectedAuthors}
               isBlogPage={true}
@@ -329,7 +337,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
         </div>
 
         {/* Active Filters Display */}
-        {(selectedTags.length > 0 ||
+        {/* {(selectedTags.length > 0 ||
           selectedAuthors.length > 0 ||
           selectedStatus.length > 0) && (
           <div className="mb-4 flex flex-wrap gap-2">
@@ -387,7 +395,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
               </span>
             ))}
           </div>
-        )}
+        )} */}
 
         {/* BlogsGrid Component */}
         {loading ? (
