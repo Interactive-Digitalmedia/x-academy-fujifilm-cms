@@ -76,7 +76,10 @@ const GridView: React.FC = () => {
 
   const filteredResults = activities.filter((event) => {
     const matchesType =
-      selectedTypes.length === 0 || selectedTypes.includes(event.activityType);
+      selectedTypes.length === 0 ||
+      selectedTypes
+        .map((t) => t.toLowerCase())
+        .includes(event.activityType.toLowerCase());
 
     const matchesAmbassadors =
       selectedConductedBy.length === 0 ||

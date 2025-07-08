@@ -105,7 +105,9 @@ const EventView: React.FC = () => {
 
       const matchesType =
         selectedTypes.length === 0 ||
-        selectedTypes.includes(event.activityType);
+        selectedTypes
+          .map((t) => t.toLowerCase())
+          .includes(event.activityType.toLowerCase());
 
       const matchesAmbassadors =
         selectedConductedBy.length === 0 ||
@@ -145,7 +147,6 @@ const EventView: React.FC = () => {
     selectedRange,
     // activeFilters,
   ]);
-
 
   return (
     <div className="w-full  mx-auto px-4 pt-4 pb-6 bg-white rounded-xl border border-gray-200">
@@ -213,7 +214,6 @@ const EventView: React.FC = () => {
               )}
             </div>
 
-
             {/* FiltersPopover (replaces old Filter button + FilterCard) */}
             <FiltersPopover
               types={[
@@ -236,7 +236,6 @@ const EventView: React.FC = () => {
                 setSelectedConductedBy([]);
               }}
             />
-
           </div>
         </div>
 
