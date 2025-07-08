@@ -232,3 +232,23 @@ export interface Attendee {
   updatedAt: string;
   __v: number;
 }
+
+export interface AskToExperts {
+  _id: string
+  userId: {
+    _id: string
+    fullname?: string
+    email?: string
+    contactNumber?: string
+  }
+  question: string
+  status: 'active' | 'answered'
+  assignTo?: {
+    _id: string
+    fullname?: string
+    email?: string
+  }
+  answer?: string
+  createdAt: string
+  updatedAt: string
+}

@@ -1,3 +1,4 @@
+import { AskToExperts } from "@/types";
 import { CommunityRow } from "./CommunityRow";
 import {
   Table,
@@ -7,18 +8,9 @@ import {
   TableHead as TH,
 } from "@/components/ui/table";
 
-type CommunityItem = {
-  _id: string;
-  sno: number;
-  date: string;
-  raisedBy: string;
-  question: string;
-  status: string;
-  assign: string;
-};
 
 type CommunityTableProps = {
-  data: CommunityItem[];
+  data: AskToExperts[];
 };
 
 export function CommunityTable({ data }: CommunityTableProps) {

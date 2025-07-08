@@ -1,10 +1,10 @@
-import  { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { dummyCommunity } from "@/assets/dummyCommunity";
-
+import { useState, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import UserInformation from "@/components/support/UserInformation";
 import AnswerQuery from "@/components/community/AnswerQuery";
 import { Badge } from "@/components/ui/badge";
+import { getAskTheExpertsById } from "@/api/askTheExperts";
+import { AskToExperts } from "@/types";
 
 const TABS = ["User Information", "Answer Query"];
 
@@ -12,12 +12,25 @@ const CommunityDetails = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("User Information");
   const [answer, setAnswer] = useState("");
-
-  const ticket = dummyCommunity.find((t) => t._id === id);
+  const { state } = useLocation();
+  const [ticket, setTicket] = useState<AskToExperts | null>(
+    state?.ticket || null
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {    
+    if (!ticket && id) {
+      (async () => {
+        const res = await getAskTheExpertsById(id);
+        if (res?.status === 200 && res.data) {
+          setTicket(res.data);
+        }
+      })();
+    }
+  }, [id, ticket]);
 
   if (!ticket) {
     return <div className="text-red-500 px-4 py-6">Ticket not found</div>;
@@ -44,7 +57,7 @@ const CommunityDetails = () => {
     <div className="p-6">
       <div className="bg-white border rounded-xl p-4 shadow-sm">
         <Badge variant="outline" className="bg-orange-100 text-orange-600 mb-2">
-          ● {ticket.status || "Unknown Status"}
+          ● {ticket?.status || "Unknown Status"}
         </Badge>
 
         {/* Updated Tabs UI */}
@@ -57,7 +70,7 @@ const CommunityDetails = () => {
               }`}
               style={{
                 display: "flex",
-                width: "135px",
+                width: "145px",
                 padding: "6px 12px",
                 justifyContent: "center",
                 alignItems: "center",

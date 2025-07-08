@@ -21,12 +21,11 @@ export default function Sidebar() {
     { name: "Events", path: "/events", icon: Calendar },
     { name: "Partners", path: "/partners", icon: Users },
     { name: "Blogs", path: "/blogs", icon: BookOpen },
-    { name: "Community", path: "/community", icon: BookOpen, disabled: true },
+    { name: "Community", path: "/community", icon: BookOpen,},
     {
       name: "Submissions",
       path: "/submissions",
       icon: BookOpen,
-      disabled: true,
     },
     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
     { name: "Support", path: "/support", icon: HelpCircle, disabled: true },

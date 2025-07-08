@@ -15,6 +15,8 @@ import { getAllXStories } from "@/api/XStory";
 import TipsAndTricks from "./TipsAndTricks";
 
 import { useNavigate } from "react-router-dom";
+import { AskToExperts } from "@/types";
+import { getAskTheExperts } from "@/api/askTheExperts";
 
 export interface XStory {
   _id: string;
@@ -37,13 +39,14 @@ const CommunityOptions: React.FC = () => {
     {}
   );
   const [activeTab, setActiveTab] = useState("Ask the Expert");
-  const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
+  // const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
   const [xStories, setXStories] = useState<XStory[]>([]);
   const navigate = useNavigate();
-  const parseDMY = (dmy: string): Date => {
-    const [day, month, year] = dmy.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  };
+  // const parseDMY = (dmy: string): Date => {
+  //   const [day, month, year] = dmy.split("-").map(Number);
+  //   return new Date(year, month - 1, day);
+  // };
+  const [askExpertData, setAskExpertData] = useState<AskToExperts[]>([]);
 
   const fetchStories = useCallback(async () => {
     try {
@@ -70,28 +73,50 @@ const CommunityOptions: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const fetchAskExperts = async () => {
+      try {
+        const res = await getAskTheExperts();
+
+        if (res.success) {
+          setAskExpertData(res.data);
+        } else {
+          console.error("Failed to fetch Ask the Experts:", res.message);
+        }
+      } catch (err) {
+        console.error("Error fetching Ask the Experts", err);
+      }
+    };
+
+    if (activeTab === "Ask the Expert") {
+      fetchAskExperts();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
     if (activeTab === "X-Stories") {
       fetchStories();
     }
   }, [activeTab, fetchStories]);
 
-  useEffect(() => {
-    const lowerSearch = searchText.toLowerCase();
-    const filtered = dummyCommunity.filter((item) => {
-      const matchesSearch =
-        searchText.length < 3 ||
-        item.raisedBy?.toLowerCase().includes(lowerSearch) ||
-        item.question?.toLowerCase().includes(lowerSearch);
-      const matchesFilters =
-        !activeFilters.status || item.status === activeFilters.status;
-      const itemDate = parseDMY(item.date);
-      const from = selectedRange?.from;
-      const to = selectedRange?.to;
-      const matchesDate = !from || !to || (itemDate >= from && itemDate <= to);
-      return matchesSearch && matchesFilters && matchesDate;
-    });
-    setFilteredCommunity(filtered);
-  }, [searchText, selectedRange, activeFilters]);
+  // useEffect(() => {
+  //   const lowerSearch = searchText.toLowerCase();
+  //   const filtered = dummyCommunity.filter((item) => {
+  //     const matchesSearch =
+  //       searchText.length < 3 ||
+  //       item.raisedBy?.toLowerCase().includes(lowerSearch) ||
+  //       item.question?.toLowerCase().includes(lowerSearch);
+  //     const matchesFilters =
+  //       !activeFilters.status || item.status === activeFilters.status;
+  //     const itemDate = parseDMY(item.date);
+  //     const from = selectedRange?.from;
+  //     const to = selectedRange?.to;
+  //     const matchesDate = !from || !to || (itemDate >= from && itemDate <= to);
+  //     return matchesSearch && matchesFilters && matchesDate;
+  //   });
+  //   // setFilteredCommunity(filtered);
+  // }, [searchText, selectedRange, activeFilters]);
+
+  console.log(activeFilters);
 
   const handleRowClick = (story: XStory) => {
     setSelectedStory(story);
@@ -243,7 +268,7 @@ const CommunityOptions: React.FC = () => {
         </div>
 
         {activeTab === "Ask the Expert" && (
-          <CommunityTable data={filteredCommunity} />
+          <CommunityTable data={askExpertData} />
         )}
 
         {activeTab === "Tips & Tricks" && <TipsAndTricks />}
