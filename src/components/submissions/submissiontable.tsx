@@ -7,14 +7,7 @@ import {
   TableRow,
   TableHead as TH,
 } from "@/components/ui/table";
-
-interface Submission {
-  sno: number;
-  name: string;
-  link: string;
-  status: "Approved" | "Rejected" | "Pending";
-  uploadDate: string;
-}
+import { Submission } from "@/types";
 
 interface SubmissionTableProps {
   submissions: Submission[];
@@ -23,6 +16,7 @@ interface SubmissionTableProps {
 export const SubmissionTable: React.FC<SubmissionTableProps> = ({
   submissions,
 }) => {
+  console.log(submissions);  
   return (
     <div className="bg-white w-full ">
       <Table className="w-full text-sm">
@@ -37,7 +31,7 @@ export const SubmissionTable: React.FC<SubmissionTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {submissions.map((sub, i) => (
+          {submissions?.map((sub, i) => (
             <SubmissionRow key={i} data={sub} index={i} />
           ))}
         </TableBody>

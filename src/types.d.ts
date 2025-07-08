@@ -157,10 +157,10 @@ export interface AboutUsContentType {
 }
 
 export interface ProfileData {
-  name: string;
+  fullname: string;
   email: string;
   contactNumber: string;
-  profileImage: string;
+  profilePictureUrl: string;
   state: string;
   socialMediaUrls: {
     instagram?: string;
@@ -282,6 +282,16 @@ export interface XStoryType {
   //   email?: string;
   //   // Add more fields from Admin schema if needed
   // };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Submission {
+  _id: string;
+  googleDriveLink: string;
+  instagramLink?: string;
+  userId: string | ProfileData;
+  status: "approved" | "denied" | "pending";
   createdAt: string;
   updatedAt: string;
 }
