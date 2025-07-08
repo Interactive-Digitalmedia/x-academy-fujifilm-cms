@@ -1,94 +1,10 @@
 import React, { useState } from "react";
-import {
-  Sun,
-  Layers,
-  ChevronDown,
-  Camera,
-} from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-// SVG Icon Wrapper
-const SvgIcon: React.FC<{ src: string; size?: number }> = ({ src, size = 24 }) => (
-  <img src={src} alt="icon" width={size} height={size} />
-);
-
-// Icon Options
-const icons = [
-  {
-    label: "Camera 1",
-    value: "camera1",
-    icon: () => <SvgIcon src="/banner/icons/camera1.svg" />,
-  },
-  {
-    label: "Camera 2",
-    value: "camera2",
-    icon: () => <SvgIcon src="/banner/icons/camera2.svg" />,
-  },
-  { label: "Sun", value: "sun", icon: () => <Sun size={24} /> },
-  { label: "Layers", value: "layers", icon: () => <Layers size={24} /> },
-  {
-    label: "Cloud",
-    value: "cloud",
-    icon: () => <SvgIcon src="/banner/icons/cloud.svg" />,
-  },
-];
-
-const IconPicker: React.FC<{
-  selectedIcon: string;
-  onChange: (val: string) => void;
-}> = ({ selectedIcon, onChange }) => {
-  const selected = icons.find((i) => i.value === selectedIcon);
-  const DefaultIcon = Camera;
-
-  return (
-    <div className="space-y-1">
-      <label className="block text-sm font-medium text-gray-600">Icon</label>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full h-[40px] flex justify-between items-center px-3 rounded-md border border-gray-200"
-          >
-            <div className="flex items-center gap-2">
-              {selected ? (
-                <selected.icon />
-              ) : (
-                <DefaultIcon size={20} />
-              )}
-            </div>
-            <ChevronDown size={18} className="text-gray-500" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-4">
-          <div className="font-semibold text-gray-500 mb-1">Choose Icon</div>
-          <div className="grid grid-cols-5 gap-4">
-            {icons.map((item) => (
-              <button
-                key={item.value}
-                onClick={() => onChange(item.value)}
-                className={`p-2 rounded-lg hover:bg-accent transition ${
-                  selectedIcon === item.value
-                    ? "bg-accent text-accent-foreground"
-                    : ""
-                }`}
-              >
-                <item.icon />
-              </button>
-            ))}
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-};
+import { createTipsAndTricks } from "@/api/tipsAndTricks";
+import toast from "react-hot-toast";
+import IconPicker from "./IconPicker";
 
 const NewTemplate: React.FC = () => {
   const sections = [1, 2, 3, 4, 5];
@@ -97,22 +13,42 @@ const NewTemplate: React.FC = () => {
   const [titles, setTitles] = useState<Record<number, string>>({});
   const [descriptions, setDescriptions] = useState<Record<number, string>>({});
 
-  const handleSave = () => {
-    const templateData = {
-      templateName,
-      sections: sections.map((i) => ({
+  const handleSave = async () => {
+    if (!templateName.trim()) {
+      toast.error("Template name is required.");
+      return;
+    }
+
+    const invalidIndex = sections.find(
+      (i) =>
+        !titles[i]?.trim() || !iconValues[i]?.trim() || !descriptions[i]?.trim()
+    );
+
+    if (invalidIndex !== undefined) {
+      toast.error(`Section ${invalidIndex} is incomplete.`);
+      return;
+    }
+    const payload = {
+      name: templateName,
+      items: sections.map((i) => ({
         title: titles[i] || "",
         icon: iconValues[i] || "",
         description: descriptions[i] || "",
       })),
     };
 
-    const existing = JSON.parse(localStorage.getItem("tips_templates") || "[]");
-    localStorage.setItem(
-      "tips_templates",
-      JSON.stringify([...existing, templateData])
-    );
-    alert("Template saved successfully!");
+    try {
+      const res = await createTipsAndTricks(payload);
+
+      if (res.status === 201) {
+        toast.success("Template saved successfully!");
+      } else {
+        console.log(`Failed to save template: ${res.message}`);
+      }
+    } catch (err) {
+      console.error("Error saving template:", err);
+      toast.error("Something went wrong while saving.");
+    }
   };
 
   return (
@@ -120,7 +56,7 @@ const NewTemplate: React.FC = () => {
       {/* Template Name */}
       <div>
         <label className="block text-sm font-medium text-gray-600 mb-1">
-          Template name
+          Template name <span className="text-red-500"> *</span>
         </label>
         <Input
           type="text"
@@ -137,7 +73,7 @@ const NewTemplate: React.FC = () => {
           <div className="flex items-start justify-between mb-2 gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                {item}. Title
+                {item}. Title <span className="text-red-500"> *</span>
               </label>
               <Input
                 type="text"
@@ -162,7 +98,7 @@ const NewTemplate: React.FC = () => {
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Description
+              Description <span className="text-red-500"> *</span>
             </label>
             <Textarea
               placeholder="Sample"

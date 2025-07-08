@@ -14,9 +14,11 @@ import XStoryDialog from "./XStoryDialog";
 import { getAllXStories } from "@/api/XStory";
 import TipsAndTricks from "./TipsAndTricks";
 
-import { useNavigate } from "react-router-dom";
-import { AskToExperts } from "@/types";
+// import { useNavigate } from "react-router-dom";
+import { AskToExperts, TipsAndTricksType, XStoryType } from "@/types";
 import { getAskTheExperts } from "@/api/askTheExperts";
+import TipsAndTricksDialog from "./TipsAndTricksDialog";
+import { getTipsAndTricks } from "@/api/tipsAndTricks";
 
 export interface XStory {
   _id: string;
@@ -31,7 +33,8 @@ export interface XStory {
 const CommunityOptions: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedStory, setSelectedStory] = useState<XStory | null>(null);
+  const [openTipsAndTricksModal, setOpenTipsAndTricksModal] = useState(false);
+  const [selectedStory, setSelectedStory] = useState<XStoryType | null>(null);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
   const [showCalendar, setShowCalendar] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -40,33 +43,38 @@ const CommunityOptions: React.FC = () => {
   );
   const [activeTab, setActiveTab] = useState("Ask the Expert");
   // const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
-  const [xStories, setXStories] = useState<XStory[]>([]);
-  const navigate = useNavigate();
+  const [xStories, setXStories] = useState<XStoryType[]>([]);
+  const [refreshTipsAndTricks, setRefreshTipsAndTricks] = useState(false);
+  // const navigate = useNavigate();
   // const parseDMY = (dmy: string): Date => {
   //   const [day, month, year] = dmy.split("-").map(Number);
   //   return new Date(year, month - 1, day);
   // };
   const [askExpertData, setAskExpertData] = useState<AskToExperts[]>([]);
+  const [templates, setTemplates] = useState<TipsAndTricksType[]>([]);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TipsAndTricksType | null>(null);
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      const res = await getTipsAndTricks();
+
+      if (res.status === 200) {
+        setTemplates(res.data);
+      } else {
+        console.error("Failed to fetch Tips & Tricks:", res.message);
+      }
+    };
+
+    fetchTemplates();
+  }, [refreshTipsAndTricks]);
 
   const fetchStories = useCallback(async () => {
     try {
       const response = await getAllXStories();
-      const transformed: XStory[] = response.data.map(
-        (story: any, index: number) => ({
-          _id: story._id,
-          sno: index + 1,
-          title: story.name,
-          videoLink: story.link,
-          dateUploaded: new Date(story.createdAt).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }),
-          uploadedBy: "Admin",
-          isCoverImage: !!story.coverImage,
-        })
-      );
-      setXStories(transformed);
+      if (response.status == 200) {
+        setXStories(response?.data);
+      }
     } catch (err) {
       console.error("Failed to load X-Stories", err);
     }
@@ -118,7 +126,7 @@ const CommunityOptions: React.FC = () => {
 
   console.log(activeFilters);
 
-  const handleRowClick = (story: XStory) => {
+  const handleRowClick = (story: XStoryType) => {
     setSelectedStory(story);
     setDialogOpen(true);
   };
@@ -128,13 +136,24 @@ const CommunityOptions: React.FC = () => {
     setDialogOpen(true);
   };
   const handleNewTemplateClick = () => {
-    navigate("/community/new-template");
+    // navigate("/community/new-template");
+    setOpenTipsAndTricksModal(true);
+    setSelectedTemplate(null);
+  };
+
+  const handleEditTemplate = (template: TipsAndTricksType) => {
+    setSelectedTemplate(template);
+    setOpenTipsAndTricksModal(true);
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setSelectedStory(null);
     fetchStories();
+  };
+
+  const handleCloseTipsAndTricksModal = () => {
+    setOpenTipsAndTricksModal(false);
   };
 
   return (
@@ -271,7 +290,12 @@ const CommunityOptions: React.FC = () => {
           <CommunityTable data={askExpertData} />
         )}
 
-        {activeTab === "Tips & Tricks" && <TipsAndTricks />}
+        {activeTab === "Tips & Tricks" && (
+          <TipsAndTricks
+            templates={templates}
+            onEditTemplate={handleEditTemplate}
+          />
+        )}
 
         {activeTab === "X-Stories" && (
           <XStoriesTable stories={xStories} onRowClick={handleRowClick} />
@@ -282,6 +306,13 @@ const CommunityOptions: React.FC = () => {
         open={dialogOpen}
         onClose={handleCloseDialog}
         story={selectedStory}
+      />
+
+      <TipsAndTricksDialog
+        open={openTipsAndTricksModal}
+        onClose={handleCloseTipsAndTricksModal}
+        story={selectedTemplate}
+        setRefreshTipsAndTricks={setRefreshTipsAndTricks}
       />
     </div>
   );

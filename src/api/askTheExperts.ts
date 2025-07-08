@@ -40,12 +40,15 @@ export const getAskTheExpertsById = async (id: string) => {
     return { status: 401, message: "Token not available" };
   }
   try {
-    const response = await axios.get(`${baseUrl}community/ask-to-experts/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(
+      `${baseUrl}community/ask-to-experts/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.data) {

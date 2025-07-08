@@ -21,7 +21,7 @@ const CommunityDetails = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (!ticket && id) {
       (async () => {
         const res = await getAskTheExpertsById(id);
@@ -78,6 +78,7 @@ const CommunityDetails = () => {
               }}
               onClick={() => setActiveTab(tab)}
               type="button"
+              disabled={tab === "Answer Query" && !answer}
             >
               {tab}
             </button>
