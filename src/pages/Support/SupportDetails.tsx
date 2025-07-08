@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { dummySupport } from "@/assets/dummySupport";
 
 import { Badge } from "@/components/ui/badge";
-import UserInformation from "@/components/support/UserInformation";
+// import UserInformation from "@/components/support/UserInformation";
 import TicketDetails from "@/components/support/TicketDetails";
 import AdminActions from "@/components/support/AdminActions";
 import InteractionLog from "@/components/support/InteractionLog";
@@ -28,7 +28,7 @@ const SupportDetails = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "User Information":
-        return <UserInformation ticket={ticket} />;
+        // return <UserInformation ticket={ticket} />;
 
       case "Ticket Details":
         return (

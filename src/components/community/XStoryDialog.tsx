@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +26,8 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   story,
   onClose,
 }) => {
+  console.log(story);
+
   const isEditing = !!story?._id;
   const [formData, setFormData] = useState<XStoryFormData>({
     name: story?.name || "",
@@ -36,6 +38,22 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (story) {
+      setFormData({
+        name: story.name || "",
+        link: story.link || "",
+        coverImage: story.coverImage || "",
+      });
+    } else {
+      setFormData({
+        name: "",
+        link: "",
+        coverImage: "",
+      });
+    }
+  }, [story]);
 
   // useEffect(() => {
   //   if (story?._id) {
@@ -66,6 +84,7 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   //     });
   //   }
   // }, [story, open]);
+
   const handleFileSelect = async (file: File) => {
     if (file.size > 10 * 1024 * 1024) {
       toast.error("File size must be less than 10MB");
