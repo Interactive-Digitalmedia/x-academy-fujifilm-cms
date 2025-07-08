@@ -188,7 +188,18 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
       const matchesStatus =
         selectedStatus.length === 0 || selectedStatus.includes(blog.status);
 
-      return matchesSearch && matchesAuthor && matchesStatus && matchesTags;
+      const from = selectedRange?.from;
+      const to = selectedRange?.to;
+      const blogDate = new Date(blog.publishedDate); // Ensure it's a Date object
+      const matchesDate = !from || !to || (blogDate >= from && blogDate <= to);
+
+      return (
+        matchesSearch &&
+        matchesAuthor &&
+        matchesStatus &&
+        matchesTags &&
+        matchesDate
+      );
     });
 
     setFilteredBlogs(filtered);
