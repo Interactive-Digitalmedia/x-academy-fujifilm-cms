@@ -1,10 +1,10 @@
 import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ChevronRight } from "lucide-react";
-import { XStory } from "./CommunityOptions";
+import { XStoryType } from "@/types";
 
 interface XStoryRowProps {
-  data: XStory;
+  data: XStoryType;
   index: number;
   onClick: () => void;
 }
@@ -13,7 +13,7 @@ export const XStoryRow: React.FC<XStoryRowProps> = ({
   data,
   index,
   onClick,
-}) => {
+}) => {  
   return (
     <TableRow
       onClick={onClick}
@@ -22,16 +22,16 @@ export const XStoryRow: React.FC<XStoryRowProps> = ({
     >
       <TableCell className="px-3 py-1 text-center">{index + 1}</TableCell>
       <TableCell className="px-3 py-1 truncate max-w-[160px]">
-        {data.title}
+        {data?.name}
       </TableCell>
       <TableCell className="px-3 py-1 text-blue-600 underline truncate max-w-[160px]">
-        {data.videoLink}
+        {data?.link}
       </TableCell>
-      <TableCell className="px-3 py-1">{data.dateUploaded}</TableCell>
-      <TableCell className="px-3 py-1">{data.uploadedBy}</TableCell>
+      <TableCell className="px-3 py-1">{data?.createdAt}</TableCell>
+      <TableCell className="px-3 py-1">Admin</TableCell>
       <TableCell className="px-3 py-1 text-right">
         <div className="flex items-center justify-end gap-2">
-          {data.isCoverImage ? "YES" : "NO"}
+          {data.coverImage ? "YES" : "NO"}
           <ChevronRight className="w-4 h-4 text-gray-400" />
         </div>
       </TableCell>

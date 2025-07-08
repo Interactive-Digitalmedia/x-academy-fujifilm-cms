@@ -7,11 +7,11 @@ import {
   TableHead as TH,
 } from "@/components/ui/table";
 import { XStoryRow } from "./XStoriesRow";
-import { XStory } from "./CommunityOptions"; // Import from the central definition
+import { XStoryType } from "@/types";
 
 interface XStoriesTableProps {
-  stories: XStory[];
-  onRowClick: (story: XStory) => void;
+  stories: XStoryType[];
+  onRowClick: (story: XStoryType) => void;
 }
 
 export const XStoriesTable: React.FC<XStoriesTableProps> = ({

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Camera,
   CameraIcon,
@@ -14,7 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Switch } from "@nextui-org/react";
+import { TipsAndTricksType } from "@/types";
 
 // SVG Icon Renderer
 const SvgIcon: React.FC<{ src: string; size?: number }> = ({
@@ -37,18 +37,18 @@ const customIconMap: Record<string, string> = {
   cloud: "/banner/icons/cloud.svg",
 };
 
-const TipsAndTricks: React.FC = () => {
-  const [templates, setTemplates] = useState<any[]>([]);
-
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("tips_templates") || "[]");
-    setTemplates(saved);
-  }, []);
-
+interface TipsAndTricksProps {
+  templates?: TipsAndTricksType[];
+  onEditTemplate?: (template: TipsAndTricksType) => void;
+}
+const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
+  templates,
+  onEditTemplate,
+}) => {
   return (
     <div className="p-0 bg-white text-black mx-auto">
       <Accordion type="single" collapsible className="space-y-0">
-        {templates.map((template, idx) => (
+        {templates?.map((template, idx) => (
           <AccordionItem
             value={`item-${idx}`}
             key={idx}
@@ -57,7 +57,7 @@ const TipsAndTricks: React.FC = () => {
             <AccordionTrigger className="py-4 px-2 transition flex items-center justify-between w-full text-left text-lg font-semibold group">
               <span className="flex items-center gap-2">
                 <span className="text-gray-500">{idx + 1}.</span>
-                {template.templateName}
+                {template?.name}
               </span>
             </AccordionTrigger>
 
@@ -68,7 +68,7 @@ const TipsAndTricks: React.FC = () => {
                   Additional Controls
                 </h2>
 
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <label className="text-sm font-medium text-gray-700">
                     Make Default Template
                   </label>
@@ -76,14 +76,17 @@ const TipsAndTricks: React.FC = () => {
                     isSelected={template.default || false}
                     onChange={() => console.log("toggled")}
                   />
-                </div>
+                </div> */}
 
                 <div className="flex gap-3">
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-md text-gray-700 hover:bg-gray-50">
+                  {/* <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-md text-gray-700 hover:bg-gray-50">
                     <Pencil size={14} />
                     Edit Name
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm border rounded-md text-gray-700 hover:bg-gray-50">
+                  </button> */}
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 text-sm border rounded-md text-gray-700 hover:bg-gray-50"
+                    onClick={() => onEditTemplate?.(template)}
+                  >
                     <Pencil size={14} />
                     Edit Template
                   </button>
@@ -95,7 +98,7 @@ const TipsAndTricks: React.FC = () => {
               </div>
 
               {/* Section Fields */}
-              {template.sections.map((sec: any, i: number) => (
+              {template?.items?.map((sec: any, i: number) => (
                 <div key={i} className="space-y-2">
                   <label className="text-sm text-gray-600 font-medium">
                     {i + 1}. Title
@@ -105,7 +108,7 @@ const TipsAndTricks: React.FC = () => {
                       type="text"
                       value={sec.title}
                       readOnly
-                      className="flex-1 px-3 py-2 text-sm border rounded-md bg-white text-gray-800"
+                      className="flex-1 px-3 py-2 text-sm border rounded-md bg-white text-gray-800 outline-none"
                     />
                     <div className="flex items-center w-40 gap-2">
                       <label className="text-sm text-gray-500">Icon</label>
@@ -122,7 +125,7 @@ const TipsAndTricks: React.FC = () => {
                         <select
                           disabled
                           value={sec.icon}
-                          className="appearance-none pl-8 pr-6 py-2 w-full text-sm rounded-md bg-white text-gray-800 border"
+                          className="appearance-none pl-8 pr-6 py-2 w-full text-sm rounded-md bg-white text-gray-800 border outline-none"
                         >
                           {[
                             ...Object.keys(iconMap),
@@ -142,7 +145,7 @@ const TipsAndTricks: React.FC = () => {
                     value={sec.description}
                     readOnly
                     rows={3}
-                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-gray-800 resize-none"
+                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-gray-800 resize-none outline-none"
                   />
                 </div>
               ))}
