@@ -135,6 +135,8 @@ interface BlogsProps {}
 const Blogs: React.FunctionComponent<BlogsProps> = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -161,6 +163,54 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
 
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    const lowerSearch = searchTerm.toLowerCase();
+
+    const filtered = blogs.filter((blog) => {
+      const matchesSearch =
+        searchTerm.length < 3 ||
+        blog.title.toLowerCase().includes(lowerSearch) ||
+        blog.author.toLowerCase().includes(lowerSearch) ||
+        blog.content.toLowerCase().includes(lowerSearch);
+
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) =>
+          blog.tags?.some(
+            (blogTag) => blogTag.toLowerCase() === tag.toLowerCase()
+          )
+        );
+
+      const matchesAuthor =
+        selectedAuthors.length === 0 || selectedAuthors.includes(blog.author);
+
+      const matchesStatus =
+        selectedStatus.length === 0 || selectedStatus.includes(blog.status);
+
+      const from = selectedRange?.from;
+      const to = selectedRange?.to;
+      const blogDate = new Date(blog.publishedDate); // Ensure it's a Date object
+      const matchesDate = !from || !to || (blogDate >= from && blogDate <= to);
+
+      return (
+        matchesSearch &&
+        matchesAuthor &&
+        matchesStatus &&
+        matchesTags &&
+        matchesDate
+      );
+    });
+
+    setFilteredBlogs(filtered);
+  }, [
+    blogs,
+    searchTerm,
+    selectedTags,
+    selectedAuthors,
+    selectedStatus,
+    selectedRange,
+  ]);
 
   // const slugify = (title: string) =>
   //   title
@@ -279,15 +329,14 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
             {/* FiltersPopover like in EventView */}
             <FiltersPopover
               types={["Event", "Fashion", "Street", "Portrait", "Wildlife"]} // or your blog statuses
-              selectedTypes={selectedStatus}
-              setSelectedTypes={setSelectedStatus}
+              selectedTypes={selectedTags}
+              setSelectedTypes={setSelectedTags}
               selectedConductedBy={selectedAuthors}
               setSelectedConductedBy={setSelectedAuthors}
-               isBlogPage={true}
+              isBlogPage={true}
               ambassadors={blogs.map((b) => ({
                 fullname: b.author,
                 _id: b.author,
-
               }))} // adapted for authors
               onReset={() => {
                 setSelectedStatus([]);
@@ -299,7 +348,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
         </div>
 
         {/* Active Filters Display */}
-        {(selectedTags.length > 0 ||
+        {/* {(selectedTags.length > 0 ||
           selectedAuthors.length > 0 ||
           selectedStatus.length > 0) && (
           <div className="mb-4 flex flex-wrap gap-2">
@@ -357,7 +406,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
               </span>
             ))}
           </div>
-        )}
+        )} */}
 
         {/* BlogsGrid Component */}
         {loading ? (
@@ -365,7 +414,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
         ) : !Array.isArray(blogs) || blogs.length === 0 ? (
           <p className="text-center text-sm text-gray-500">No blogs found.</p>
         ) : (
-          <BlogsGrid blogs={blogs} handleBlogClick={handleBlogClick} />
+          <BlogsGrid blogs={filteredBlogs} handleBlogClick={handleBlogClick} />
         )}
       </div>
     </>

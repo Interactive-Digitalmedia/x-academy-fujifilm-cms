@@ -203,7 +203,6 @@ export interface Blog {
   updatedAt: string;
 }
 
-
 export interface Booking {
   _id: string;
   userId: string;
@@ -213,8 +212,6 @@ export interface Booking {
   createdAt: string;
   updatedAt: string;
 }
-
-
 
 export interface Attendee {
   _id: string;
@@ -231,4 +228,60 @@ export interface Attendee {
   createdAt: string;
   updatedAt: string;
   __v: number;
+}
+
+export interface AskToExperts {
+  _id: string;
+  userId: {
+    _id: string;
+    fullname?: string;
+    email?: string;
+    contactNumber?: string;
+  };
+  question: string;
+  status: "active" | "answered";
+  assignTo?: {
+    _id: string;
+    fullname?: string;
+    email?: string;
+  };
+  answer?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type TipsAndTricksIcon =
+  | "camera"
+  | "starCamera"
+  | "sun"
+  | "layers"
+  | "cloud";
+
+export interface TipsAndTricksItem {
+  title: string;
+  description: string;
+  icon: TipsAndTricksIcon;
+}
+
+export interface TipsAndTricksType {
+  _id: string;
+  name: string;
+  items: TipsAndTricksItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface XStoryType {
+  _id: string;
+  link: string;
+  name: string;
+  coverImage: string;
+  // createdBy: string | {
+  //   _id: string;
+  //   fullname?: string;
+  //   email?: string;
+  //   // Add more fields from Admin schema if needed
+  // };
+  createdAt: string;
+  updatedAt: string;
 }

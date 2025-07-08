@@ -13,7 +13,7 @@ export function getTokenFromLocalStorage(): string | null {
   }
 }
 
-export const uploadXStory = async (payload: FormData) => {
+export const uploadXStory = async (payload: any) => {
   const token = getTokenFromLocalStorage();
   if (!token) {
     console.error("Token is not available.");
@@ -24,7 +24,7 @@ export const uploadXStory = async (payload: FormData) => {
     const response = await axios.post(`${baseUrl}xStory`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     });
     return response.data;
@@ -34,7 +34,7 @@ export const uploadXStory = async (payload: FormData) => {
   }
 };
 
-export const updateXStory = async (id: string, payload: FormData) => {
+export const updateXStory = async (id: string, payload: any) => {
   const token = getTokenFromLocalStorage();
   if (!token) {
     console.error("Token is not available.");
@@ -45,7 +45,7 @@ export const updateXStory = async (id: string, payload: FormData) => {
     const response = await axios.patch(`${baseUrl}xStory/${id}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     });
     return response.data;
