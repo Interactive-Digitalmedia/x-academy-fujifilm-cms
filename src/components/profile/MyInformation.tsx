@@ -1,6 +1,10 @@
+import { CmsUserProfileData } from "@/types";
 import { Pencil } from "lucide-react";
+interface MyInformationProps {
+  adminData?: CmsUserProfileData;
+}
 
-const MyInformation = () => {
+const MyInformation: React.FC<MyInformationProps> = ({ adminData }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Name */}
@@ -10,7 +14,7 @@ const MyInformation = () => {
         </label>
         <input
           type="text"
-          value="John Doe"
+          value={adminData?.fullname || ""}
           readOnly
           className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
         />
@@ -36,7 +40,7 @@ const MyInformation = () => {
         </label>
         <input
           type="email"
-          value="johndoe@email.com"
+          value={adminData?.email || ""}
           readOnly
           className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
         />
@@ -50,7 +54,7 @@ const MyInformation = () => {
         <div className="relative">
           <input
             type="text"
-            value="+91 xxxxx xxxxx"
+            value={adminData?.contactNumber || ""}
             readOnly
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-sm bg-white"
           />
@@ -66,7 +70,7 @@ const MyInformation = () => {
         <div className="relative">
           <input
             type="password"
-            value=""
+            value={adminData?.password || ""}
             readOnly
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-sm bg-white"
           />
@@ -82,7 +86,7 @@ const MyInformation = () => {
         <div className="relative">
           <input
             type="text"
-            value="Associate Admin"
+            value={adminData?.userRole || ""}
             readOnly
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-sm bg-white"
           />

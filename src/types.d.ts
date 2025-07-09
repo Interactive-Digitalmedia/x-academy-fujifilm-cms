@@ -156,7 +156,7 @@ export interface AboutUsContentType {
   __v?: number;
 }
 
-export interface ProfileData {
+export interface ClientUserProfileData {
   fullname: string;
   email: string;
   contactNumber: string;
@@ -290,8 +290,20 @@ export interface Submission {
   _id: string;
   googleDriveLink: string;
   instagramLink?: string;
-  userId: string | ProfileData;
+  userId: string | ClientUserProfileData;
   status: "approved" | "denied" | "pending";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CmsUserProfileData {
+  _id: string;
+  fullname: string;
+  email: string;
+  contactNumber?: string;
+  password: string;
+  userRole: string;
+  inviteAccepted: boolean;
   createdAt: string;
   updatedAt: string;
 }

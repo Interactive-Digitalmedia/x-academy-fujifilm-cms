@@ -94,7 +94,7 @@ export default function NavBar() {
         {
           label: "Create New",
           icon: CirclePlus,
-          action: () => navigate("/partners/create-partner"),
+          action: () => navigate("/create-partner"),
         },
         // {
         //   label: "Drafts",

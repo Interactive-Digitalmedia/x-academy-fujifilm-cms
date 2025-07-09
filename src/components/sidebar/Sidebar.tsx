@@ -79,12 +79,15 @@ export default function Sidebar() {
       {/* Footer */}
       <Link
         to={"/profile"}
-        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`flex items-center gap-3 rounded-lg px-3 py-2 mx-1 text-sm font-medium transition-all duration-200 ${
           isProfile
-            ? "bg-blue-50 text-blue-600"
-            : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+            ? "bg-[#CFEAFD] text-black"
+            : "text-gray-700 hover:bg-[#CFEAFD] border-t"
         }`}
       >
+        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xl font-medium text-gray-600">
+          {user?.fullname?.charAt(0).toUpperCase() || "A"}
+        </div>
         {user?.userRole}
       </Link>
     </aside>
