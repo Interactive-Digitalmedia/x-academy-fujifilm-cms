@@ -45,6 +45,7 @@ import TicketConfirmation from "./pages/EventManager/TicketConfirmation";
 import Submissions from "./pages/Submissions/Submissions";
 import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
 import NewTemplateOthers from "./components/others/NewTemplate";
+import QRScannerPage from "./pages/EventManager/QRScannerPage";
 // import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
 
         <Route path="/" element={<CheckAuth />}>
          <Route path="/ticket-confirmation" element={<TicketConfirmation />} />
+          <Route path="/scan" element={<QRScannerPage />} />
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
 
