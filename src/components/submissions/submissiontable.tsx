@@ -16,7 +16,6 @@ interface SubmissionTableProps {
 export const SubmissionTable: React.FC<SubmissionTableProps> = ({
   submissions,
 }) => {
-  console.log(submissions);  
   return (
     <div className="bg-white w-full ">
       <Table className="w-full text-sm">

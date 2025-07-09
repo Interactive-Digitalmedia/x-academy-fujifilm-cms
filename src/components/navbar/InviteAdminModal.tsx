@@ -20,7 +20,7 @@ interface InviteAdminModalProps {
 
 export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalProps) {
   const [email, setEmail] = useState('')
-  const [role, setRole] = useState<'super admin' | 'admin' | 'event manager'| 'content manager'>('admin')
+  const [role, setRole] = useState<'superAdmin' | 'admin' | 'eventManager'| 'contentManager'>('admin')
 
   const handleCreateInvite = async () => {
     const payload ={
@@ -31,6 +31,7 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
       const response = await createInvite(payload) // Assuming your API accepts a role parameter
       toast.success('Invite sent successfully!')
       console.log(response)
+      onClose()
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 'Something went wrong while sending invite.'
       toast.error(errorMessage)
@@ -68,7 +69,7 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
               <label className="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
               <Select
                 selectedKeys={[role]}
-                onChange={(e) => setRole(e.target.value as 'super admin' | 'admin' | 'event manager'| 'content manager')}
+                onChange={(e) => setRole(e.target.value as 'superAdmin' | 'admin' | 'eventManager'| 'contentManager')}
               >
                 {/* <SelectItem key="super admin" value="super admin">
                   Super Admin

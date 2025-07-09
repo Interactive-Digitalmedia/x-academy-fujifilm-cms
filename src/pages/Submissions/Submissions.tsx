@@ -22,7 +22,6 @@ const Submissions: React.FunctionComponent = () => {
     fetchSubmissions();
   }, []);
 
-  console.log(submissions);
 
   return (
     <div

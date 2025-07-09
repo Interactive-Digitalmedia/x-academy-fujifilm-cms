@@ -26,7 +26,6 @@ export default function Sidebar() {
       name: "Submissions",
       path: "/submissions",
       icon: BookOpen,
-      disabled: true,
     },
     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
     { name: "Support", path: "/support", icon: HelpCircle, disabled: true },

@@ -11,7 +11,6 @@ interface ContainerProps {
 
 const Container: React.FC<ContainerProps> = ({submissions}) => {
   const [selectedStatus, setSelectedStatus] = useState<Status>("Pending");
-console.log(submissions);
 
   return (
     <div
@@ -47,6 +46,7 @@ console.log(submissions);
               }}
               onClick={() => setSelectedStatus(status)}
               type="button"
+              disabled
             >
               {status !== "Pending" && (
                 <span

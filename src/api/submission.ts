@@ -32,3 +32,23 @@ export const getSubmissions = async () => {
     throw error;
   }
 };
+
+export const getSubmissionById = async (id: string) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    console.error("Token is not available.");
+    return;
+  }
+  try {
+    const response = await axios.get(`${baseUrl}submission/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching submission with id ${id}:`, error);
+    throw error;
+  }
+};

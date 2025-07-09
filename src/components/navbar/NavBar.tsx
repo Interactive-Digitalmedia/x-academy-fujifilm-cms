@@ -1,4 +1,11 @@
-import { Bell, CirclePlus, Trash2, Settings, SquarePen } from "lucide-react";
+import {
+  Bell,
+  CirclePlus,
+  Trash2,
+  Settings,
+  SquarePen,
+  UserRoundPlus,
+} from "lucide-react";
 import InviteAdminModal from "./InviteAdminModal";
 import { useDisclosure } from "@nextui-org/react";
 import useGlobalStore from "@/state/GlobalState";
@@ -45,13 +52,16 @@ export default function NavBar() {
   const sectionConfig = {
     dashboard: {
       title: "Dashboard",
-      buttons: [
-        {
-          label: "",
-          icon: Bell,
-          action: () => console.log("Notification clicked"),
-        },
-      ],
+      buttons:
+        user?.userRole === "superAdmin"
+          ? [
+              {
+                label: "Invite",
+                icon: UserRoundPlus,
+                action: () => onOpenChange(),
+              },
+            ]
+          : [],
     },
 
     events: {
@@ -109,7 +119,7 @@ export default function NavBar() {
               label: "Create New",
               icon: CirclePlus,
               action: () => navigate("/blog/createblogs"),
-            }
+            },
             // {
             //   label: "Drafts",
             //   icon: "",
@@ -148,7 +158,7 @@ export default function NavBar() {
     if (location.pathname === "/events/create-events") return null;
 
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex justify-center items-center gap-2">
         {config.buttons.map((b, i) => {
           const isPrimary =
             b.label?.toLowerCase().includes("create") ||
@@ -158,7 +168,7 @@ export default function NavBar() {
             <button
               key={i}
               onClick={b.action}
-              className={`flex items-center gap-2 rounded-md px-2 py-[6px] text-sm min-w-[100px] font-medium transition
+              className={`flex items-center gap-3 rounded-md px-5 py-[6px] text-sm font-medium transition
                 ${
                   isPrimary
                     ? "bg-[#2196F3] text-white hover:bg-[#1976D2]"
@@ -183,7 +193,7 @@ export default function NavBar() {
 
       <div className="ml-auto flex items-center gap-2">
         {renderSectionButtons()}
-        {currentSection === "dashboard" && user?.userRole !== "super admin" && (
+        {currentSection === "dashboard" && (
           <button
             className="p-2 rounded-md hover:bg-gray-100 transition"
             aria-label="Notifications"

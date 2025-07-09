@@ -34,9 +34,13 @@ export const SubmissionRow: React.FC<SubmissionRowProps> = ({
     return `${day}-${month}-${year}`;
   };
 
+  const handleNavigate = () => {
+    navigate(`/submissions/${data?._id}`, { state: { submission: data } });
+  };
+
   return (
     <TableRow
-      onClick={() => navigate(`/submissions/${data?._id}`)}
+      onClick={() => handleNavigate()}
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0 leading-tight"
     >
       <TableCell className="px-3 py-1">{index + 1}</TableCell>
@@ -59,10 +63,16 @@ export const SubmissionRow: React.FC<SubmissionRowProps> = ({
       <TableCell className="px-3 py-1">
         {data?.status === "pending" ? (
           <div className="flex gap-2">
-            <Button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 h-6 text-xs rounded">
+            <Button
+              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 h-6 text-xs rounded"
+              disabled
+            >
               Approve
             </Button>
-            <Button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 h-6 text-xs rounded">
+            <Button
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 h-6 text-xs rounded"
+              disabled
+            >
               Deny
             </Button>
           </div>
