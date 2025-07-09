@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { UploadCloud, Trash2 } from "lucide-react";
-import { uploadXStory, updateXStory } from "@/api/XStory";
-
+import { uploadXStory, updateXStory, deleteXStory } from "@/api/XStory";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import toast from "react-hot-toast";
 import { XStoryType } from "@/types";
 import { uploadImage } from "@/api/uploadImageApi";
@@ -26,8 +26,6 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   story,
   onClose,
 }) => {
-  console.log(story);
-
   const isEditing = !!story?._id;
   const [formData, setFormData] = useState<XStoryFormData>({
     name: story?.name || "",
@@ -38,6 +36,8 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (story) {
@@ -109,6 +109,31 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
     } catch (err) {
       console.error("Image upload failed", err);
       toast.error("Failed to upload image.");
+    }
+  };
+
+  const handleDeleteStory = async (reason?: string) => {
+    console.log("Deleting story with reason:", reason);
+    // change
+    if (!story?._id) {
+      console.log("no story id");
+      return;
+    }
+    console.log("Attempting to delete story with ID:", story._id);
+    if (reason) console.log("Reason:", reason);
+
+    setIsDeleting(true);
+    try {
+      const res = await deleteXStory(story._id);
+      console.log("DELETE response:", res);
+      toast.success("X-Story deleted");
+      onClose();
+    } catch (err: any) {
+      console.error("Delete failed", err?.response || err);
+      toast.error("Failed to delete X-Story");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
     }
   };
 
@@ -279,11 +304,23 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-end gap-3 pt-4">
+          {isEditing && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-red-500 text-red-600 hover:bg-red-50"
+              onClick={handleDeleteStory}
+            >
+              Delete Story
+            </Button>
+          )}
+
           <Button
             size="sm"
             className="bg-[#2196F3] text-white hover:bg-[#1976D2]"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
             {isSubmitting
               ? isEditing
@@ -295,6 +332,16 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
           </Button>
         </div>
       </DialogContent>
+      {/* <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteStory}
+        title="Delete X-Story"
+        description="Are you sure you want to delete this X-Story? This action cannot be undone."
+        confirmText={isDeleting ? "Deleting..." : "Yes, Delete"}
+        cancelText="Cancel"
+        showReasonInput={true}
+      /> */}
     </Dialog>
   );
 };

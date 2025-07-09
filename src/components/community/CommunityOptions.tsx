@@ -128,7 +128,7 @@ const CommunityOptions: React.FC = () => {
   //   // setFilteredCommunity(filtered);
   // }, [searchText, selectedRange, activeFilters]);
 
-  console.log(activeFilters);
+  // console.log(activeFilters);
 
   const handleRowClick = (story: XStoryType) => {
     setSelectedStory(story);
