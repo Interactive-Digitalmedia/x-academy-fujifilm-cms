@@ -9,17 +9,17 @@ import { dummyCommunity } from "@/assets/dummyCommunity";
 import FilterCard from "@/components/ui/filtercard";
 import { CommunityTable } from "@/components/community/CommunityTable";
 import { XStoriesTable } from "./XStoriesTable";
-
+import ConfirmationModal from "@/components/ConfirmationModal";
 import XStoryDialog from "./XStoryDialog";
 import { getAllXStories } from "@/api/XStory";
 import TipsAndTricks from "./TipsAndTricks";
-
+import { deleteTipsAndTricks } from "@/api/tipsAndTricks";
 // import { useNavigate } from "react-router-dom";
 import { AskToExperts, TipsAndTricksType, XStoryType } from "@/types";
 import { getAskTheExperts } from "@/api/askTheExperts";
 import TipsAndTricksDialog from "./TipsAndTricksDialog";
 import { getTipsAndTricks } from "@/api/tipsAndTricks";
-
+import toast from "react-hot-toast";
 export interface XStory {
   _id: string;
   sno: number;
@@ -32,6 +32,10 @@ export interface XStory {
 
 const CommunityOptions: React.FC = () => {
   const [searchText, setSearchText] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [templateToDelete, setTemplateToDelete] =
+    useState<TipsAndTricksType | null>(null);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [openTipsAndTricksModal, setOpenTipsAndTricksModal] = useState(false);
   const [selectedStory, setSelectedStory] = useState<XStoryType | null>(null);
@@ -144,6 +148,32 @@ const CommunityOptions: React.FC = () => {
   const handleEditTemplate = (template: TipsAndTricksType) => {
     setSelectedTemplate(template);
     setOpenTipsAndTricksModal(true);
+  };
+  const handleDeleteTemplate = (template: TipsAndTricksType) => {
+    setTemplateToDelete(template);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!templateToDelete?._id) return;
+
+    try {
+      const res = await deleteTipsAndTricks(templateToDelete._id);
+      if (res.status === 200) {
+        toast.success("Template deleted!");
+        setTemplates((prev) =>
+          prev.filter((template) => template._id !== templateToDelete._id)
+        );
+      } else {
+        toast.error(res.message || "Delete failed");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.error("Delete error:", error);
+    } finally {
+      setShowDeleteModal(false);
+      setTemplateToDelete(null);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -294,6 +324,7 @@ const CommunityOptions: React.FC = () => {
           <TipsAndTricks
             templates={templates}
             onEditTemplate={handleEditTemplate}
+            onDeleteTemplate={handleDeleteTemplate}
           />
         )}
 
@@ -313,6 +344,16 @@ const CommunityOptions: React.FC = () => {
         onClose={handleCloseTipsAndTricksModal}
         story={selectedTemplate}
         setRefreshTipsAndTricks={setRefreshTipsAndTricks}
+      />
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Template"
+        description="Are you sure you want to delete this Tips & Tricks template? This action cannot be undone."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+        showReasonInput={true}
       />
     </div>
   );
