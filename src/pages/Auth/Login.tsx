@@ -47,7 +47,7 @@ const Login = () => {
         setIsLoading(false)
    
 
-        const { userId, fullname, userRole = 'super admin' } = response.data.data
+        const { userId, fullname, userRole = 'superAdmin' } = response.data.data
         const token = response.data.token
 
         setUser({ userId, fullname, token, userRole, email })

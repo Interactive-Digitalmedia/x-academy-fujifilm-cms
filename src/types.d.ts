@@ -156,11 +156,11 @@ export interface AboutUsContentType {
   __v?: number;
 }
 
-export interface ProfileData {
-  name: string;
+export interface ClientUserProfileData {
+  fullname: string;
   email: string;
   contactNumber: string;
-  profileImage: string;
+  profilePictureUrl: string;
   state: string;
   socialMediaUrls: {
     instagram?: string;
@@ -282,6 +282,28 @@ export interface XStoryType {
   //   email?: string;
   //   // Add more fields from Admin schema if needed
   // };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Submission {
+  _id: string;
+  googleDriveLink: string;
+  instagramLink?: string;
+  userId: string | ClientUserProfileData;
+  status: "approved" | "denied" | "pending";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CmsUserProfileData {
+  _id: string;
+  fullname: string;
+  email: string;
+  contactNumber?: string;
+  password: string;
+  userRole: string;
+  inviteAccepted: boolean;
   createdAt: string;
   updatedAt: string;
 }

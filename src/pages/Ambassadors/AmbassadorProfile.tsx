@@ -62,7 +62,6 @@ const AmbassadorProfile = () => {
       </div>
     );
   }
-console.log(ambassador);
 
   if (!ambassador) {
     return (
@@ -85,7 +84,7 @@ console.log(ambassador);
         <div className="bg-white py-5 px-5 rounded-xl w-full max-w-none mx-auto mb-6">
           <div
             className={`relative min-h-[120px] w-full overflow-hidden rounded-t-2xl bg-[#0000001A] bg-cover bg-center`}
-            style={{ backgroundImage: `url(${ambassador?.bannerImage})` }}
+            style={{ backgroundImage: `url(${encodeURI(ambassador?.bannerImage || '')})` }}
           />
 
           <div className="-mt-10 flex items-end justify-between px-3 md:px-6">
@@ -135,15 +134,15 @@ console.log(ambassador);
 
           <div className="mt-[2rem] space-y-4">
             <h2 className="text-2xl font-bold capitalize">
-              {ambassador.fullname}
+              {ambassador?.fullname}
             </h2>
             <p className="text-base leading-relaxed">
               <span className="font-semibold">Bio - </span>
-              {ambassador.bio}
+              {ambassador?.bio}
             </p>
 
             <div className="flex flex-wrap gap-2">
-              {ambassador.tags?.map((tag, index) => {
+              {ambassador?.tags?.map((tag, index) => {
                 const specificColor = badgeColors[index % badgeColors.length];
                 return (
                   <span key={index} className={`tag ${specificColor}`}>
@@ -192,9 +191,9 @@ console.log(ambassador);
             {/* Tab Content */}
             <div className="bg-white py-5 px-5 rounded-xl w-full mt-3 max-w-none mx-auto mb-6">
               {activeTab === "Gear Details" ? (
-                <GearDetailsGrid gear={ambassador.gearDetails || []} />
+                <GearDetailsGrid gear={ambassador?.gearDetails || []} />
               ) : activeTab === "Gallery" ? (
-                <GalleryMasonryGrid images={ambassador.gallery || []} />
+                <GalleryMasonryGrid images={ambassador?.gallery || []} />
               ) : (
                 <div className="bg-white rounded-xl p-4 w-full text-sm">
                   <div>

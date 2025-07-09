@@ -24,7 +24,7 @@ const PartnerRow: React.FC<PartnerRowProps> = ({ partner, index }) => {
       <TableCell className="px-3 py-1">{partner.fullname}</TableCell>
       <TableCell className="px-3 py-1 capitalize">{partner.type}</TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
-        {partner?.upcomingEvents}
+        {partner?.upcomingEvents?.length}
       </TableCell>
       <TableCell className="px-3 py-1 text-center align-middle">
         {partner?.totalEvents}
