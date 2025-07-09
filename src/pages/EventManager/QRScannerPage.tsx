@@ -31,10 +31,10 @@ const QRScannerPage = () => {
         </div>
       </div>
 
-      {/* Camera Background (placeholder for now) */}
+      {/* Camera Background  */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/your-camera-placeholder.jpg" // Replace with live camera or blur background
+          src="/your-camera-placeholder.jpg"
           alt="camera"
           className="w-full h-full object-cover opacity-30"
         />
@@ -42,9 +42,7 @@ const QRScannerPage = () => {
 
       {/* QR Scanner Frame */}
       <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="w-72 h-72 border-4 border-white rounded-lg relative">
-          {/* You can customize this with corner brackets later */}
-        </div>
+        <div className="w-72 h-72 border-4 border-white rounded-lg relative"></div>
       </div>
 
       {/* Search input */}
