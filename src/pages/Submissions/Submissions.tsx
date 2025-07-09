@@ -2,7 +2,7 @@ import { Users, Monitor, LineChart } from "lucide-react";
 import { Submission } from "@/types";
 import { useEffect, useState } from "react";
 import { getSubmissions } from "@/api/submission";
-import Container from "@/components/submissions/Container";
+import Container from "@/components/submissions/container";
 
 const Submissions: React.FunctionComponent = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
