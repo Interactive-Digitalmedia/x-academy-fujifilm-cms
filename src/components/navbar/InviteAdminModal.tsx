@@ -7,36 +7,54 @@ import {
   Button,
   Select,
   SelectItem,
-} from '@nextui-org/react'
-import { Send } from 'lucide-react'
-import { useState } from 'react'
-import { createInvite } from '@/api/Invite'
-import toast from 'react-hot-toast'
+} from "@nextui-org/react";
+import { Send } from "lucide-react";
+import { useState } from "react";
+import { createInvite } from "@/api/Invite";
+import toast from "react-hot-toast";
 
 interface InviteAdminModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalProps) {
-  const [email, setEmail] = useState('')
-  const [role, setRole] = useState<'super admin' | 'admin' | 'event manager'| 'content manager'>('admin')
+export default function InviteAdminModal({
+  isOpen,
+  onClose,
+}: InviteAdminModalProps) {
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<
+    "superAdmin" | "admin" | "eventManager" | "contentManager"
+  >("admin");
 
   const handleCreateInvite = async () => {
-    const payload ={
-      email : email,
-      userRole: role
+    if (!email || !role) {
+      toast.error("Please fill in all fields.");
+      return;
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    const payload = {
+      email: email,
+      userRole: role,
+    };
     try {
-      const response = await createInvite(payload) // Assuming your API accepts a role parameter
-      toast.success('Invite sent successfully!')
-      console.log(response)
+      const response = await createInvite(payload);
+      toast.success("Invite sent successfully!");
+      console.log(response);
+      onClose();
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || 'Something went wrong while sending invite.'
-      toast.error(errorMessage)
-      console.error('Invite error:', error)
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Something went wrong while sending invite.";
+      toast.error(errorMessage);
+      console.error("Invite error:", error);
     }
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="lg" backdrop="blur">
@@ -59,16 +77,31 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1"
               />
-              <Button isIconOnly color="primary" className="rounded-full" onPress={handleCreateInvite}>
+              <Button
+                isIconOnly
+                color="primary"
+                className="rounded-full"
+                onPress={handleCreateInvite}
+              >
                 <Send size={16} />
               </Button>
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Select Role
+              </label>
               <Select
                 selectedKeys={[role]}
-                onChange={(e) => setRole(e.target.value as 'super admin' | 'admin' | 'event manager'| 'content manager')}
+                onChange={(e) =>
+                  setRole(
+                    e.target.value as
+                      | "superAdmin"
+                      | "admin"
+                      | "eventManager"
+                      | "contentManager"
+                  )
+                }
               >
                 {/* <SelectItem key="super admin" value="super admin">
                   Super Admin
@@ -76,10 +109,10 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
                 <SelectItem key="admin" value="admin">
                   Admin
                 </SelectItem>
-                <SelectItem key="content manager" value="content manager">
-                Content Manger
+                <SelectItem key="contentManager" value="content manager">
+                  Content Manger
                 </SelectItem>
-                <SelectItem key="event manager" value="event manager">
+                <SelectItem key="eventManager" value="event manager">
                   Event Manager
                 </SelectItem>
               </Select>
@@ -88,5 +121,5 @@ export default function InviteAdminModal({ isOpen, onClose }: InviteAdminModalPr
         </ModalBody>
       </ModalContent>
     </Modal>
-  )
+  );
 }
