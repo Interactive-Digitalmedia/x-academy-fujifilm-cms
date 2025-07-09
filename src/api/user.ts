@@ -54,3 +54,30 @@ export const getAllAdminsData = async () => {
     return { status: 500, message: "Something went wrong" };
   }
 };
+
+
+export const updateAdminProfileData = async (updatePayload: {
+  fullname?: string;
+  phone?: string;
+  password?: string;
+}) => {
+  const token = getTokenFromLocalStorage();
+  if (!token) {
+    return { status: 401, message: "Token not available" };
+  }
+
+  try {
+    const response = await axios.put(`${baseUrl}admin/update-data`, updatePayload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { status: 500, message: "Something went wrong" };
+  }
+};

@@ -2,7 +2,7 @@ import {
   Bell,
   CirclePlus,
   Trash2,
-  Settings,
+  // Settings,
   SquarePen,
   UserRoundPlus,
 } from "lucide-react";
@@ -141,7 +141,7 @@ export default function NavBar() {
     others: { title: "Others", buttons: [] },
     profile: {
       title: "Profile",
-      buttons: [{ label: "Edit Profile", icon: Settings, action: () => {} }],
+      buttons: [],
     },
   };
 
