@@ -92,38 +92,21 @@ const TicketConfirmation: React.FC = () => {
           <div className="w-full border-t border-gray-700 my-2" />
 
           {/* Details */}
-          <div className="space-y-1 text-sm">
-            <p>
-              <span className="text-gray-400">NAME</span> - Jatin Jakhar
-            </p>
-            <p>
-              <span className="text-gray-400">EMAIL</span> - sample@gmail.com
-            </p>
-            <p>
-              <span className="text-gray-400">TICKET ID</span> - #XYZABC9823
-            </p>
-            <p>
-              <span className="text-gray-400">EVENT</span> - Visual Alchemy And
-              Fujifilm
-            </p>
-            <p>
-              <span className="text-gray-400">DATE</span> - Monday, April 28th
-              2025
-            </p>
-            <p>
-              <span className="text-gray-400">CHECK-IN TIME</span> - 07:26 PM
-            </p>
-            <p>
-              <span className="text-gray-400">LOCATION</span> - BENGALURU
-            </p>
+          <div className="space-y-1 text-sm w-full text-left">
+            <p>NAME - Jatin Jakhar</p>
+            <p>EMAIL - sample@gmail.com</p>
+            <p>TICKET ID - #XYZABC9823</p>
+            <p>EVENT - Visual Alchemy And Fujifilm</p>
+            <p>DATE - Monday, April 28th 2025</p>
+            <p>CHECK-IN TIME - 07:26 PM</p>
+            <p>LOCATION - BENGALURU</p>
           </div>
+          {/* Action Button */}
+          <button className=" w-[100%] sm:w-[30%] py-2 rounded-full text-sm font-semibold bg-[#1098F7] text-white">
+            {status === "failed" ? "Try Again" : "Continue"}
+          </button>
         </div>
       </div>
-
-      {/* Action Button */}
-      <button className="mt-6 w-[95%] sm:w-[30%] py-2 rounded-full text-sm font-semibold bg-[#1098F7] text-white">
-        {status === "failed" ? "Try Again" : "Continue"}
-      </button>
     </div>
   );
 };
