@@ -9,7 +9,7 @@ interface ContainerProps {
   submissions: Submission[];
 }
 
-const Container: React.FC<ContainerProps> = ({submissions}) => {
+const Container: React.FC<ContainerProps> = ({ submissions }) => {
   const [selectedStatus, setSelectedStatus] = useState<Status>("Pending");
 
   return (
