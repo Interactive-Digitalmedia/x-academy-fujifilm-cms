@@ -310,7 +310,7 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
               size="sm"
               variant="outline"
               className="border-red-500 text-red-600 hover:bg-red-50"
-              onClick={handleDeleteStory}
+              onClick={() => handleDeleteStory()}
             >
               Delete Story
             </Button>
