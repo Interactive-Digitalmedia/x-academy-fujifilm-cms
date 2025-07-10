@@ -171,7 +171,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
       const matchesSearch =
         searchTerm.length < 3 ||
         blog.title.toLowerCase().includes(lowerSearch) ||
-        blog.author.toLowerCase().includes(lowerSearch) ||
+        // blog.author.toLowerCase().includes(lowerSearch) ||
         blog.content.toLowerCase().includes(lowerSearch);
 
       const matchesTags =
@@ -182,8 +182,8 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
           )
         );
 
-      const matchesAuthor =
-        selectedAuthors.length === 0 || selectedAuthors.includes(blog.author);
+      // const matchesAuthor =
+      //   selectedAuthors.length === 0 || selectedAuthors.includes(blog.author);
 
       const matchesStatus =
         selectedStatus.length === 0 || selectedStatus.includes(blog.status);
@@ -195,7 +195,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
 
       return (
         matchesSearch &&
-        matchesAuthor &&
+        // matchesAuthor &&
         matchesStatus &&
         matchesTags &&
         matchesDate

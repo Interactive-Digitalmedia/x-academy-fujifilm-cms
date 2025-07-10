@@ -28,7 +28,7 @@ export default function Sidebar() {
       icon: BookOpen,
     },
     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
-    { name: "Support", path: "/support", icon: HelpCircle, disabled: true },
+    { name: "Support", path: "/support", icon: HelpCircle, },
     { name: "Others", path: "/others", icon: CircleEllipsis, disabled: true },
   ];
 
