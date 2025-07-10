@@ -1,10 +1,6 @@
-import * as React from "react";
+import { uploadImage } from "@/api/uploadImageApi";
 import { UploadCloud, Trash2 } from "lucide-react";
-
-interface GalleryImage {
-  file: File | null;
-  url: string;
-}
+import { useRef, useState } from "react";
 
 interface PostEventImagesProps {
   data: any;
@@ -12,8 +8,9 @@ interface PostEventImagesProps {
 }
 
 const PostEventImages: React.FC<PostEventImagesProps> = ({ data, setData }) => {
-  const [dragActive, setDragActive] = React.useState(false);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -29,23 +26,18 @@ const PostEventImages: React.FC<PostEventImagesProps> = ({ data, setData }) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
     if (e.dataTransfer.files && e.dataTransfer.files.length) {
-      Array.from(e.dataTransfer.files).forEach(handleFileSelect);
+      handleFilesUpload(Array.from(e.dataTransfer.files));
     }
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      Array.from(e.target.files).forEach(handleFileSelect);
+      handleFilesUpload(Array.from(e.target.files));
     }
   };
 
-  const handleFileSelect = (file: File) => {
-    if (file.size > 10 * 1024 * 1024) {
-      return alert("File size must be < 10MB");
-    }
-
+  const handleFilesUpload = async (files: File[]) => {
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -54,23 +46,38 @@ const PostEventImages: React.FC<PostEventImagesProps> = ({ data, setData }) => {
       "application/zip",
     ];
 
-    if (!allowedTypes.includes(file.type)) {
-      return alert("Only .jpg, .png, .svg, and .zip files are allowed");
-    }
-
-    const previewUrl = file.type.startsWith("image/")
-      ? URL.createObjectURL(file)
-      : ""; // Don't preview non-image files like zip
-
-    const newImage: GalleryImage = {
-      file,
-      url: previewUrl,
-    };
-
-    setData({
-      ...data,
-      postEventImages: [...(data.postEventImages || []), newImage],
+    const validFiles = files.filter((file) => {
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`❌ ${file.name} is larger than 10MB`);
+        return false;
+      }
+      if (!allowedTypes.includes(file.type)) {
+        alert(`❌ ${file.name} has an unsupported file type`);
+        return false;
+      }
+      return true;
     });
+
+    if (!validFiles.length) return;
+
+    setUploading(true);
+    try {
+      const uploadResults = await Promise.all(
+        validFiles.map((file) => uploadImage(file))
+      );
+
+      const uploadedUrls = uploadResults
+        .filter((r) => r?.publicUrl)
+        .map((r) => encodeURI(r.publicUrl));
+
+      setData((prev: any) => ({
+        ...prev,
+        postEventImages: [...(prev.postEventImages || []), ...uploadedUrls],
+      }));
+    } catch (err) {
+      console.error("❌ Upload failed:", err);
+    }
+    setUploading(false);
   };
 
   const handleAddImage = () => {
@@ -116,33 +123,35 @@ const PostEventImages: React.FC<PostEventImagesProps> = ({ data, setData }) => {
         </p>
       </div>
 
+      {uploading && (
+        <p className="text-sm text-blue-500">Uploading image(s)...</p>
+      )}
+
       {/* Previews */}
       <div className="flex flex-wrap gap-4">
-        {(data.postEventImages || []).map(
-          (img: GalleryImage, index: number) => (
-            <div
-              key={index}
-              className="border rounded-lg p-4 bg-gray-50 w-[172px] flex flex-col items-center space-y-2"
+        {(data.postEventImages || []).map((url: string, index: number) => (
+          <div
+            key={index}
+            className="border rounded-lg p-4 bg-gray-50 w-[172px] flex flex-col items-center space-y-2"
+          >
+            {url ? (
+              <img
+                src={url}
+                alt={`Post-event image ${index + 1}`}
+                className="max-h-64 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="text-xs text-gray-500">ZIP File</div>
+            )}
+            <button
+              onClick={() => handleDeleteImage(index)}
+              className="flex items-center text-sm text-red-500 hover:text-red-700"
             >
-              {img.url ? (
-                <img
-                  src={img.url}
-                  alt={`Post-event image ${index + 1}`}
-                  className="max-h-64 rounded-lg object-cover"
-                />
-              ) : (
-                <div className="text-xs text-gray-500">ZIP File</div>
-              )}
-              <button
-                onClick={() => handleDeleteImage(index)}
-                className="flex items-center text-sm text-red-500 hover:text-red-700"
-              >
-                <Trash2 className="w-4 h-4 mr-1" />
-                Delete
-              </button>
-            </div>
-          )
-        )}
+              <Trash2 className="w-4 h-4 mr-1" />
+              Delete
+            </button>
+          </div>
+        ))}
       </div>
 
       {/* Hidden Input */}

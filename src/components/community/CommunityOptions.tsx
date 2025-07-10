@@ -45,6 +45,8 @@ const CommunityOptions: React.FC = () => {
   const [activeFilters, setActiveFilters] = useState<Record<string, string>>(
     {}
   );
+  console.log(activeFilters);
+  
   const [activeTab, setActiveTab] = useState("Ask the Expert");
   // const [filteredCommunity, setFilteredCommunity] = useState(dummyCommunity);
   const [xStories, setXStories] = useState<XStoryType[]>([]);
