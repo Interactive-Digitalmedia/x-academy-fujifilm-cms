@@ -14,6 +14,7 @@ import { deleteActivity } from "@/api/activity";
 import ConfirmationModal from "../ConfirmationModal";
 import ChangeStatusPopover from "../Activity/ChangeStatusPopover";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@nextui-org/react";
 
 type MainCardProps = {
   data: Activity;
@@ -124,6 +125,14 @@ const MainCard: React.FC<MainCardProps> = ({ data, onStatusChange }) => {
           <button className="border p-2 rounded-md">
             <Download className="w-4 h-4" />
           </button>
+          <Button
+            size="sm"
+            color="primary"
+            className="bg-[#1098F7] text-white"
+            onClick={() => navigate(`/events/${data._id}`)}
+          >
+            Preview
+          </Button>
           <ChangeStatusPopover
             currentStatus={data?.status}
             onChange={handleToggleStatus}
