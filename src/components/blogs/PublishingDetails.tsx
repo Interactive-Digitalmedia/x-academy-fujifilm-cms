@@ -3,6 +3,7 @@ import { uploadImage } from "@/api/uploadImageApi";
 import { getAllAdminsData } from "@/api/user";
 import { Ambassador, Blog, CmsUserProfileData } from "@/types";
 import { useEffect, useState } from "react";
+import { Select, SelectItem, SelectSection } from "@nextui-org/react";
 
 interface PublishingDetailsProps {
   blogData: Partial<Blog>;
@@ -42,7 +43,7 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     fetchAuthors();
   }, []);
 
-  const handleAuthorSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleAuthorSelect = (e: { target: { value: string } }) => {
     const value = e.target.value;
     if (value === "other") {
       updateBlogData("author", null);
@@ -140,40 +141,52 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
           <label className="block text-sm font-medium text-[#818181] mb-1">
             Original Author<span className="text-red-500">*</span>
           </label>
-          <select
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 space-y-2"
-            value={
-              authorModel === "Other"
-                ? "other"
-                : typeof blogData.author === "string"
-                  ? blogData.author
-                  : blogData.author?._id || ""
+          <Select
+            isRequired
+            variant="bordered"
+            className="w-full"
+            selectedKeys={
+              new Set([
+                authorModel === "Other"
+                  ? "other"
+                  : typeof blogData.author === "string"
+                    ? blogData.author
+                    : blogData.author?._id || "",
+              ])
             }
-            onChange={handleAuthorSelect}
+            onChange={(e) =>
+              handleAuthorSelect({
+                target: { value: e.target.value },
+              } as React.ChangeEvent<HTMLSelectElement>)
+            }
           >
-            <option value="" disabled>
-              Select author's name
-            </option>
-            {admins.length > 0 && (
-              <optgroup label="Admins" className="">
-                {admins.map((admin) => (
-                  <option key={admin._id} value={admin._id}>
-                    {admin.fullname || "Unnamed Admin"}
-                  </option>
-                ))}
-              </optgroup>
-            )}
-            {ambassadors.length > 0 && (
-              <optgroup label="Ambassadors">
-                {ambassadors.map((amb) => (
-                  <option key={amb._id} value={amb._id} className="capitalize">
-                    {amb.fullname || amb.userName || "Unnamed Ambassador"}
-                  </option>
-                ))}
-              </optgroup>
-            )}
-            <option value="other">Other (Manual Entry)</option>
-          </select>
+            
+
+            {admins.filter((admin) => admin.fullname).length > 0 ? (
+              <SelectSection title="Admins" className="capitalize">
+                {admins
+                  .filter((admin) => admin.fullname)
+                  .map((admin) => (
+                    <SelectItem key={admin._id}>{admin.fullname}</SelectItem>
+                  ))}
+              </SelectSection>
+            ) : null}
+
+            {ambassadors.filter((amb) => amb.fullname || amb.userName).length >
+            0 ? (
+              <SelectSection title="Ambassadors" className="capitalize">
+                {ambassadors
+                  .filter((amb) => amb.fullname || amb.userName)
+                  .map((amb) => (
+                    <SelectItem key={amb._id} className="capitalize">
+                      {amb.fullname || amb.userName}
+                    </SelectItem>
+                  ))}
+              </SelectSection>
+            ) : null}
+
+            <SelectItem key="other">Other (Manual Entry)</SelectItem>
+          </Select>
         </div>
 
         <div>

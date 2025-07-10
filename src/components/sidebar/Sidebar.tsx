@@ -41,10 +41,9 @@ export default function Sidebar() {
       disabled: true,
     },
 
-//     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
-//     { name: "Support", path: "/support", icon: HelpCircle, },
-//     { name: "Others", path: "/others", icon: CircleEllipsis, disabled: true },
-
+    //     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
+    //     { name: "Support", path: "/support", icon: HelpCircle, },
+    //     { name: "Others", path: "/others", icon: CircleEllipsis, disabled: true },
   ];
 
   const isActive = (itemPath: string) => {
@@ -74,7 +73,7 @@ export default function Sidebar() {
               <div
                 key={name}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200
-                  ${disabled ? "cursor-not-allowed text-gray-400" : active ? "bg-[#CFEAFD] text-[#1098F7]" : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`}
+                  ${disabled ? "cursor-not-allowed text-gray-400" : active ? "bg-[#CFEAFD] text-[#1098F7]" : "text-gray-700 hover:bg-blue-50 "}`}
               >
                 {disabled ? (
                   <>

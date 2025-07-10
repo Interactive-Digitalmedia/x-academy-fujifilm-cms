@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "../ConfirmationModal";
 import { deletelog } from "@/api/blogApi";
 
+import { Button } from "@nextui-org/react";
+
 type BlogEditMainCardProps = {
   data: Partial<Blog>;
   onDelete?: () => void;
@@ -116,7 +118,14 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
           <button className="border p-2 rounded-md">
             <Download className="w-4 h-4" />
           </button>
-
+<Button
+            size="sm"
+            color="primary"
+            className="bg-[#1098F7] text-white"
+            onClick={() => navigate(`/blogs/${data._id}`)}
+          >
+            Preview
+          </Button>
           <ChangeStatusPopover
             currentStatus={(data?.status as "draft" | "published") ?? "draft"}
             onChange={handleToggleStatus}

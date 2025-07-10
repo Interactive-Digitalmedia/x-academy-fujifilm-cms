@@ -9,7 +9,8 @@ import { Calendar } from "lucide-react";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import FiltersPopover from "@/components/ui/FiltersPopover";
 import { DateRange } from "react-day-picker";
-
+import { getAmbassadors } from "@/api/ambassadors";
+import { Ambassador } from "@/types";
 // export const dummyBlogs: any = [
 //   {
 //     id: "1",
@@ -136,6 +137,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
+  const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
   // Filter states
@@ -162,6 +164,21 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
     };
 
     fetchBlogs();
+  }, []);
+
+  useEffect(() => {
+    const fetchAmbassadors = async () => {
+      try {
+        const res = await getAmbassadors();
+        if (res.status !== 200) throw new Error("Failed to fetch ambassadors");
+
+        setAmbassadors(res.data || []); // ✅ Set state here
+      } catch (err) {
+        console.error("Error fetching ambassadors:", err);
+      }
+    };
+
+    fetchAmbassadors();
   }, []);
 
   useEffect(() => {
@@ -334,10 +351,7 @@ const Blogs: React.FunctionComponent<BlogsProps> = () => {
               selectedConductedBy={selectedAuthors}
               setSelectedConductedBy={setSelectedAuthors}
               isBlogPage={true}
-              ambassadors={blogs.map((b) => ({
-                fullname: b.author,
-                _id: b.author,
-              }))} // adapted for authors
+              ambassadors={ambassadors}
               onReset={() => {
                 setSelectedStatus([]);
                 setSelectedAuthors([]);
