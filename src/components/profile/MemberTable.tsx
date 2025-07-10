@@ -1,5 +1,4 @@
 import React from "react";
-import InviteAdminModal from "../navbar/InviteAdminModal";
 import {
   Table,
   TableBody,
@@ -8,48 +7,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MemberRow } from "./MemberRow";
-import { useDisclosure } from "@nextui-org/react"; // ✅ import this
+import { CmsUserProfileData } from "@/types";
 
-const dummyMembers = [
-  {
-    id: 1,
-    date: "12-06-2022",
-    name: "XYZABC",
-    email: "johndoe@gmail.com",
-    role: "Admin",
-  },
-  {
-    id: 2,
-    date: "12-06-2022",
-    name: "XYZABC",
-    email: "johndoe@gmail.com",
-    role: "Admin",
-  },
-  {
-    id: 3,
-    date: "12-06-2022",
-    name: "XYZABC",
-    email: "johndoe@gmail.com",
-    role: "Admin",
-  },
-  {
-    id: 4,
-    date: "12-06-2022",
-    name: "XYZABC",
-    email: "johndoe@gmail.com",
-    role: "Content Manager",
-  },
-  {
-    id: 5,
-    date: "12-06-2022",
-    name: "XYZABC",
-    email: "johndoe@gmail.com",
-    role: "Event Manager",
-  },
-];
+interface MemberTableProps {
+  members: CmsUserProfileData[];
+}
 
-export const MemberTable: React.FC = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure(); // ✅ modal state
+const MemberTable: React.FC<MemberTableProps> = ({ members }) => {
+  // const { isOpen, onOpen, onOpenChange } = useDisclosure(); // ✅ modal state
 
   return (
     <div className="bg-white w-full rounded-xl">
@@ -65,24 +30,26 @@ export const MemberTable: React.FC = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyMembers.map((member, index) => (
-            <MemberRow key={member.id} member={member} index={index} />
+          {members.map((member, index) => (
+            <MemberRow key={member._id} member={member} index={index} />
           ))}
         </TableBody>
       </Table>
 
       {/* Add New Button */}
-      <div className="flex justify-end mt-4">
+      {/* <div className="flex justify-end mt-4">
         <button
           onClick={onOpen} // ✅ opens the modal
           className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm flex items-center gap-1"
         >
           + Add New
         </button>
-      </div>
+      </div> */}
 
       {/* Invite Admin Modal */}
-      <InviteAdminModal isOpen={isOpen} onClose={onOpenChange} />
+      {/* <InviteAdminModal isOpen={isOpen} onClose={onOpenChange} /> */}
     </div>
   );
 };
+
+export default MemberTable;

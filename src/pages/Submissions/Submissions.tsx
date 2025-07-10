@@ -1,12 +1,27 @@
-import * as React from "react";
-import {
-  Users,
-  Monitor,
-  LineChart,
-} from "lucide-react";
+import { Users, Monitor, LineChart } from "lucide-react";
+import { Submission } from "@/types";
+import { useEffect, useState } from "react";
+import { getSubmissions } from "@/api/submission";
 import Container from "@/components/submissions/container";
 
 const Submissions: React.FunctionComponent = () => {
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      try {
+        const res = await getSubmissions();
+        if (res?.success) {
+          setSubmissions(res?.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch submissions:", error);
+      }
+    };
+
+    fetchSubmissions();
+  }, []);
+
   return (
     <div
       className="p-2
@@ -63,7 +78,7 @@ const Submissions: React.FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <Container />
+      <Container submissions={submissions} />
     </div>
   );
 };

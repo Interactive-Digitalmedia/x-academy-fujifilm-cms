@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { SubmissionTable } from "./submissiontable";
-import { dummySubmissions } from "@/assets/dummySubmissions";
+import { Submission } from "@/types";
 
 const statusOptions = ["Pending", "Approved", "Rejected"] as const;
 type Status = (typeof statusOptions)[number];
 
-export default function Container() {
-  const [selectedStatus, setSelectedStatus] = useState<Status>("Pending");
+interface ContainerProps {
+  submissions: Submission[];
+}
 
-  const filteredSubmissions = dummySubmissions.filter(
-    (submission) => submission.status === selectedStatus
-  );
+const Container: React.FC<ContainerProps> = ({ submissions }) => {
+  const [selectedStatus, setSelectedStatus] = useState<Status>("Pending");
 
   return (
     <div
@@ -46,6 +46,7 @@ export default function Container() {
               }}
               onClick={() => setSelectedStatus(status)}
               type="button"
+              disabled
             >
               {status !== "Pending" && (
                 <span
@@ -60,8 +61,10 @@ export default function Container() {
         </div>
 
         {/* Table Section */}
-        <SubmissionTable submissions={filteredSubmissions} />
+        <SubmissionTable submissions={submissions} />
       </div>
     </div>
   );
-}
+};
+
+export default Container;
