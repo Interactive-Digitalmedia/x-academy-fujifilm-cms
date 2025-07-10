@@ -57,8 +57,11 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
               {blog?.title}
             </h3>
 
+
+
             {/* Author Info */}
             <AuthorDisplay blog={blog} />
+
           </div>
         </div>
       ))}

@@ -42,11 +42,11 @@ export type Activity = {
   activityName: string;
   tags: string[];
   activityType: string;
-  activityCategory: string;
+  activityCategory: string[];
   startDate: string;
   endDate: string;
   location: string;
-  language: string;
+  language: string[];
   venue: string;
   ambassadorId: string[] | Ambassador[];
   pricing: string; // e.g., "paid" or "free"

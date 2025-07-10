@@ -47,7 +47,7 @@ const PartnerCard: React.FC<Props> = ({ partner }) => {
         <div>
           <h3 className="text-sm capitalize font-semibold flex items-center gap-1">
             {partner?.fullname} {/* {partner?.countryCode && ( */}
-            <span className="text-lg font-emoji">{getEmojiFlag("IN")}</span>
+            {/* <span className="text-lg font-emoji">{getEmojiFlag("IN")}</span> */}
             {/* )} */}
           </h3>
           {partner.location && (

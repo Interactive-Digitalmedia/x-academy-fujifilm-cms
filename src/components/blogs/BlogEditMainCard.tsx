@@ -63,12 +63,20 @@ const BlogEditMainCard: React.FC<BlogEditMainCardProps> = ({
   return (
     <div className="w-full bg-white rounded-xl shadow-md p-4 mb-6">
       {/* ---------- Status label ---------- */}
-      <div className="text-xs font-medium text-gray-700 bg-gray-200 inline-block px-3 py-1 rounded-full mb-2 capitalize">
-        {data?.status}
+      <div className="mb-2">
+        {data?.status === "draft" ? (
+          <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-semibold">
+            Draft
+          </span>
+        ) : (
+          <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-semibold">
+            Published
+          </span>
+        )}
       </div>
 
       {/* ---------- Cover image ---------- */}
-      <div className="relative w-full h-[150px] rounded-lg overflow-hidden mb-4">
+      <div className="relative w-full h-[240px] rounded-lg overflow-hidden mb-4">
         <img
           src={data?.blogImage?.heroImage}
           alt={data?.blogImage?.description}
