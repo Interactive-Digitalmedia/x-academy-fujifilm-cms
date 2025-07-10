@@ -111,14 +111,14 @@ export default function NavBar() {
             {
               label: "Update",
               icon: SquarePen,
-              action: () => navigate(`/blog/update-blog/${eventId}`),
+              action: () => navigate(`/blogs/update-blog/${eventId}`),
             },
           ]
         : [
             {
               label: "Create New",
               icon: CirclePlus,
-              action: () => navigate("/blog/createblogs"),
+              action: () => navigate("/blogs/createblogs"),
             },
             // {
             //   label: "Drafts",

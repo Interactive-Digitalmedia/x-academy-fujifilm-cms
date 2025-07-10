@@ -40,6 +40,11 @@ export default function Sidebar() {
       icon: "/banner/icons/Others.svg",
       disabled: true,
     },
+
+//     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },
+//     { name: "Support", path: "/support", icon: HelpCircle, },
+//     { name: "Others", path: "/others", icon: CircleEllipsis, disabled: true },
+
   ];
 
   const isActive = (itemPath: string) => {

@@ -1,3 +1,4 @@
+import AuthorDisplay from "@/components/blogs/AuthorDisplay";
 import { Blog } from "@/types";
 
 interface BlogsGridProps {
@@ -11,13 +12,13 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-3 gap-4 justify-items-center">
-      {blogs.map((blog) => (
+      {blogs?.map((blog) => (
         <div
-          key={blog._id}
+          key={blog?._id}
           onClick={() => {
             handleBlogClick(blog);
           }}
-          className=" cursor-pointer rounded-lg shadow-md transition-all hover:shadow-md bg-[#F4F4F4]  "
+          className=" cursor-pointer rounded-lg shadow-md transition-all hover:shadow-md bg-[#F4F4F4]"
         >
           {/* Blog Image */}
           <div className="relative overflow-hidden">
@@ -32,41 +33,35 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
             {/* Category Badge */}
             <div className="absolute left-4 top-4">
               <span className="rounded-md bg-blue-500 px-2 py-1 text-xs font-medium text-white">
-                {blog.tags[0] || "General"}
+                {blog?.tags[0] || "General"}
               </span>
             </div>
           </div>
 
           {/* Status Badge */}
-          <div className="px-4 pt-2">
+          <div className="px-4">
             <span
-              className={`inline-block rounded-md capitalize px-2 py-1 text-xs font-medium ${
-                blog.status === "publish"
+              className={`inline-block rounded-md capitalize px-2 text-xs font-medium ${
+                blog?.status === "publish"
                   ? "bg-green-100 text-green-800"
                   : "bg-orange-100 text-orange-800"
               }`}
             >
-              {blog.status}
+              {blog?.status}
             </span>
           </div>
 
           {/* Blog Content */}
-          <div className="p-4 pt-2">
+          <div className="px-4 pb-4 pt-1 flex flex-col justify-between">
             <h3 className="mb-3 line-clamp-2 text-base font-medium text-gray-900 dark:text-white">
-              {blog.title}
+              {blog?.title}
             </h3>
 
-           {/* Author Info */}
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                <div className="flex h-full w-full items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-400">
-                  {blog?.author?.charAt(0)}
-                </div>
-              </div>
-              <span className="text-sm text-gray-600 capitalize dark:text-gray-400">
-                {blog?.author}
-              </span>
-            </div>
+
+
+            {/* Author Info */}
+            <AuthorDisplay blog={blog} />
+
           </div>
         </div>
       ))}

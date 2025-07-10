@@ -1,4 +1,8 @@
-import { Blog } from "@/types";
+import { getAmbassadors } from "@/api/ambassadors";
+import { uploadImage } from "@/api/uploadImageApi";
+import { getAllAdminsData } from "@/api/user";
+import { Ambassador, Blog, CmsUserProfileData } from "@/types";
+import { useEffect, useState } from "react";
 
 interface PublishingDetailsProps {
   blogData: Partial<Blog>;
@@ -16,16 +20,43 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     { name: "Wildlife", color: "bg-emerald-700" },
     { name: "Portrait", color: "bg-pink-400" },
   ];
-
-  // const [selectedTags, setSelectedTags] = useState<string[]>(
-  //   blogData.tags || []
-  // );
-  // useEffect(() => {
-  //   if (blogData.tags && blogData.tags.length > 0) {
-  //     setSelectedTags(blogData.tags);
-  //   }
-  // }, [blogData.tags]);
+  const [admins, setAdmins] = useState<CmsUserProfileData[]>([]);
+  const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
   const selectedTags = blogData.tags || [];
+  const authorModel = blogData.authorModel || "";
+
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      const adminRes = await getAllAdminsData();
+      const ambassadorRes = await getAmbassadors();
+
+      if (adminRes?.status === 200 && Array.isArray(adminRes.data)) {
+        setAdmins(adminRes.data);
+      }
+
+      if (ambassadorRes?.status === 200 && Array.isArray(ambassadorRes.data)) {
+        setAmbassadors(ambassadorRes.data);
+      }
+    };
+
+    fetchAuthors();
+  }, []);
+
+  const handleAuthorSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === "other") {
+      updateBlogData("author", null);
+      updateBlogData("authorModel", "Other");
+    } else {
+      updateBlogData("author", value);
+      if (admins.some((a) => a._id === value)) {
+        updateBlogData("authorModel", "Admin");
+      } else {
+        updateBlogData("authorModel", "Ambassador");
+      }
+    }
+  };
+
   const toggleTag = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
@@ -38,6 +69,49 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
     const updatedTags = selectedTags.filter((t) => t !== tag);
 
     updateBlogData("tags", updatedTags);
+  };
+
+  const updateCustomAuthor = (field: string, value: string) => {
+    updateBlogData("customAuthor", {
+      ...blogData.customAuthor,
+      [field]: value,
+      socialMediaUrls: {
+        ...blogData.customAuthor?.socialMediaUrls,
+        ...(field === "facebook" || field === "instagram"
+          ? { [field]: value }
+          : blogData.customAuthor?.socialMediaUrls),
+      },
+    });
+  };
+
+  const handleCustomAuthorImageUpload = async (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      return alert("File size must be under 10MB.");
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/svg+xml",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      return alert("Only .jpg, .png, .svg formats are supported.");
+    }
+
+    try {
+      const res = await uploadImage(file);
+      if (res?.publicUrl) {
+        const encodedUrl = encodeURI(res.publicUrl);
+        updateBlogData("customAuthor", {
+          ...blogData.customAuthor,
+          image: encodedUrl,
+        });
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("❌ Image upload failed");
+    }
   };
 
   return (
@@ -67,16 +141,38 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
             Original Author<span className="text-red-500">*</span>
           </label>
           <select
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={blogData.author}
-            onChange={(e) => updateBlogData("author", e.target.value)}
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 space-y-2"
+            value={
+              authorModel === "Other"
+                ? "other"
+                : typeof blogData.author === "string"
+                  ? blogData.author
+                  : blogData.author?._id || ""
+            }
+            onChange={handleAuthorSelect}
           >
             <option value="" disabled>
               Select author's name
             </option>
-            <option value="john-doe">John Doe</option>
-            <option value="jane-smith">Jane Smith</option>
-            <option value="admin">Admin</option>
+            {admins.length > 0 && (
+              <optgroup label="Admins" className="">
+                {admins.map((admin) => (
+                  <option key={admin._id} value={admin._id}>
+                    {admin.fullname || "Unnamed Admin"}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            {ambassadors.length > 0 && (
+              <optgroup label="Ambassadors">
+                {ambassadors.map((amb) => (
+                  <option key={amb._id} value={amb._id} className="capitalize">
+                    {amb.fullname || amb.userName || "Unnamed Ambassador"}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            <option value="other">Other (Manual Entry)</option>
           </select>
         </div>
 
@@ -86,12 +182,87 @@ const PublishingDetails: React.FunctionComponent<PublishingDetailsProps> = ({
           </label>
           <input
             type="date"
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
-            value={blogData.publishedDate}
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800"
+            value={blogData.publishedDate || ""}
             onChange={(e) => updateBlogData("publishedDate", e.target.value)}
           />
         </div>
       </div>
+
+      {/* Custom Author Fields */}
+      {authorModel === "Other" && (
+        <div className="space-y-3 mt-3 border border-gray-300 p-4 rounded-md">
+          <h3 className="text-sm font-semibold text-gray-700">Custom Author</h3>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Name</label>
+            <input
+              type="text"
+              value={blogData.customAuthor?.name || ""}
+              onChange={(e) => updateCustomAuthor("name", e.target.value)}
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="Author's name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">About</label>
+            <textarea
+              value={blogData.customAuthor?.about || ""}
+              onChange={(e) => updateCustomAuthor("about", e.target.value)}
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="Short bio or description"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">
+              Profile Image
+            </label>
+            {blogData.customAuthor?.image && (
+              <img
+                src={blogData.customAuthor.image}
+                alt="Author"
+                className="w-24 h-24 object-cover rounded-full mb-2 border"
+              />
+            )}
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,.svg"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleCustomAuthorImageUpload(file);
+              }}
+              className="w-full text-sm"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Facebook
+              </label>
+              <input
+                type="text"
+                value={blogData.customAuthor?.socialMediaUrls?.facebook || ""}
+                onChange={(e) => updateCustomAuthor("facebook", e.target.value)}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">
+                Instagram
+              </label>
+              <input
+                type="text"
+                value={blogData.customAuthor?.socialMediaUrls?.instagram || ""}
+                onChange={(e) =>
+                  updateCustomAuthor("instagram", e.target.value)
+                }
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Blog Tags */}
       <div>

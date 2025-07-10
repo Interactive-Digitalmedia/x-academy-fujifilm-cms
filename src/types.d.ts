@@ -187,12 +187,25 @@ export interface BlogImage {
   heroImage: string;
   description?: string;
 }
+export interface CustomAuthor {
+  name: string;
+  about?: string;
+  image?: string;
+  socialMediaUrls?: {
+    facebook?: string;
+    instagram?: string;
+  };
+}
+
+export type AuthorModel = "Admin" | "Ambassador" | "Other";
 
 export interface Blog {
   _id: string;
   title: string;
   status: "draft" | "publish";
-  author: string;
+  author: string | Ambassador | CmsUserProfileData | null; // Admin or Ambassador ID (null when "Other")
+  authorModel: AuthorModel;
+  customAuthor?: CustomAuthor;
   publishedDate: string;
   tags: string[];
   blogImage: BlogImage;
@@ -299,8 +312,10 @@ export interface Submission {
 export interface CmsUserProfileData {
   _id: string;
   fullname: string;
+  userName: string;
   email: string;
   contactNumber?: string;
+  profileImage?: string;
   password: string;
   userRole: string;
   inviteAccepted: boolean;

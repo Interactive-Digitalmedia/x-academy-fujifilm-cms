@@ -97,8 +97,8 @@ function App() {
             <Route path="/events" element={<Events />} />
 
             <Route path="/blogs" element={<Blogs />} />
-            <Route path="/blog/createblogs" element={<CreateBlog />} />
-            <Route path="/blog/update-blog/:id" element={<CreateBlog />} />
+            <Route path="/blogs/createblogs" element={<CreateBlog />} />
+            <Route path="/blogs/update-blog/:id" element={<CreateBlog />} />
             <Route path="/blogs/:blogId" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
