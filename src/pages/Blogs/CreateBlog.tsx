@@ -59,7 +59,18 @@ export default function CreateBlogLayout({
     switch (step) {
       case 0:
         if (!data.title?.trim()) return "Title is required";
-        if (!data.author?.trim()) return "Author is required";
+        if (data.authorModel === "Other") {
+          if (!data.customAuthor?.name?.trim())
+            return "Custom author name is required";
+          if (!data.customAuthor?.about?.trim())
+            return "Custom author about is required";
+          if (!data.customAuthor?.image?.trim())
+            return "Custom author image is required";
+        } else {
+          const authorId =
+            typeof data.author === "string" ? data.author : data.author?._id;
+          if (!authorId?.trim()) return "Author is required";
+        }
         if (!data.publishedDate?.trim()) return "Publishing date is required";
         return null;
       case 1:
@@ -82,17 +93,32 @@ export default function CreateBlogLayout({
     }
   };
 
-  const transformToPayload = (data: Partial<Blog>) => ({
-    title: data.title,
-    author: data.author,
-    publishedDate: data.publishedDate,
-    tags: data.tags || [],
-    blogImage: data.blogImage,
-    content: data.content,
-    cta: data.cta || [],
-    metaData: data.metaData || {},
-    status: data.status || "draft",
-  });
+  const transformToPayload = (data: Partial<Blog>) => {
+    const isCustomAuthor = data.authorModel === "Other";
+    return {
+      title: data.title,
+      authorModel: data.authorModel,
+      author: isCustomAuthor ? undefined : data.author,
+      customAuthor: isCustomAuthor
+        ? {
+            name: data.customAuthor?.name || "",
+            about: data.customAuthor?.about || "",
+            image: data.customAuthor?.image || "",
+            social: {
+              facebook: data.customAuthor?.socialMediaUrls?.facebook || "",
+              instagram: data.customAuthor?.socialMediaUrls?.instagram || "",
+            },
+          }
+        : undefined,
+      publishedDate: data.publishedDate,
+      tags: data.tags || [],
+      blogImage: data.blogImage,
+      content: data.content,
+      cta: data.cta || [],
+      metaData: data.metaData || {},
+      status: data.status || "draft",
+    };
+  };
 
   const handleNextOrSubmit = async () => {
     const error = validateStep(currentStep, blogData);
