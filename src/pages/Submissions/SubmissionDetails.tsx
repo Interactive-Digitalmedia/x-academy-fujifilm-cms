@@ -119,22 +119,25 @@ export default function SubmissionDetails() {
             </div>
           </div>
           <div>
-            <div className="flex justify-between items-center mb-1">
-              <p className="text-xs text-gray-500">Link</p>
-              {submission?.googleDriveLink && (
-                <a
-                  href={submission.googleDriveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-black"
-                >
-                  <ArrowUpRight className="w-5 h-5" />
-                </a>
-              )}
-            </div>
-            <div className="border h-[40px] px-3 py-2 rounded-md truncate flex items-center">
-              {submission?.googleDriveLink || "—"}
-            </div>
+           <div>
+  <div className="flex justify-between items-center mb-1">
+    <p className="text-xs text-gray-500">Link</p>
+    {submission?.googleDriveLink && (
+      <a
+        href={submission.googleDriveLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-gray-500 hover:text-black"
+      >
+        <ArrowUpRight className="w-4 h-4" />
+      </a>
+    )}
+  </div>
+  <div className="border h-[40px] px-3 py-2 rounded-md truncate flex items-center">
+    <span className="truncate">{submission?.googleDriveLink || "—"}</span>
+  </div>
+</div>
+
           </div>
 
           <div>
