@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { UploadCloud, Trash2 } from "lucide-react";
 import { uploadXStory, updateXStory, deleteXStory } from "@/api/XStory";
-import ConfirmationModal from "@/components/ConfirmationModal";
 import toast from "react-hot-toast";
 import { XStoryType } from "@/types";
 import { uploadImage } from "@/api/uploadImageApi";
@@ -36,8 +35,6 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (story) {
@@ -122,7 +119,7 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
     console.log("Attempting to delete story with ID:", story._id);
     if (reason) console.log("Reason:", reason);
 
-    setIsDeleting(true);
+    // setIsDeleting(true);
     try {
       const res = await deleteXStory(story._id);
       console.log("DELETE response:", res);
@@ -132,8 +129,8 @@ const XStoryDialog: React.FC<AddXStoryDialogProps> = ({
       console.error("Delete failed", err?.response || err);
       toast.error("Failed to delete X-Story");
     } finally {
-      setIsDeleting(false);
-      setShowDeleteModal(false);
+      // setIsDeleting(false);
+      // setShowDeleteModal(false);
     }
   };
 
