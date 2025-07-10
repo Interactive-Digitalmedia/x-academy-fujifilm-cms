@@ -21,7 +21,6 @@ import EventAnalytics from "./pages/Analytics/EventAnalytics";
 import NewTemplate from "./components/community/NewTemplate";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
-import Events from "./pages/Activity/Events";
 import EventView from "./pages/Events/EventView";
 import EventDetails from "./pages/Events/EventDetails";
 import EventConcluded from "./pages/Events/EventConcluded";
@@ -70,7 +69,6 @@ function App() {
 
             <Route path="/create-events" element={<CreateEvent />} />
             <Route path="/concluded-event" element={<EventConcluded />} />
-            <Route path="/events" element={<EventView />} />
 
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:username" element={<AmbassadorProfile />} />
@@ -94,7 +92,7 @@ function App() {
               element={<RefundSupportDetails />}
             />
 
-            <Route path="/events" element={<Events />} />
+            {/* <Route path="/events" element={<Events />} /> */}
 
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/blogs/createblogs" element={<CreateBlog />} />
