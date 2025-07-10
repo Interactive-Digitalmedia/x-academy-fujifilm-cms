@@ -109,7 +109,8 @@ export const CommunityRow: React.FC<CommunityRowProps> = ({
                   size="icon"
                   variant="outline"
                   className="h-5 w-5 rounded-full border border-gray-300 text-gray-500 p-0"
-                  onClick={(e) => e.stopPropagation()}
+                  // onClick={(e) => e.stopPropagation()}
+                  disabled
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
