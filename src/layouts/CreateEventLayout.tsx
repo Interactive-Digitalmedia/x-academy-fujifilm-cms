@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EventDetails from "@/components/createEventTabs/EventDetails";
 import AboutEvent from "@/components/createEventTabs/AboutEvent";
 import AdminControls from "@/components/createEventTabs/AdminControls";
@@ -12,15 +12,7 @@ import { useActivityStore } from "@/Zustang/useActivityStore";
 import MainCard from "@/components/concludedEventTabs/MainCard";
 import { Activity, Ambassador } from "@/types";
 import { createFaq, updateFaq } from "@/api/faq";
-
-const tabs = [
-  "Event Details",
-  "About Event",
-  "Event Schedule",
-  "Event Image",
-  "FAQs",
-  "Admin Controls",
-];
+import PostEventImages from "@/components/concludedEventTabs/PostEventImages";
 
 function normalizeFAQ(
   faqObj: any
@@ -43,7 +35,9 @@ function normalizeFAQ(
 }
 
 export default function CreateEventLayout() {
-  const [formData, setFormData] = useState<Activity>({isEventVisibleToPublic: true} as Activity);
+  const [formData, setFormData] = useState<Activity>({
+    isEventVisibleToPublic: true,
+  } as Activity);
   const [originalData, setOriginalData] = useState<Activity | null>(null);
   const [activityId, setActivityId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
@@ -77,6 +71,13 @@ export default function CreateEventLayout() {
     })();
   }, [id]);
 
+  const isEventConcluded = useMemo(() => {
+    if (!formData?.startDate) return false;
+    const eventDate = new Date(formData.startDate);
+    const today = new Date();
+    return eventDate < today;
+  }, [formData]);
+
   const renderCurrentTab = () => {
     switch (currentTab) {
       case 0:
@@ -91,6 +92,8 @@ export default function CreateEventLayout() {
         return <FAQs data={formData} setData={setFormData} />;
       case 5:
         return <AdminControls data={formData} setData={setFormData} />;
+      case 6:
+        return <PostEventImages data={formData} setData={setFormData} />;
       default:
         return null;
     }
@@ -104,8 +107,13 @@ export default function CreateEventLayout() {
       case 0: // Event Details
         if (!data.activityName?.trim()) return "Event name is required.";
         if (!data.activityType?.trim()) return "Event type is required.";
-        if (!data.activityCategory?.trim())
+        if (
+          !Array.isArray(data.activityCategory) ||
+          data.activityCategory.length === 0 ||
+          data.activityCategory.every((cat) => !cat.trim())
+        ) {
           return "Event category is required.";
+        }
         if (!data.startDate?.trim()) return "Start date is required.";
         if (!data.endDate?.trim()) return "End date is required.";
         if (new Date(data.endDate) < new Date(data.startDate))
@@ -284,7 +292,7 @@ export default function CreateEventLayout() {
       ) {
         faqItems = formData.FAQ.items;
       }
-      
+
       if (faqItems.length > 0) {
         const faqPayload = {
           name: "Custom",
@@ -403,14 +411,27 @@ export default function CreateEventLayout() {
       console.error("Status update error:", err);
     }
   };
-
+  const tabs = useMemo(() => {
+    const baseTabs = [
+      "Event Details",
+      "About Event",
+      "Event Schedule",
+      "Event Image",
+      "FAQs",
+      "Admin Controls",
+    ];
+    if (isEventConcluded) {
+      baseTabs.push("Post Event Images");
+    }
+    return baseTabs;
+  }, [isEventConcluded]);
   return (
     <div className=" flex flex-col">
       {id && <MainCard data={formData} onStatusChange={handleStatusChange} />}
       {/* Card wrapper */}
       <div className="bgCard pb-0 h-[87vh]">
         {/* Tab Navigation (inside card) */}
-        <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4">
+        <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-4 overflow-y-auto scrollbar-hide">
           {tabs.map((tab, index) => (
             <div key={index} className="flex items-center gap-2">
               <button
