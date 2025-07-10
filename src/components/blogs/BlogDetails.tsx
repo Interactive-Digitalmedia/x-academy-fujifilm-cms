@@ -2,6 +2,7 @@ import { getBlogById } from "@/api/blogApi";
 import { Blog } from "@/types";
 import React, { useState, useEffect } from "react";
 import { useLocation, useParams, Navigate } from "react-router-dom";
+import AuthorDisplay from "./AuthorDisplay";
 
 interface BlogDetailsProps {}
 
@@ -68,7 +69,6 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
 
   return (
     <>
-
       <div className="bg-white h-max rounded-xl p-4 px-0">
         {/* Main Content */}
         <article className="px-10">
@@ -132,7 +132,8 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
 
             {/* Author Info */}
             <div className=" bg-gray-200 mb-4 flex w-fit capitalize items-center gap-1 rounded-full p-1.5 px-4">
-              <span className="font-medium">{currentBlog?.author}</span>
+              {/* <span className="font-medium">{currentBlog?.author}</span> */}
+              <AuthorDisplay blog={currentBlog} />
             </div>
           </header>
 

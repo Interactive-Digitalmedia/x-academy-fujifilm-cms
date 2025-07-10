@@ -40,7 +40,6 @@ export default function EventDetails({ data, setData }: any) {
     }
   }, [data?.tags]);
 
-
   const handleTagToggle = (tag: string) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
@@ -141,10 +140,14 @@ export default function EventDetails({ data, setData }: any) {
           </label>
           <Select
             placeholder="Select Event Category"
-            selectedKeys={[data.activityCategory || ""]}
-            onChange={(e) =>
-              setData({ ...data, activityCategory: e.target.value })
-            }
+            selectionMode="multiple"
+            selectedKeys={new Set(data.activityCategory || [])}
+            onSelectionChange={(keys) => {
+              if (keys === "all") return;
+              const selected = Array.from(keys as Set<string>);
+              setData({ ...data, activityCategory: selected });
+            }}
+            isMultiline
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
@@ -223,8 +226,14 @@ export default function EventDetails({ data, setData }: any) {
           </label>
           <Select
             placeholder="Select Language"
-            selectedKeys={[data.language || ""]}
-            onChange={(e) => setData({ ...data, language: e.target.value })}
+            selectionMode="multiple"
+            selectedKeys={new Set(data.language || [])}
+            onSelectionChange={(keys) => {
+              if (keys === "all") return;
+              const selected = Array.from(keys as Set<string>);
+              setData({ ...data, language: selected });
+            }}
+            isMultiline
             classNames={{
               trigger:
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",

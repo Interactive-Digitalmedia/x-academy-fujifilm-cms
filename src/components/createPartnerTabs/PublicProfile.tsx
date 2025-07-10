@@ -106,7 +106,7 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
           </label>
           <input
             type="text"
-            className="w-full border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            className="w-full capitalize border placeholder:text-[15px] rounded-lg px-3 py-2 shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
             placeholder="John Doe"
             value={data.fullname || ""}
             onChange={(e) => setData({ ...data, fullname: e.target.value })}
@@ -232,20 +232,23 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
                 "border text-sm px-3 py-2 bg-white rounded-md shadow-sm text-gray-800 focus:ring-2 focus:ring-blue-500",
             }}
           >
-            {[
-              "Ahmedabad",
-              "Bangalore",
-              "Chandigarh",
-              "Chennai",
-              "Delhi",
-              "Hyderabad",
-              "Kochi",
-              "Kolkata",
-              "Mumbai",
-              "Pune",
-            ].map((city) => (
-              <SelectItem key={city} value={city}>
-                {city}
+            {(data.type === "X-Evangelist"
+              ? ["North Region", "South Region", "East Region", "West Region"]
+              : [
+                  "Ahmedabad",
+                  "Bangalore",
+                  "Chandigarh",
+                  "Chennai",
+                  "Delhi",
+                  "Hyderabad",
+                  "Kochi",
+                  "Kolkata",
+                  "Mumbai",
+                  "Pune",
+                ]
+            ).map((location) => (
+              <SelectItem key={location} value={location}>
+                {location}
               </SelectItem>
             ))}
           </Select>

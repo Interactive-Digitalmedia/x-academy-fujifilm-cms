@@ -40,10 +40,12 @@ const customIconMap: Record<string, string> = {
 interface TipsAndTricksProps {
   templates?: TipsAndTricksType[];
   onEditTemplate?: (template: TipsAndTricksType) => void;
+  onDeleteTemplate?: (template: TipsAndTricksType) => void;
 }
 const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
   templates,
   onEditTemplate,
+  onDeleteTemplate,
 }) => {
   return (
     <div className="p-0 bg-white text-black mx-auto">
@@ -90,7 +92,10 @@ const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
                     <Pencil size={14} />
                     Edit Template
                   </button>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 border border-red-500 rounded-md hover:bg-red-50">
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 border border-red-500 rounded-md hover:bg-red-50"
+                    onClick={() => onDeleteTemplate?.(template)}
+                  >
                     <Trash2 size={14} />
                     Delete Template
                   </button>

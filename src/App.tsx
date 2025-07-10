@@ -21,7 +21,6 @@ import EventAnalytics from "./pages/Analytics/EventAnalytics";
 import NewTemplate from "./components/community/NewTemplate";
 
 import CreatePartner from "./pages/Activity/CreatePartner";
-import Events from "./pages/Activity/Events";
 import EventView from "./pages/Events/EventView";
 import EventDetails from "./pages/Events/EventDetails";
 import EventConcluded from "./pages/Events/EventConcluded";
@@ -40,10 +39,12 @@ import Support from "./pages/Support/Support";
 import SupportDetails from "./pages/Support/SupportDetails";
 import RefundSupportDetails from "./pages/Support/RefundSupportDetails";
 import AmbassadorProfile from "./pages/Ambassadors/AmbassadorProfile";
+import TicketConfirmation from "./pages/EventManager/TicketConfirmation";
 
 import Submissions from "./pages/Submissions/Submissions";
 import SubmissionDetails from "./pages/Submissions/SubmissionDetails";
 import NewTemplateOthers from "./components/others/NewTemplate";
+import QRScannerPage from "./pages/EventManager/QRScannerPage";
 // import PartnersEditPage from "./pages/Partners/PartnersEditPage";
 
 function App() {
@@ -56,6 +57,8 @@ function App() {
         <Route path="/invalid-login-method" element={<NotGoogleUser />} />
 
         <Route path="/" element={<CheckAuth />}>
+         <Route path="/ticket-confirmation" element={<TicketConfirmation />} />
+          <Route path="/scan" element={<QRScannerPage />} />
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Home />} />
 
@@ -66,7 +69,6 @@ function App() {
 
             <Route path="/create-events" element={<CreateEvent />} />
             <Route path="/concluded-event" element={<EventConcluded />} />
-            <Route path="/events" element={<EventView />} />
 
             <Route path="/partners" element={<PartnersView />} />
             <Route path="/partners/:username" element={<AmbassadorProfile />} />
@@ -76,6 +78,8 @@ function App() {
             <Route path="/submissions" element={<Submissions />} />
             <Route path="/submissions/:id" element={<SubmissionDetails />} />
             <Route path="/analytics" element={<Analytics />} />
+           
+
             <Route
               path="/analytics/event-analytics"
               element={<EventAnalytics />}
@@ -88,11 +92,11 @@ function App() {
               element={<RefundSupportDetails />}
             />
 
-            <Route path="/events" element={<Events />} />
+            {/* <Route path="/events" element={<Events />} /> */}
 
             <Route path="/blogs" element={<Blogs />} />
-            <Route path="/blog/createblogs" element={<CreateBlog />} />
-            <Route path="/blog/update-blog/:id" element={<CreateBlog />} />
+            <Route path="/blogs/createblogs" element={<CreateBlog />} />
+            <Route path="/blogs/update-blog/:id" element={<CreateBlog />} />
             <Route path="/blogs/:blogId" element={<BlogDetails />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/:id" element={<CommunityDetails />} />
@@ -118,6 +122,7 @@ function App() {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="register" element={<Register />} />
           <Route path="create-user" element={<CreateUser />} />
+          
         </Route>
       </Routes>
       {/* </PlanProvider> */}
