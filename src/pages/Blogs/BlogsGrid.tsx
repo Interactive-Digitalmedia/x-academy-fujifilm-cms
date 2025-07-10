@@ -56,15 +56,15 @@ const BlogsGrid: React.FunctionComponent<BlogsGridProps> = ({
               {blog.title}
             </h3>
 
-            {/* Author Info */}
+           {/* Author Info */}
             <div className="flex items-center gap-2">
               <div className="h-6 w-6 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div className="flex h-full w-full items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-400">
-                  {blog.author.charAt(0)}
+                  {blog?.author?.charAt(0)}
                 </div>
               </div>
               <span className="text-sm text-gray-600 capitalize dark:text-gray-400">
-                {blog.author}
+                {blog?.author}
               </span>
             </div>
           </div>

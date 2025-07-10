@@ -83,11 +83,11 @@ const AmbassadorProfile = () => {
         {/* Banner */}
         <div className="bg-white py-5 px-5 rounded-xl w-full max-w-none mx-auto mb-6">
           <div
-            className={`relative min-h-[120px] w-full overflow-hidden rounded-t-2xl bg-[#0000001A] bg-cover bg-center`}
+            className={`relative min-h-[240px] w-full overflow-hidden rounded-t-2xl bg-[#0000001A] bg-cover bg-center`}
             style={{ backgroundImage: `url(${encodeURI(ambassador?.bannerImage || '')})` }}
           />
 
-          <div className="-mt-10 flex items-end justify-between px-3 md:px-6">
+          <div className=" flex items-end justify-between px-3 md:px-6 -mt-16">
             <div className="z-30 h-20 w-20 overflow-hidden rounded-full border-4 border-background md:h-28 md:w-28">
               <img
                 src={ambassador?.profileImage}
@@ -132,7 +132,7 @@ const AmbassadorProfile = () => {
             </div>
           </div>
 
-          <div className="mt-[2rem] space-y-4">
+          <div className="mt-[1rem] space-y-4">
             <h2 className="text-2xl font-bold capitalize">
               {ambassador?.fullname}
             </h2>
