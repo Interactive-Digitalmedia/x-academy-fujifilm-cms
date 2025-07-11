@@ -125,23 +125,23 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
         <p className="text-sm text-blue-500">Uploading image(s)...</p>
       )}
 
-      <div className="flex flex-wrap gap-4">
+      <div className="columns-2 sm:columns-3 md:columns-4 gap-4 space-y-4">
         {(data.gallery || []).map((url: string, index: number) => (
           <div
             key={index}
-            className="border rounded-lg p-4 bg-gray-50 w-[172px] flex flex-col items-center space-y-2"
+            className="relative overflow-hidden rounded-lg shadow-md group break-inside-avoid"
           >
             <img
               src={url}
               alt={`Gallery image ${index + 1}`}
-              className="max-h-64 rounded-lg object-cover"
+              className="w-full h-auto rounded-lg transition-transform duration-300 group-hover:scale-105"
             />
             <button
               onClick={() => handleDeleteImage(index)}
-              className="flex items-center text-sm text-red-500 hover:text-red-700"
+              className="absolute top-2 right-2 bg-white/80 hover:bg-red-600 text-red-600 hover:text-white p-1 rounded-full shadow transition"
+              title="Remove"
             >
-              <Trash2 className="w-4 h-4 mr-1" />
-              Delete
+              <Trash2 className="w-4 h-4" />
             </button>
           </div>
         ))}
