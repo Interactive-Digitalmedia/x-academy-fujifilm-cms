@@ -94,6 +94,12 @@ export type Activity = {
 
 // Faq template schmema
 
+export interface gearDetails {
+  gearOwned: string;
+  productName: string;
+  productLink: string;
+}
+
 export interface Ambassador {
   _id: string;
   fullname: string;
@@ -115,11 +121,7 @@ export interface Ambassador {
     facebook?: string;
     instagram?: string;
   };
-  gearDetails?: {
-    gearOwned?: string;
-    productName?: string;
-    productLink?: string;
-  }[];
+  gearDetails?: string[];
   email: string;
   contactNumber: string;
   totalEvents?: string;

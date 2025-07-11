@@ -2,11 +2,14 @@ import React, { useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Ambassador } from "@/types";
 import { uploadImage } from "@/api/uploadImageApi";
+import { uploadGearProduct } from "@/api/gearProduct";
 
 interface GearItem {
+  _id?: string;
   productName?: string;
   productLink?: string;
   productImage?: string;
+  saved?: boolean;
 }
 
 interface GearsProps {
@@ -15,9 +18,9 @@ interface GearsProps {
 }
 
 const Gears: React.FC<GearsProps> = ({ data, setData }) => {
-  const [gearBlocks, setGearBlocks] = useState<GearItem[]>(
-    data.gearDetails || [{ productName: "", productLink: "", productImage: "" }]
-  );
+  const [gearBlocks, setGearBlocks] = useState<GearItem[]>([
+    { productName: "", productLink: "", productImage: "", saved: false },
+  ]);
 
   const fileInputRefs = useRef<HTMLInputElement[]>([]);
 
@@ -27,9 +30,9 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
     value: string
   ) => {
     const updated = [...gearBlocks];
-    updated[index][field] = value;
+    (updated[index][field] as string | undefined) = value;
     setGearBlocks(updated);
-    setData({ ...data, gearDetails: updated });
+    // setData({ ...data, gearDetails: updated });
   };
 
   const handleFileUpload = async (
@@ -64,20 +67,56 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
   const addGearBlock = () => {
     const updated = [
       ...gearBlocks,
-      { productName: "", productLink: "", productImage: "" },
+      { productName: "", productLink: "", productImage: "", saved: false },
     ];
     setGearBlocks(updated);
-    setData({ ...data, gearDetails: updated });
   };
 
   const deleteGearBlock = (index: number) => {
-    const updated = gearBlocks.filter((_, i) => i !== index);
-    setGearBlocks(updated);
-    setData({ ...data, gearDetails: updated });
+    const updatedGearBlocks = gearBlocks.filter((_, i) => i !== index);
+    setGearBlocks(updatedGearBlocks);
+
+    const updatedGearIds = (data.gearDetails || []).filter(
+      (_, i) => i !== index
+    );
+    setData({ ...data, gearDetails: updatedGearIds });
   };
 
   const handleFileInputClick = (index: number) => {
     fileInputRefs.current[index]?.click();
+  };
+
+  const handleSaveItem = async (index: number) => {
+    const gear = gearBlocks[index];
+
+    // Validation (optional)
+    if (!gear.productName || !gear.productLink || !gear.productImage) {
+      alert("Please fill out all fields and upload an image before saving.");
+      return;
+    }
+
+    try {
+      const response = await uploadGearProduct({
+        productName: gear.productName,
+        productLink: gear.productLink,
+        productImage: gear.productImage,
+      });
+
+      const createdId = response?.data?._id;
+      if (!createdId) throw new Error("No ID returned");
+
+      // Update local block as saved
+      const updatedGearBlocks = [...gearBlocks];
+      updatedGearBlocks[index]._id = createdId;
+      updatedGearBlocks[index].saved = true;
+      setGearBlocks(updatedGearBlocks);
+
+      // Add to ambassador state
+      const updatedGearDetails = [...(data.gearDetails || []), createdId];
+      setData({ ...data, gearDetails: updatedGearDetails });
+    } catch (err) {
+      console.error("Failed to save gear item:", err);
+    }
   };
 
   return (
@@ -156,6 +195,17 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
               />
             </div>
           </div>
+          {!gear.saved && (
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => handleSaveItem(index)}
+                className="px-4 py-2 text-white text-sm font-semibold rounded-md bg-[#1098F7]"
+              >
+                Save Item
+              </button>
+            </div>
+          )}
 
           <div className="flex items-center gap-3 flex-wrap">
             {/* <div className="flex-1 min-w-[240px]">
@@ -197,7 +247,7 @@ const Gears: React.FC<GearsProps> = ({ data, setData }) => {
         <button
           type="button"
           onClick={addGearBlock}
-          className="flex items-center gap-1 px-4 -mt-3 py-2 bg-[#1098F7] hover:bg-blue-600 text-white text-sm font-semibold rounded-md"
+          className="flex items-center gap-1 px-4 -mt-3 py-2 bg-[#1098F7] text-white text-sm font-semibold rounded-md"
         >
           <span className="text-lg leading-none">＋</span> Add Item
         </button>
