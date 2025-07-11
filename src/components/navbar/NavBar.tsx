@@ -45,6 +45,9 @@ export default function NavBar() {
   // Are we on an event-detail page?  /events/<24-char id>
   const isEventDetail = /^\/events\/[0-9a-fA-F]{24}$/.test(location.pathname);
   const isBlogDetail = /^\/blogs\/[0-9a-fA-F]{24}$/.test(location.pathname);
+  const isAmbassadorDetail =
+    /^\/partners\/[^/]+$/.test(location.pathname) &&
+    location.pathname !== "/partners";
 
   /* -------------------------------------------------- */
   /* 2. Section-specific configs                        */
@@ -90,18 +93,20 @@ export default function NavBar() {
 
     partners: {
       title: "Partners",
-      buttons: [
-        {
-          label: "Create New",
-          icon: CirclePlus,
-          action: () => navigate("/create-partner"),
-        },
-        // {
-        //   label: "Drafts",
-        //   icon: "",
-        //   action: () => console.log("Partner analytics"),
-        // },
-      ],
+      buttons: !isAmbassadorDetail
+        ? [
+            {
+              label: "Create New",
+              icon: CirclePlus,
+              action: () => navigate("/create-partner"),
+            },
+            // {
+            //   label: "Drafts",
+            //   icon: "",
+            //   action: () => console.log("Partner analytics"),
+            // },
+          ]
+        : [],
     },
 
     blogs: {

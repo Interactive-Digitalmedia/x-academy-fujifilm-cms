@@ -6,12 +6,20 @@ interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
   onImageUpload?: (file: File) => Promise<string>;
+  placeholder?: string;
+  modules?: any;
+  formats?: string[];
+  className?: string;
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value,
   onChange,
   onImageUpload,
+  placeholder = "Write something amazing...",
+  modules = defaultModules,
+  formats = defaultFormats,
+  className = "",
 }) => {
   const quillRef = useRef<any>(null);
 
@@ -47,21 +55,22 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   };
 
   return (
-    <div className="my-4 rounded-2xl">
+    <div className={`my-4 rounded-2xl ${className}`}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
         value={value}
         onChange={onChange}
-        placeholder="Write something amazing..."
+        placeholder={placeholder}
         modules={modules}
         formats={formats}
+        className="custom-quill"
       />
     </div>
   );
 };
 
-const modules = {
+const defaultModules = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ["bold", "italic", "underline", "strike", "blockquote"],
@@ -71,7 +80,7 @@ const modules = {
   ],
 };
 
-const formats = [
+const defaultFormats = [
   "header",
   "bold",
   "italic",

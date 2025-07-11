@@ -218,7 +218,7 @@ body {
   }
 
   .bgCard {
-   @apply rounded-xl border border-gray-200 bg-white p-5 shadow-sm
+    @apply rounded-xl border border-gray-200 bg-white p-5 shadow-sm;
   }
 }
 
@@ -257,3 +257,57 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Customize outer border */
+.ql-container {
+  border-bottom: 1px solid #ccc !important;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Customize the toolbar */
+.ql-toolbar {
+  border-radius: 8px 8px 0 0;
+  background-color: #f9f9f9;
+}
+
+/* Customize the editor content */
+.ql-editor {
+  min-height: 150px;
+  font-size: 14px;
+  color: #333;
+  border-radius: 0 0 8px 8px;
+  background-color: #fff;
+}
+
+.custom-quill .ql-editor h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.custom-quill .ql-editor h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.custom-quill .ql-editor h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.custom-quill .ql-editor p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.custom-quill .ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+
