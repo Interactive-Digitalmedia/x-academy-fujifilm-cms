@@ -97,7 +97,7 @@ const SupportDetails = () => {
               }`}
               style={{
                 display: "flex",
-                width: "135px",
+                width: "145px",
                 padding: "6px 12px",
                 justifyContent: "center",
                 alignItems: "center",

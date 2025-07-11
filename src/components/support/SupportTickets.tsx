@@ -6,7 +6,9 @@ import { SupportTable } from "./SupportTable";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import FilterCard from "@/components/ui/filtercard";
-import { dummySupport } from "@/assets/dummySupport";
+
+import { getAllSupportTickets } from "@/api/supportTickets";
+
 
 const SupportTickets: React.FC = () => {
   const [searchText, setSearchText] = useState("");
@@ -17,18 +19,35 @@ const SupportTickets: React.FC = () => {
     {}
   );
   const [activeType, setActiveType] = useState("All");
-  const [filteredSupport, setFilteredSupport] = useState<any[]>(dummySupport);
+  const [supportTickets, setSupportTickets] = useState<any[]>([]);
+const [filteredSupport, setFilteredSupport] = useState<any[]>([]);
 
-  
+
   const parseDMY = (dmy: string): Date => {
     const [day, month, year] = dmy.split("-").map(Number);
     return new Date(year, month - 1, day);
   };
 
   useEffect(() => {
+  const fetchSupportTickets = async () => {
+    const response = await getAllSupportTickets();
+    if (response?.status === 200) {
+      setSupportTickets(response.data); // adjust if your API shape is different
+      setFilteredSupport(response.data);
+    } else {
+      console.error("Failed to fetch support tickets:", response.message);
+    }
+  };
+
+  fetchSupportTickets();
+}, []);
+
+
+  useEffect(() => {
     const lowerSearch = searchText.toLowerCase();
 
-    const filtered = dummySupport.filter((ticket) => {
+   const filtered = supportTickets.filter((ticket) => {
+
       const matchesSearch =
         searchText.length < 3 ||
         ticket.raisedBy.toLowerCase().includes(lowerSearch) ||
@@ -77,7 +96,7 @@ const SupportTickets: React.FC = () => {
         {/* Controls Row */}
         <div className="flex justify-between items-center mb-6 w-full">
           {/* Search Bar */}
-          <div className="relative w-[738px] mr-4">
+          <div className="relative w-full mr-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
@@ -132,7 +151,7 @@ const SupportTickets: React.FC = () => {
               {showFilters && (
                 <div className="absolute right-0 z-50 mt-2 w-[300px] bg-white rounded-md">
                   <FilterCard
-                    data={dummySupport}
+                    data={supportTickets}
                     sections={[
                       {
                         heading: "Status",
@@ -145,13 +164,13 @@ const SupportTickets: React.FC = () => {
                         key: "type",
                         type: "dropdown",
                         options: Array.from(
-                          new Set(dummySupport.map((e) => e.type))
+                          new Set(supportTickets.map((e) => e.type))
                         ),
                       },
                     ]}
                     onFiltered={(filtered, active) => {
-                      setFilteredSupport(filtered);       // ✅ filtered data
-                      setActiveFilters(active);           // ✅ selected filters
+                      setFilteredSupport(filtered); // ✅ filtered data
+                      setActiveFilters(active); // ✅ selected filters
                     }}
                   />
                 </div>
@@ -161,8 +180,11 @@ const SupportTickets: React.FC = () => {
         </div>
 
         {/* Type Toggle Buttons */}
-        <div className="mb-6 flex flex-wrap gap-3">
-          {["All", "User", "Ambassador", "Refunds"].map((type) => (
+        <div className="mb-1 flex flex-wrap gap-3">
+          {[
+            "All",
+            // , "User", "Ambassador", "Refunds"
+          ].map((type) => (
             <button
               key={type}
               className={`btn-toggle ${

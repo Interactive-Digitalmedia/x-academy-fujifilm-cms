@@ -322,3 +322,34 @@ export interface CmsUserProfileData {
   createdAt: string;
   updatedAt: string;
 }
+
+
+export interface SupportTicket {
+  _id: string;
+  subject: string;
+  message?: string;
+  userId: {
+    _id: string;
+    email: string;
+    name?: string;
+  };
+  type: {
+  type: String,
+  enum: ['query', 'bugs', 'refund'], // ✅ restrict to valid values
+  default: 'query', // optional
+},
+  status: 'active' | 'closed';
+  reason?: string;
+  assignTo?: {
+    _id: string;
+    email: string;
+    name?: string;
+  };
+  attachments?: string[];
+  lastInteractionAttachment?: string;
+  adminSubject?: string;
+  adminMessage?: string;
+  attendedWorkshop: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

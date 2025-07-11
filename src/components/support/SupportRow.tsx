@@ -3,46 +3,49 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { SupportTicket } from "@/types";
 
 interface SupportRowProps {
-  support: {
-    sno: number;
-    _id: string;
-    date: string;
-    raisedBy: string;
-    title: string;
-    type: string;
-    status: string;
-    assign: string;
-  };
+  support: SupportTicket;
   index: number;
 }
 
 export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
   const navigate = useNavigate();
 
+  console.log("Support Object:", support);
+
   return (
     <TableRow
       onClick={() =>
         navigate(
-          support.type.toLowerCase() === "refund"
-            ? `/support/refund/${support._id}`
-            : `/support/${support._id}`
+          // support.type === "refund"
+          //   ? `/support/refund/${support._id}`
+          //   :
+          `/support/${support._id}`
         )
       }
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >
-      <TableCell className="px-3 py-1">{index + 1}</TableCell> 
-      <TableCell className="px-3 py-1">{support.date}</TableCell>
-      <TableCell className="px-3 py-1">{support.raisedBy}</TableCell>
-      <TableCell className="px-3 py-1">{support.title}</TableCell>
-      <TableCell className="px-3 py-1">{support.type}</TableCell>
-      <TableCell className="px-3 py-1">
+      <TableCell className="px-3 py-0">{index + 1}</TableCell>
+      <TableCell className="px-3 py-0">
+        {new Date(support.createdAt).toLocaleDateString("en-IN")}
+      </TableCell>
+
+      <TableCell>{support.userId?.email ?? "N/A"}</TableCell>
+
+      <TableCell className="px-3 py-0">{support.subject}</TableCell>
+
+      <TableCell className="px-3 py-0 ">
+        {/* {typeof support.type === "string" ? support.type : "-"} */}
+        {"Query"}
+      </TableCell>
+      <TableCell className="px-3 py-0">
         <div className="flex items-center gap-2">
           <span
             className={`h-2 w-2 rounded-full ${
-              support.status.toLowerCase() === "open"
+              support.status.toLowerCase() === "active"
                 ? "bg-green-500"
                 : "bg-red-500"
             }`}
@@ -50,9 +53,10 @@ export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
           <span>{support.status}</span>
         </div>
       </TableCell>
-      <TableCell className="px-3 py-1">
+      <TableCell className="px-3 py-0">
         <div className="flex items-center gap-2">
-          <span>{support.assign}</span>
+          <span>{support.assignTo?.email ?? "-"}</span>
+
           <Button
             size="icon"
             variant="outline"
@@ -66,7 +70,7 @@ export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
           </Button>
         </div>
       </TableCell>
-      <TableCell className="px-3 py-1 text-right">
+      <TableCell className="px-3 py-0 text-right">
         <ChevronRight className="w-4 h-4 text-gray-400" />
       </TableCell>
     </TableRow>

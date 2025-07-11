@@ -32,7 +32,7 @@ export default function Sidebar() {
       name: "Support",
       path: "/support",
       icon: "/banner/icons/Support.svg",
-      disabled: true,
+      // disabled: true,
     },
     {
       name: "Others",

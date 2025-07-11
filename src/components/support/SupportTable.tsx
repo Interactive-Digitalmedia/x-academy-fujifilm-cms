@@ -1,5 +1,5 @@
 import { SupportRow } from "./SupportRow";
-import { dummySupport } from "@/assets/dummySupport";
+import { SupportTicket } from "@/types";
 
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 
 type SupportTableProps = {
-  filteredSupports: typeof dummySupport; // or your SupportType[]
+  filteredSupports: SupportTicket[];
 };
 
 export function SupportTable({ filteredSupports }: SupportTableProps) {
@@ -29,12 +29,8 @@ export function SupportTable({ filteredSupports }: SupportTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredSupports.map((support) => (
-            <SupportRow
-              key={support._id}
-              support={support}
-              index={support.sno - 1}
-            />
+          {filteredSupports.map((support, index) => (
+            <SupportRow key={support._id} support={support} index={index} />
           ))}
         </TableBody>
       </Table>
