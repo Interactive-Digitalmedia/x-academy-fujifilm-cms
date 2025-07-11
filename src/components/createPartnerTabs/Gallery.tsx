@@ -1,11 +1,8 @@
-import * as React from "react";
 import { UploadCloud, Trash2 } from "lucide-react";
 import { uploadImage } from "@/api/uploadImageApi";
 import { Ambassador } from "@/types";
-
-interface GalleryImage {
-  url: string;
-}
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 interface GalleryProps {
   data: Partial<Ambassador>;
@@ -13,8 +10,9 @@ interface GalleryProps {
 }
 
 const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
-  const [dragActive, setDragActive] = React.useState(false);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -26,47 +24,59 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files.length) {
-      Array.from(e.dataTransfer.files).forEach(handleFileSelect);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      await handleMultipleFilesUpload(Array.from(e.dataTransfer.files));
     }
   };
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      Array.from(e.target.files).forEach(handleFileSelect);
+  const handleFileInputChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      await handleMultipleFilesUpload(Array.from(e.target.files));
     }
   };
 
-  const handleFileSelect = async (file: File) => {
-    if (file.size > 10 * 1024 * 1024) return alert("File size must be < 10MB");
+  const handleMultipleFilesUpload = async (files: File[]) => {
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
       "image/png",
       "image/svg+xml",
     ];
-    if (!allowedTypes.includes(file.type)) {
-      return alert("Only .jpg, .png, .svg files are allowed");
-    }
+    const validFiles = files.filter(
+      (file) =>
+        allowedTypes.includes(file.type) && file.size <= 50 * 1024 * 1024
+    );
 
+    if (validFiles.length === 0) {
+      toast.error("No valid files to upload (Max 10MB and jpg/png/svg only)");
+      return;
+    }
+    setUploading(true);
     try {
-      const result = await uploadImage(file);
-      if (result?.publicUrl) {
-        const encodedUrl = encodeURI(result.publicUrl);
-        const newImage: GalleryImage = { url: encodedUrl };
-        setData({
-          ...data,
-          gallery: [...(data.gallery || []), newImage.url], // Store only S3 URLs
-        });
+      const uploadPromises = validFiles.map((file) => uploadImage(file));
+      const results = await Promise.all(uploadPromises);
+      const uploadedUrls = results
+        .filter((res) => res?.publicUrl)
+        .map((res) => encodeURI(res.publicUrl));
+
+      if (uploadedUrls.length) {
+        setData((prev) => ({
+          ...prev,
+          gallery: [...(prev.gallery || []), ...uploadedUrls],
+        }));
       }
     } catch (error) {
       console.error("Gallery upload failed:", error);
-      alert("Upload failed. Please try again.");
+      toast.error("Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -110,6 +120,10 @@ const Gallery: React.FC<GalleryProps> = ({ data, setData }) => {
           </p>
         </div>
       </div>
+
+      {uploading && (
+        <p className="text-sm text-blue-500">Uploading image(s)...</p>
+      )}
 
       <div className="flex flex-wrap gap-4">
         {(data.gallery || []).map((url: string, index: number) => (
