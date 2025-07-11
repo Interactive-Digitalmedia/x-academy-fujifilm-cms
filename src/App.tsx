@@ -86,7 +86,7 @@ function App() {
             />
 
             <Route path="/support" element={<Support />} />
-            <Route path="/support/:id" element={<SupportDetails />} />
+            <Route path="/support-ticket/:id" element={<SupportDetails />} />
             <Route
               path="/support/refund/:id"
               element={<RefundSupportDetails />}

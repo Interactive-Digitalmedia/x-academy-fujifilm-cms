@@ -1,12 +1,15 @@
-import { useState } from "react";
+//support details
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { dummySupport } from "@/assets/dummySupport";
 
 import { Badge } from "@/components/ui/badge";
 import UserInformation from "@/components/support/UserInformation";
 import TicketDetails from "@/components/support/TicketDetails";
 import AdminActions from "@/components/support/AdminActions";
 import InteractionLog from "@/components/support/InteractionLog";
+
+import { getSupportTicketById } from "@/api/supportTickets";
+import { SupportTicket } from "@/types";
 
 const TABS = [
   "User Information",
@@ -16,59 +19,55 @@ const TABS = [
 ];
 
 const SupportDetails = () => {
-  const { id } = useParams(); // ✅ Get ticket ID from URL
+  const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState("User Information");
+  const [support, setSupport] = useState<SupportTicket | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const ticket = dummySupport.find((t) => t._id === "665f4a1c9a7b1a2c4f2f0001"); // ✅ Get real ticket
 
-  if (!ticket) {
-    return <div className="text-red-500">Ticket not found</div>; // ✅ Error case
-  }
+  useEffect(() => {
+    console.log("calling fetch ticket");
+    const fetchTicket = async () => {
+      
+      if (!id){
+        console.log("id not found");
+        return;
+      } 
+      setLoading(true);
+      const response = await getSupportTicketById(id);
+      console.log(response);
+      if (!response || response.status !== 200) {
+        setError(response?.message || "Unable to fetch support ticket.");
+        setSupport(null);
+        console.log("updated support as null");
+      } else {
+        console.log("running else statement")
+        setSupport(response.data);
+        console.log("SUPPORT: ", support);
+        setError(null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchTicket();
+  }, [id]);
+
+  if (loading) return <div className="text-gray-500 p-6">Loading support ticket...</div>;
+  if (error || !support)
+    return <div className="text-red-500 p-6">{error || "Support ticket not found"}</div>;
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "User Information":
-        return <UserInformation ticket={ticket} />;
+        return <UserInformation support={support} />;
 
       case "Ticket Details":
-        return (
-          <TicketDetails
-            ticket={{
-              id: ticket._id,
-              subject: "Sample Subject",
-              message: "This is a sample ticket message.",
-              attachments: ["Doc1", "File2"],
-            }}
-          />
-        );
+        return <TicketDetails support={support} />;
 
       case "Admin Actions":
-        return (
-          <AdminActions
-            ticket={{
-              id: ticket._id,
-              subject: "Ticket Subject",
-              message:
-                "Hey User, we are connecting you to the technical team for faster resolution",
-              assignedTo: "Sample Name",
-              teamMembers: ["Sample Name", "John Smith", "Jane Doe"],
-              lastInteractions: [
-                {
-                  sender: "user",
-                  message:
-                    "Hey, I booked an event but didn’t receive my ticket email.",
-                  date: "12/08/2025",
-                },
-                {
-                  sender: "admin",
-                  message:
-                    "Hey, I booked an event but didn’t receive my ticket email.",
-                  date: "12/08/2025",
-                },
-              ],
-            }}
-          />
-        );
+        return <AdminActions support={support} />;
 
       case "Interaction Log":
         return <InteractionLog />;
@@ -82,9 +81,9 @@ const SupportDetails = () => {
     <div className="p-6">
       <div className="bg-white border rounded-xl p-4 -mt-6 mb-6 shadow-sm">
         <Badge variant="outline" className="bg-orange-100 text-orange-600 mb-2">
-          ● {ticket.status}
+          ● {support.status}
         </Badge>
-        <h2 className="text-2xl font-bold">#{ticket._id}</h2>
+        <h2 className="text-2xl font-bold">#{support._id}</h2>
       </div>
 
       <div className="bg-white border rounded-xl p-4 shadow-sm">

@@ -1,36 +1,29 @@
+//admin actions
 import React, { useState } from "react";
+import { SupportTicket } from "@/types";
 
 interface AdminActionsProps {
-  ticket: {
-    id: string;
-    subject: string;
-    message: string;
-    lastInteractions: {
-      message: string;
-      date: string;
-      sender: "user" | "admin";
-    }[];
-    assignedTo: string;
-    teamMembers: string[]; // Add this field for dropdown options
-  };
+  support: SupportTicket;
 }
 
-const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
-  const [assignee, setAssignee] = useState(ticket.assignedTo);
+const AdminActions: React.FC<AdminActionsProps> = ({ support }) => {
+  const [assignee, setAssignee] = useState(support.assignTo?.name || "");
 
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
-        <div className="col-span-2">
+      {/* Status */}
+      <div className="col-span-2">
         <p className="text-xs mb-1 text-gray-500">Current Status</p>
-        <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800">
-          {"status"}
+        <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800 capitalize">
+          {support.status}
         </div>
       </div>
+
       {/* Ticket ID */}
       <div>
         <p className="text-xs mb-1 text-gray-500">Ticket ID</p>
         <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800">
-          #{ticket.id}
+          #{support._id}
         </div>
       </div>
 
@@ -42,7 +35,7 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
           onChange={(e) => setAssignee(e.target.value)}
           className="w-full border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800"
         >
-          {ticket.teamMembers.map((name, index) => (
+          {["Sample Name", "John Smith", "Jane Doe"].map((name, index) => (
             <option key={index} value={name}>
               {name}
             </option>
@@ -54,7 +47,18 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
       {/* <div className="col-span-2">
         <p className="text-xs mb-2 text-gray-500">Last Interaction</p>
         <div className="border rounded-lg bg-white p-4 space-y-3 max-h-96 overflow-y-auto">
-          {ticket.lastInteractions.map((interaction, idx) => {
+          {[
+            {
+              sender: "user",
+              message: support.message || "",
+              date: support.createdAt,
+            },
+            {
+              sender: "admin",
+              message: support.adminMessage || "",
+              date: support.updatedAt,
+            },
+          ].map((interaction, idx) => {
             const isUser = interaction.sender === "user";
             return (
               <div
@@ -75,7 +79,7 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
                   </p>
                   <p className="whitespace-pre-wrap">{interaction.message}</p>
                   <p className="text-[10px] text-right mt-1 opacity-80">
-                    {interaction.date}
+                    {new Date(interaction.date).toLocaleString("en-IN")}
                   </p>
                 </div>
               </div>
@@ -84,19 +88,19 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
         </div>
       </div> */}
 
-      {/* Subject */}
+      {/* Admin Subject */}
       <div className="col-span-2">
         <p className="text-xs mb-1 text-gray-500">Subject</p>
         <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800">
-          #{ticket.subject}
+          {support.adminSubject || "—"}
         </div>
       </div>
 
-      {/* Message */}
+      {/* Admin Message */}
       <div className="col-span-2">
         <p className="text-xs mb-1 text-gray-500">Message</p>
-        <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800 min-h-[120px]">
-          {ticket.message}
+        <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800 min-h-[120px] whitespace-pre-wrap">
+          {support.adminMessage || "—"}
         </div>
       </div>
     </div>

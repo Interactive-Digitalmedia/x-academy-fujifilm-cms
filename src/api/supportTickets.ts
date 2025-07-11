@@ -83,7 +83,7 @@ export const updateSupportTicket = async (
   if (!token) return { status: 401, message: "Token not available" };
 
   try {
-    const res = await axios.put(`${baseUrl}support-tickets/${id}`, updateData, {
+    const res = await axios.put(`${baseUrl}support-ticket/${id}`, updateData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -101,7 +101,7 @@ export const deleteSupportTicket = async (id: string) => {
   if (!token) return { status: 401, message: "Token not available" };
 
   try {
-    const res = await axios.delete(`${baseUrl}support-tickets/${id}`, {
+    const res = await axios.delete(`${baseUrl}support-ticket/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -22,12 +22,14 @@ export const SupportRow: React.FC<SupportRowProps> = ({ support, index }) => {
           // support.type === "refund"
           //   ? `/support/refund/${support._id}`
           //   :
-          `/support/${support._id}`
+          `/support-ticket/${support._id}`
+          
         )
       }
       className="hover:bg-blue-500 hover:text-white cursor-pointer border-b-0"
       style={{ fontSize: "11px" }}
     >
+      
       <TableCell className="px-3 py-0">{index + 1}</TableCell>
       <TableCell className="px-3 py-0">
         {new Date(support.createdAt).toLocaleDateString("en-IN")}

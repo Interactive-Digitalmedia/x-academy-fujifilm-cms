@@ -1,15 +1,11 @@
 import React from "react";
+import { SupportTicket } from "@/types";
 
 interface TicketDetailsProps {
-  ticket: {
-    id: string;
-    subject: string;
-    message: string;
-    attachments: string[];
-  };
+  support: SupportTicket;
 }
 
-const TicketDetails: React.FC<TicketDetailsProps> = ({ ticket }) => {
+const TicketDetails: React.FC<TicketDetailsProps> = ({ support }) => {
   const fieldStyle =
     "w-full px-4 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-800 shadow-sm";
 
@@ -20,39 +16,39 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({ ticket }) => {
       {/* Ticket ID */}
       <div>
         <p className={labelStyle}>Ticket ID</p>
-        <div className={fieldStyle}>#{ticket.id}</div>
+        <div className={fieldStyle}>#{support._id}</div>
       </div>
 
       {/* Subject */}
       <div>
         <p className={labelStyle}>Subject</p>
-        <div className={fieldStyle}>{ticket.subject}</div>
+        <div className={fieldStyle}>{support.subject}</div>
       </div>
 
       {/* Message */}
       <div>
         <p className={labelStyle}>Message</p>
         <div className={`${fieldStyle} whitespace-pre-line min-h-[100px]`}>
-          {ticket.message}
+          {support.message || "—"}
         </div>
       </div>
 
       {/* Attachments */}
-      {ticket.attachments?.length > 0 && (
+      {/* {support.attachments?.length > 0 && (
         <div>
           <p className={labelStyle}>Attachments</p>
           <div className="flex gap-4 flex-wrap">
-            {ticket.attachments.map((_, idx) => (
-              <div
+            {support.attachments.map((url, idx) => (
+              <img
                 key={idx}
-                className="w-32 h-32 border border-gray-300 rounded-md bg-white flex items-center justify-center text-xs text-gray-500 shadow-sm"
-              >
-                Placeholder
-              </div>
+                src={url}
+                alt={`attachment-${idx + 1}`}
+                className="w-32 h-32 object-cover rounded-md border border-gray-300 shadow-sm"
+              />
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
