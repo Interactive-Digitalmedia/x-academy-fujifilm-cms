@@ -32,13 +32,13 @@ export default function Sidebar() {
       name: "Support",
       path: "/support",
       icon: "/banner/icons/Support.svg",
-      disabled: true,
+      // disabled: true,
     },
     {
       name: "Others",
       path: "/others",
       icon: "/banner/icons/Others.svg",
-      disabled: true,
+      // disabled: true,
     },
 
     //     { name: "Analytics", path: "/analytics", icon: BarChart, disabled: true },

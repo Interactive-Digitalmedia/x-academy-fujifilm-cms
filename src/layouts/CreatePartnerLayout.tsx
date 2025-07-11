@@ -51,7 +51,7 @@ export default function CreatePartnerLayout({
   const validateStep = (step: number, formData: Partial<Ambassador>) => {
     switch (step) {
       case 0: // Public Profile
-        if (!formData.userName?.trim()) return "Username is required";
+        // if (!formData.userName?.trim()) return "Username is required";
         if (!formData.fullname?.trim()) return "Name is required";
         if (!formData.type?.trim()) return "Type is required";
         // if (!formData.bio?.trim()) return "Bio is required";

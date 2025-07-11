@@ -142,7 +142,7 @@ const BlogDetails: React.FunctionComponent<BlogDetailsProps> = () => {
             {formatContent(currentBlog.content)}
           </div> */}
           <div
-            className=" max-w-none text-gray-800 dark:text-gray-200"
+            className="prose max-w-none text-gray-800 dark:text-gray-200"
             dangerouslySetInnerHTML={{ __html: currentBlog?.content }}
           />
         </article>

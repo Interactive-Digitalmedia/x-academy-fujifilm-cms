@@ -110,5 +110,5 @@ export default {
     }
   },
   // darkMode: "class",
-  plugins: [twAnimate, nextui(), require('tailwindcss-animate')]
+  plugins: [twAnimate, nextui(), require('tailwindcss-animate'),require('@tailwindcss/typography')]
 }

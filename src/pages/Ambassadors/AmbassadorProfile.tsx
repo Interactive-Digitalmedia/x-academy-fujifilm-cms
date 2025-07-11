@@ -54,7 +54,6 @@ const AmbassadorProfile = () => {
     }
   };
 
-
   if (loading) {
     return (
       <div className="p-6 text-center">
@@ -84,7 +83,9 @@ const AmbassadorProfile = () => {
         <div className="bg-white py-5 px-5 rounded-xl w-full max-w-none mx-auto mb-6">
           <div
             className={`relative min-h-[240px] w-full overflow-hidden rounded-t-2xl bg-[#0000001A] bg-cover bg-center`}
-            style={{ backgroundImage: `url(${encodeURI(ambassador?.bannerImage || '')})` }}
+            style={{
+              backgroundImage: `url(${encodeURI(ambassador?.bannerImage || "")})`,
+            }}
           />
 
           <div className=" flex items-end justify-between px-3 md:px-6 -mt-16">
@@ -136,10 +137,11 @@ const AmbassadorProfile = () => {
             <h2 className="text-2xl font-bold capitalize">
               {ambassador?.fullname}
             </h2>
-            <p className="text-base leading-relaxed">
-              <span className="font-semibold">Bio - </span>
-              {ambassador?.bio}
-            </p>
+            {/* {ambassador?.bio} */}
+            <div
+              className="prose max-w-none text-base leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: ambassador?.bio || "" }}
+            />
 
             <div className="flex flex-wrap gap-2">
               {ambassador?.tags?.map((tag, index) => {
@@ -200,9 +202,15 @@ const AmbassadorProfile = () => {
                     <h4 className="mb-2 text-sm font-semibold text-gray-400">
                       About Ambassador
                     </h4>
-                    <p className="whitespace-pre-line leading-relaxed">
+                    {/* <p className="whitespace-pre-line leading-relaxed">
                       {ambassador?.about}
-                    </p>
+                    </p> */}
+                    <div
+                      className="prose max-w-none text-base leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: ambassador?.about || "",
+                      }}
+                    />
                   </div>
                 </div>
               )}
