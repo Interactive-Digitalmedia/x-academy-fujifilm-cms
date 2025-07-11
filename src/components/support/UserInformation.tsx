@@ -35,14 +35,14 @@ const UserInformation: React.FC<UserInformationProps> = ({ ticket }) => {
           {ticket?.userId?.contactNumber}
         </div>
       </div>
-      {/* <div>
+      <div>
         <p className="text-xs mb-1 text-gray-500">State</p>
         <div className="border px-3 py-2 rounded-md min-h-10">{ticket.state}</div>
-      </div> */}
-      {/* <div>
+      </div>
+      <div>
         <p className="text-xs mb-1 text-gray-500">Role</p>
         <div className="border px-3 py-2 rounded-md min-h-10">{ticket.role}</div>
-      </div> */}
+      </div>
       <div>
         <p className="text-xs mb-1 text-gray-500">Time Submitted</p>
         <div className="border px-3 py-2 rounded-md min-h-10">

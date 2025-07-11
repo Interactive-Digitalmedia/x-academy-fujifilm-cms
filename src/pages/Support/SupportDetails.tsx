@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { dummySupport } from "@/assets/dummySupport";
 
 import { Badge } from "@/components/ui/badge";
-// import UserInformation from "@/components/support/UserInformation";
+import UserInformation from "@/components/support/UserInformation";
 import TicketDetails from "@/components/support/TicketDetails";
 import AdminActions from "@/components/support/AdminActions";
 import InteractionLog from "@/components/support/InteractionLog";
@@ -19,7 +19,7 @@ const SupportDetails = () => {
   const { id } = useParams(); // ✅ Get ticket ID from URL
   const [activeTab, setActiveTab] = useState("User Information");
 
-  const ticket = dummySupport.find((t) => t._id === id); // ✅ Get real ticket
+  const ticket = dummySupport.find((t) => t._id === "665f4a1c9a7b1a2c4f2f0001"); // ✅ Get real ticket
 
   if (!ticket) {
     return <div className="text-red-500">Ticket not found</div>; // ✅ Error case
@@ -28,7 +28,7 @@ const SupportDetails = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "User Information":
-        // return <UserInformation ticket={ticket} />;
+        return <UserInformation ticket={ticket} />;
 
       case "Ticket Details":
         return (

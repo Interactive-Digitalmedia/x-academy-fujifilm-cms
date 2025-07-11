@@ -20,6 +20,12 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
 
   return (
     <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="col-span-2">
+        <p className="text-xs mb-1 text-gray-500">Current Status</p>
+        <div className="border px-3 py-2 rounded-md bg-white shadow-sm text-sm text-gray-800">
+          {"status"}
+        </div>
+      </div>
       {/* Ticket ID */}
       <div>
         <p className="text-xs mb-1 text-gray-500">Ticket ID</p>
@@ -45,7 +51,7 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
       </div>
 
       {/* Last Interaction */}
-      <div className="col-span-2">
+      {/* <div className="col-span-2">
         <p className="text-xs mb-2 text-gray-500">Last Interaction</p>
         <div className="border rounded-lg bg-white p-4 space-y-3 max-h-96 overflow-y-auto">
           {ticket.lastInteractions.map((interaction, idx) => {
@@ -76,7 +82,7 @@ const AdminActions: React.FC<AdminActionsProps> = ({ ticket }) => {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {/* Subject */}
       <div className="col-span-2">
