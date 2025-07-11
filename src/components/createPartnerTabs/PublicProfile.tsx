@@ -2,6 +2,7 @@ import { uploadImage } from "@/api/uploadImageApi";
 import { Ambassador } from "@/types";
 import { Select, SelectItem, Button } from "@nextui-org/react";
 import { useState, useRef } from "react";
+import RichTextEditor from "../RichTextEditor/RichTextEditor";
 
 const tagsList = [
   { name: "Event", color: "bg-purple-600" },
@@ -88,7 +89,7 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
 
       {/* Name & Title */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
             Username <span className="text-red-500">*</span>
           </label>
@@ -99,7 +100,7 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
             value={data.userName || ""}
             onChange={(e) => setData({ ...data, userName: e.target.value })}
           />
-        </div>
+        </div> */}
         <div>
           <label className="block text-sm font-medium text-[#818181] mb-1">
             Name <span className="text-red-500">*</span>
@@ -198,22 +199,50 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
         <label className="block text-sm font-medium text-[#818181] mb-1">
           Bio
         </label>
-        <textarea
+        {/* <textarea
           className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
           placeholder="Write a short bio"
           value={data.bio || ""}
           onChange={(e) => setData({ ...data, bio: e.target.value })}
+        /> */}
+        <RichTextEditor
+          value={data.bio || ""}
+          onChange={(val) => setData({ ...data, bio: val })}
+          placeholder="Write a short bio"
+          modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, false] }],
+              ["bold", "italic", "underline"],
+              [{ list: "bullet" }],
+            ],
+          }}
+          formats={["bold", "header", "italic", "underline", "list", "bullet"]}
+          className="shadow-sm rounded-lg"
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-[#818181] mb-1">
           About
         </label>
-        <textarea
+        {/* <textarea
           className="w-full border rounded-lg px-3 py-2 text-sm shadow-sm bg-white text-gray-800 placeholder:text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
           placeholder="Write a short bio"
           value={data.about || ""}
           onChange={(e) => setData({ ...data, about: e.target.value })}
+        /> */}
+        <RichTextEditor
+          value={data.about || ""}
+          onChange={(val) => setData({ ...data, about: val })}
+          placeholder="Write a something about ambassador"
+          modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, false] }],
+              ["bold", "italic", "underline"],
+              [{ list: "bullet" }, { list: "ordered" }],
+            ],
+          }}
+          formats={["bold", "header", "italic", "underline", "list", "bullet"]}
+          className="shadow-sm rounded-lg"
         />
       </div>
 
@@ -259,8 +288,8 @@ export default function PublicProfile({ data, setData }: PublicProfileProps) {
             Date Joined
           </label>
           <input
-            type="date"
-            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100"
+            type="month"
+            className="w-full border rounded-md px-3 py-2 text-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 focus:bg-gray-100 outline-none"
             value={data.joinedDate || ""}
             onChange={(e) => setData({ ...data, joinedDate: e.target.value })}
           />
